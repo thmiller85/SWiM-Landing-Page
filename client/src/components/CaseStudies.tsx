@@ -54,8 +54,8 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     
     const width = window.innerWidth;
     if (width < 640) {
-      // Small screens - use a width that adapts to the screen size and matches our CSS
-      const cardWidth = Math.min(width - 40, 320); // Match with case-study-card.tsx width calculation
+      // Small screens - use a width that adapts to the screen size
+      const cardWidth = Math.min(Math.max(width * 0.85, 260), 300); // At least 85% of screen width but min 260px, max 300px
       return cardWidth + 24; // Add gap
     }
     if (width < 768) return 320 + 24; // Medium screens (320px card + 24px gap)
@@ -70,7 +70,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     const width = window.innerWidth;
     if (width < 640) {
       // Calculate the responsive card width to match our CSS
-      const cardWidth = Math.min(width - 40, 320); // Match with case-study-card.tsx width
+      const cardWidth = Math.min(width - 32, 300); 
       
       // Calculate centered offset (screen width - card width) / 2
       const centerOffset = Math.max(0, (width - cardWidth) / 2);
