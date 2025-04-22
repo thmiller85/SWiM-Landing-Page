@@ -57,7 +57,7 @@ const CaseStudyCard = ({
   return (
     <div className="pt-2 pb-2 overflow-visible">
       <motion.div 
-        className="w-[calc(100vw-32px)] max-w-[300px] sm:w-[320px] md:w-[350px] glass rounded-2xl overflow-hidden relative group"
+        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] glass rounded-2xl overflow-hidden relative group"
         variants={fadeIn}
         custom={delay}
         initial="hidden"
@@ -331,7 +331,7 @@ const CaseStudyCard = ({
                 whileHover={{ scale: 1.05, y: -2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <span className={`${index % 2 === 0 ? 'text-accent' : 'text-highlight'} text-sm font-medium`}>
+                <span className={`${index % 2 === 0 ? 'text-accent' : 'text-highlight'} text-base font-semibold`}>
                   {category}
                 </span>
               </motion.div>
@@ -339,7 +339,7 @@ const CaseStudyCard = ({
           </motion.div>
           
           <motion.h3 
-            className="text-xl sm:text-xl font-space font-bold mb-2"
+            className="text-2xl sm:text-2xl font-space font-bold mb-3"
             variants={scaleIn}
             custom={delay + 0.3}
           >
@@ -347,7 +347,7 @@ const CaseStudyCard = ({
           </motion.h3>
           
           <motion.p 
-            className="text-white/70 font-inter text-sm sm:text-sm mb-4"
+            className="text-white/70 font-inter text-base sm:text-base mb-5"
             variants={fadeIn}
             custom={delay + 0.4}
           >
@@ -360,9 +360,9 @@ const CaseStudyCard = ({
             custom={delay + 0.5}
           >
             <div>
-              <p className="text-white/50 text-sm font-inter">Results</p>
+              <p className="text-white/50 text-base font-inter font-medium">Results</p>
               <motion.p 
-                className="text-accent font-space font-bold text-base sm:text-base"
+                className="text-accent font-space font-bold text-xl sm:text-xl"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
@@ -371,7 +371,7 @@ const CaseStudyCard = ({
             </div>
             <motion.a 
               href="#" 
-              className="flex items-center text-white/70 hover:text-accent transition-colors font-inter text-sm sm:text-sm group/link"
+              className="flex items-center text-white/80 hover:text-accent transition-colors font-inter text-base sm:text-base font-medium group/link"
               whileHover={{ x: 5 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
@@ -381,7 +381,7 @@ const CaseStudyCard = ({
                 animate={{ x: isHovered ? 5 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <ArrowRight className="h-4 w-4 sm:h-4 sm:w-4 group-hover/link:text-accent" />
+                <ArrowRight className="h-5 w-5 sm:h-5 sm:w-5 group-hover/link:text-accent" />
               </motion.span>
             </motion.a>
           </motion.div>

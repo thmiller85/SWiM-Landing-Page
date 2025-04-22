@@ -50,16 +50,16 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
 
   const getCardWidth = () => {
     // Get card width based on screen size
-    if (typeof window === 'undefined') return 324; // Default fallback
+    if (typeof window === 'undefined') return 424; // Default fallback
     
     const width = window.innerWidth;
     if (width < 640) {
       // Small screens - use a width that adapts to the screen size
-      const cardWidth = Math.min(Math.max(width * 0.85, 260), 300); // At least 85% of screen width but min 260px, max 300px
+      const cardWidth = Math.min(Math.max(width * 0.9, 300), 400); // At least 90% of screen width but min 300px, max 400px
       return cardWidth + 24; // Add gap
     }
-    if (width < 768) return 320 + 24; // Medium screens (320px card + 24px gap)
-    return 350 + 24; // Large screens (350px card + 24px gap)
+    if (width < 768) return 380 + 24; // Medium screens (380px card + 24px gap)
+    return 400 + 24; // Large screens (400px card + 24px gap)
   };
   
   // Calculate the left padding to center the first card on small screens
@@ -70,7 +70,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     const width = window.innerWidth;
     if (width < 640) {
       // Calculate the responsive card width to match our CSS
-      const cardWidth = Math.min(width - 32, 300); 
+      const cardWidth = Math.min(width - 40, 400); 
       
       // Calculate centered offset (screen width - card width) / 2
       const centerOffset = Math.max(0, (width - cardWidth) / 2);
