@@ -154,7 +154,11 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               </div>
               <Button 
                 type="submit" 
-                className="bg-gradient-to-r from-accent to-highlight text-primary font-inter font-medium hover:opacity-90 transition-all w-full sm:w-auto"
+                className="bg-accent hover:bg-accent/90 text-black font-inter font-semibold text-lg px-8 py-6 shadow-glow transition-all w-full sm:w-auto"
+                style={{ 
+                  textShadow: "0 0 5px rgba(0,240,255,0.3)",
+                  boxShadow: "0 0 20px rgba(0,240,255,0.5)"
+                }}
               >
                 Schedule Consultation
               </Button>
