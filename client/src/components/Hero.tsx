@@ -159,7 +159,7 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+      <div className="relative mt-12 flex flex-col items-center">
         <p className="text-white/60 font-inter text-xs mb-2">Scroll to explore</p>
         <div className="h-12 w-6 border border-white/20 rounded-full flex justify-center">
           <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce mt-2"></div>
