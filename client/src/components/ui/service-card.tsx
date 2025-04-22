@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { fadeIn } from "@/lib/animations";
+import { fadeIn, scaleIn, pulseAnimation } from "@/lib/animations";
 
 interface ServiceCardProps {
   icon: React.ReactNode;
@@ -13,30 +13,96 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ icon, title, description, tags, color, delay }: ServiceCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
   return (
     <motion.div 
-      className="glass rounded-2xl p-8 card-hover"
+      className="glass rounded-2xl p-8 relative group overflow-hidden"
       variants={fadeIn}
       custom={delay}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.3 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{
+        y: -10,
+        transition: { duration: 0.3, ease: "easeOut" }
+      }}
     >
-      <div className={`w-16 h-16 rounded-2xl bg-${color}/10 flex items-center justify-center mb-6`}>
+      {/* Animated background gradient */}
+      <motion.div 
+        className={`absolute -inset-0.5 bg-gradient-to-r from-${color} to-${color === "accent" ? "highlight" : "accent"} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
+        animate={{
+          backgroundPosition: isHovered ? ['0% 0%', '100% 100%'] : '0% 0%',
+        }}
+        transition={{
+          duration: 3,
+          ease: "linear",
+        }}
+      />
+      
+      <motion.div 
+        className={`w-16 h-16 rounded-2xl bg-${color}/10 flex items-center justify-center mb-6 relative`}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <motion.div
+          variants={pulseAnimation}
+          initial="hidden"
+          animate="visible"
+          className="absolute inset-0 rounded-2xl"
+        />
         {icon}
-      </div>
-      <h3 className="text-xl font-space font-bold mb-4">{title}</h3>
-      <p className="text-white/70 font-inter mb-6">
+      </motion.div>
+      
+      <motion.h3 
+        className="text-xl font-space font-bold mb-4"
+        variants={scaleIn}
+        custom={delay + 0.1}
+      >
+        {title}
+      </motion.h3>
+      
+      <motion.p 
+        className="text-white/70 font-inter mb-6"
+        variants={fadeIn}
+        custom={delay + 0.2}
+      >
         {description}
-      </p>
-      <div className="flex flex-wrap gap-2 mb-6">
+      </motion.p>
+      
+      <motion.div 
+        className="flex flex-wrap gap-2 mb-6"
+        variants={fadeIn}
+        custom={delay + 0.3}
+      >
         {tags.map((tag, index) => (
-          <span key={index} className="text-xs px-3 py-1 rounded-full bg-secondary text-white/80">
+          <motion.span 
+            key={index} 
+            className={`text-xs px-3 py-1 rounded-full bg-secondary text-white/80 hover:bg-${color}/20 transition-colors duration-300`}
+            whileHover={{ scale: 1.05 }}
+          >
             {tag}
-          </span>
+          </motion.span>
         ))}
-      </div>
-      <a href="#" className={`flex items-center text-${color} font-inter font-medium text-sm`}>
-        Learn more
-        <ArrowRight className="ml-1 h-4 w-4" />
-      </a>
+      </motion.div>
+      
+      <motion.a 
+        href="#" 
+        className={`flex items-center text-${color} font-inter font-medium text-sm relative group overflow-hidden`}
+        whileHover={{ x: 5 }}
+        transition={{ type: "spring", stiffness: 400 }}
+      >
+        <span>Learn more</span>
+        <motion.div
+          className="inline-block ml-1"
+          animate={{ x: isHovered ? 5 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ArrowRight className="h-4 w-4" />
+        </motion.div>
+      </motion.a>
     </motion.div>
   );
 };

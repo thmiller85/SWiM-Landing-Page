@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import ParticleBackground from "./ParticleBackground";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
-import { fadeIn, slideUp } from "@/lib/animations";
+import { fadeIn, slideUp, floatingAnimation, pulseAnimation } from "@/lib/animations";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -72,16 +72,26 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
             animate={isInView ? "visible" : "hidden"}
             variants={slideUp}
           >
-            <div className="relative animate-float">
+            <motion.div 
+              className="relative"
+              variants={floatingAnimation}
+              initial="hidden"
+              animate="visible"
+            >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-highlight rounded-2xl blur opacity-30"></div>
               <div className="glass rounded-2xl relative overflow-hidden">
                 <div className="aspect-video w-full bg-primary/50 rounded-2xl flex items-center justify-center">
                   <div className="text-center">
-                    <div className="inline-block p-3 rounded-full bg-accent/10 mb-3">
+                    <motion.div 
+                      className="inline-block p-3 rounded-full bg-accent/10 mb-3"
+                      variants={pulseAnimation}
+                      initial="hidden"
+                      animate="visible"
+                    >
                       <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
                         <div className="w-8 h-8 rounded-full bg-accent animate-pulse"></div>
                       </div>
-                    </div>
+                    </motion.div>
                     <p className="text-white/80 font-space">AI-powered analytics visualization</p>
                   </div>
                 </div>
@@ -92,9 +102,31 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
                   </div>
                 </div>
               </div>
-              <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-highlight/10 rounded-full blur-2xl"></div>
-              <div className="absolute -top-8 -left-8 w-32 h-32 bg-accent/10 rounded-full blur-2xl"></div>
-            </div>
+              <motion.div 
+                className="absolute -bottom-8 -right-8 w-24 h-24 bg-highlight/10 rounded-full blur-2xl"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.6, 0.8, 0.6],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              ></motion.div>
+              <motion.div 
+                className="absolute -top-8 -left-8 w-32 h-32 bg-accent/10 rounded-full blur-2xl"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.6, 0.9, 0.6],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              ></motion.div>
+            </motion.div>
           </motion.div>
         </div>
         
