@@ -70,7 +70,8 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
         <div ref={titleRef} className="text-center mb-16">
           <motion.div
             initial="hidden"
-            animate={isTitleInView ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true }}
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
@@ -93,7 +94,8 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
             className="overflow-x-auto scrollbar-hide pb-8 no-scrollbar"
             variants={staggerContainer}
             initial="hidden"
-            animate={isTitleInView ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true }}
           >
             <div className="flex gap-6 min-w-max">
               {caseStudies.map((study, index) => (

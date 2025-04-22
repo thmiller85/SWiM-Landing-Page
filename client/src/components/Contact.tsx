@@ -67,7 +67,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
           <div ref={titleRef} className="text-center mb-12">
             <motion.div
               initial="hidden"
-              animate={isTitleInView ? "visible" : "hidden"}
+              whileInView="visible"
+              viewport={{ once: true }}
               variants={fadeIn}
             >
               <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
@@ -89,7 +90,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
             onSubmit={handleSubmit}
             variants={staggerContainer}
             initial="hidden"
-            animate={isTitleInView ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true }}
           >
             <div>
               <Label htmlFor="name" className="block mb-2 text-white/80 font-inter text-sm">Full Name</Label>
@@ -173,8 +175,9 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               key={index}
               className="glass rounded-xl p-6 text-center"
               initial={{ opacity: 0, y: 20 }}
-              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.2 + index * 0.2, duration: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 + index * 0.1, duration: 0.6 }}
             >
               <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
                 {method.icon}
