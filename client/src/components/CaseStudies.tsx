@@ -66,9 +66,12 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     const width = window.innerWidth;
     if (width < 640) {
       // Calculate centered offset (screen width - card width) / 2
-      const centerOffset = (width - 300) / 2;
-      // Account for existing container padding (6px)
-      return centerOffset - 6;
+      const centerOffset = Math.max(0, (width - 300) / 2);
+      
+      // Account for existing container padding
+      // For better centering, we need to consider the container's padding (6px on each side)
+      const containerPadding = 6;
+      return Math.max(0, centerOffset - containerPadding);
     }
     return 0;
   };
@@ -103,7 +106,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
 
   return (
     <section ref={ref} id="case-studies" className="py-24 relative overflow-hidden bg-secondary/30">
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+      <div className="container mx-auto px-0 sm:px-6 md:px-12 relative z-10">
         <div ref={titleRef} className="text-center mb-16">
           <motion.div
             initial="hidden"
