@@ -91,7 +91,7 @@ const CaseStudyCard = ({
           className="text-center p-4 z-10 w-full h-full flex flex-col items-center justify-center"
           variants={floatingAnimation}
           initial="hidden"
-          animate="visible"
+          animate={isHovered ? { opacity: 0, y: -10, transition: { duration: 0.2 } } : "visible"}
         >
           {/* Visualization content based on case study type */}
           {image === 'e-commerce' && (
