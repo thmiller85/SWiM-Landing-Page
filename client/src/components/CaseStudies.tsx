@@ -48,9 +48,19 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     }
   ];
 
+  const getCardWidth = () => {
+    // Get card width based on screen size
+    if (typeof window === 'undefined') return 324; // Default fallback
+    
+    const width = window.innerWidth;
+    if (width < 640) return 300 + 24; // Small screens (300px card + 24px gap)
+    if (width < 768) return 320 + 24; // Medium screens (320px card + 24px gap)
+    return 350 + 24; // Large screens (350px card + 24px gap)
+  };
+
   const handlePrev = () => {
     if (sliderRef.current) {
-      const slideWidth = 350 + 24; // Card width + gap
+      const slideWidth = getCardWidth();
       sliderRef.current.scrollBy({ left: -slideWidth, behavior: 'smooth' });
       setActiveSlide(prev => Math.max(prev - 1, 0));
     }
@@ -58,7 +68,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
 
   const handleNext = () => {
     if (sliderRef.current) {
-      const slideWidth = 350 + 24; // Card width + gap
+      const slideWidth = getCardWidth();
       sliderRef.current.scrollBy({ left: slideWidth, behavior: 'smooth' });
       setActiveSlide(prev => Math.min(prev + 1, caseStudies.length - 1));
     }
@@ -129,7 +139,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
                   className={`w-3 h-3 rounded-full ${index === activeSlide ? 'bg-accent' : 'bg-white/20 hover:bg-white/40'} transition-all`}
                   onClick={() => {
                     if (sliderRef.current) {
-                      const slideWidth = 350 + 24; // Card width + gap
+                      const slideWidth = getCardWidth(); // Use our responsive width function
                       sliderRef.current.scrollTo({ 
                         left: slideWidth * index, 
                         behavior: 'smooth' 

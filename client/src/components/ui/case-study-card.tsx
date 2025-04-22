@@ -56,7 +56,7 @@ const CaseStudyCard = ({
 
   return (
     <motion.div 
-      className="w-[350px] glass rounded-2xl overflow-hidden relative group"
+      className="w-[300px] sm:w-[320px] md:w-[350px] glass rounded-2xl overflow-hidden relative group"
       variants={fadeIn}
       custom={delay}
       initial="hidden"
@@ -317,7 +317,7 @@ const CaseStudyCard = ({
         </motion.div>
       </div>
       
-      <div className="p-6 relative z-10">
+      <div className="p-4 sm:p-6 relative z-10">
         <motion.div 
           className="flex items-center gap-2 mb-4 flex-wrap"
           variants={fadeIn}
@@ -338,7 +338,7 @@ const CaseStudyCard = ({
         </motion.div>
         
         <motion.h3 
-          className="text-xl font-space font-bold mb-2"
+          className="text-lg sm:text-xl font-space font-bold mb-2"
           variants={scaleIn}
           custom={delay + 0.3}
         >
@@ -346,7 +346,7 @@ const CaseStudyCard = ({
         </motion.h3>
         
         <motion.p 
-          className="text-white/70 font-inter text-sm mb-4"
+          className="text-white/70 font-inter text-xs sm:text-sm mb-4"
           variants={fadeIn}
           custom={delay + 0.4}
         >
@@ -361,7 +361,7 @@ const CaseStudyCard = ({
           <div>
             <p className="text-white/50 text-xs font-inter">Results</p>
             <motion.p 
-              className="text-accent font-space font-bold"
+              className="text-accent font-space font-bold text-sm sm:text-base"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
@@ -370,7 +370,7 @@ const CaseStudyCard = ({
           </div>
           <motion.a 
             href="#" 
-            className="flex items-center text-white/70 hover:text-accent transition-colors font-inter text-sm group/link"
+            className="flex items-center text-white/70 hover:text-accent transition-colors font-inter text-xs sm:text-sm group/link"
             whileHover={{ x: 5 }}
             transition={{ type: "spring", stiffness: 400 }}
           >
@@ -380,7 +380,7 @@ const CaseStudyCard = ({
               animate={{ x: isHovered ? 5 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              <ArrowRight className="h-4 w-4 group-hover/link:text-accent" />
+              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover/link:text-accent" />
             </motion.span>
           </motion.a>
         </motion.div>
