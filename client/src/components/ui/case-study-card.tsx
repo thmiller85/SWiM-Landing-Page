@@ -285,25 +285,29 @@ const CaseStudyCard = ({
           )}
         </motion.div>
         
-        {/* View case study button with solid background on hover */}
+        {/* View case study button - only visible on hover with animation */}
         <motion.div 
-          className="absolute inset-0 bg-black/85 flex items-center justify-center"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ 
-            opacity: isHovered ? 1 : 0
+            opacity: isHovered ? 0.85 : 0
           }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.3 }}
         >
           <motion.button 
-            className="px-5 py-3 rounded-full bg-accent text-white font-bold flex items-center gap-2 hover:bg-accent/90 transition-all shadow-lg"
-            initial={{ opacity: 0 }}
+            className="px-5 py-3 rounded-full bg-accent/90 text-white font-medium flex items-center gap-2 hover:bg-accent transition-all shadow-lg"
+            initial={{ y: 20, opacity: 0 }}
             animate={{ 
-              opacity: isHovered ? 1 : 0
+              y: isHovered ? 0 : 20, 
+              opacity: isHovered ? 1 : 0,
+              scale: isHovered ? 1 : 0.9
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ 
-              duration: 0.2,
+              type: "spring", 
+              stiffness: 400, 
+              damping: 10,
               delay: isHovered ? 0.1 : 0 
             }}
           >
