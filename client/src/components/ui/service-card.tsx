@@ -32,7 +32,11 @@ const ServiceCard = ({ icon, title, description, tags, color, delay }: ServiceCa
     >
       {/* Animated background gradient */}
       <motion.div 
-        className={`absolute -inset-0.5 bg-gradient-to-r from-${color} to-${color === "accent" ? "highlight" : "accent"} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
+        className={`absolute -inset-0.5 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-700 ${
+          color === "accent" 
+            ? "bg-gradient-to-r from-accent to-highlight" 
+            : "bg-gradient-to-r from-highlight to-accent"
+        }`}
         animate={{
           backgroundPosition: isHovered ? ['0% 0%', '100% 100%'] : '0% 0%',
         }}
@@ -43,7 +47,9 @@ const ServiceCard = ({ icon, title, description, tags, color, delay }: ServiceCa
       />
       
       <motion.div 
-        className={`w-16 h-16 rounded-2xl bg-${color}/10 flex items-center justify-center mb-6 relative`}
+        className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 relative ${
+          color === "accent" ? "bg-accent/10" : "bg-highlight/10"
+        }`}
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
@@ -80,7 +86,9 @@ const ServiceCard = ({ icon, title, description, tags, color, delay }: ServiceCa
         {tags.map((tag, index) => (
           <motion.span 
             key={index} 
-            className={`text-xs px-3 py-1 rounded-full bg-secondary text-white/80 hover:bg-${color}/20 transition-colors duration-300`}
+            className={`text-xs px-3 py-1 rounded-full bg-secondary text-white/80 transition-colors duration-300 ${
+              color === "accent" ? "hover:bg-accent/20" : "hover:bg-highlight/20"
+            }`}
             whileHover={{ scale: 1.05 }}
           >
             {tag}
@@ -90,7 +98,9 @@ const ServiceCard = ({ icon, title, description, tags, color, delay }: ServiceCa
       
       <motion.a 
         href="#" 
-        className={`flex items-center text-${color} font-inter font-medium text-sm relative group overflow-hidden`}
+        className={`flex items-center font-inter font-medium text-sm relative group overflow-hidden ${
+          color === "accent" ? "text-accent" : "text-highlight"
+        }`}
         whileHover={{ x: 5 }}
         transition={{ type: "spring", stiffness: 400 }}
       >
