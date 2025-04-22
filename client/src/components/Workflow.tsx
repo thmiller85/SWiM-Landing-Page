@@ -282,22 +282,18 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
                     </motion.div>
                   </motion.div>
                   
-                  {/* Timeline marker for md screens */}
+                  {/* Timeline connector for md screens - simplified to avoid duplication */}
                   <motion.div 
-                    className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full"
+                    style={{ 
+                      backgroundColor: step.color === 'accent' ? '#00F0FF' : '#FF2E63',
+                      opacity: hoveredStep === index ? 0.8 : 0.4
+                    }}
                     animate={{ 
-                      scale: hoveredStep === index ? 1.15 : 1,
+                      scale: hoveredStep === index ? 1.2 : 1,
                       transition: { duration: 0.3 }
                     }}
-                  >
-                    <motion.div 
-                      className={`w-12 h-12 rounded-full bg-${step.color === 'accent' ? 'accent' : 'highlight'} flex items-center justify-center z-10`}
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      {step.icon}
-                    </motion.div>
-                  </motion.div>
+                  />
                 </div>
               </motion.div>
             ))}
