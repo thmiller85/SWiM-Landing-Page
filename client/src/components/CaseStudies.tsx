@@ -57,20 +57,47 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     if (width < 768) return 320 + 24; // Medium screens (320px card + 24px gap)
     return 350 + 24; // Large screens (350px card + 24px gap)
   };
+  
+  // Calculate the left padding to center the first card on small screens
+  const getInitialOffset = () => {
+    if (typeof window === 'undefined') return 0;
+    
+    // Only add extra padding on mobile screens
+    const width = window.innerWidth;
+    if (width < 640) {
+      // Calculate centered offset (screen width - card width) / 2
+      const centerOffset = (width - 300) / 2;
+      // Account for existing container padding (6px)
+      return centerOffset - 6;
+    }
+    return 0;
+  };
 
   const handlePrev = () => {
     if (sliderRef.current) {
       const slideWidth = getCardWidth();
-      sliderRef.current.scrollBy({ left: -slideWidth, behavior: 'smooth' });
-      setActiveSlide(prev => Math.max(prev - 1, 0));
+      const newIndex = Math.max(activeSlide - 1, 0);
+      
+      // Calculate position for smooth scrolling
+      const scrollPos = (newIndex === 0) 
+        ? getInitialOffset() 
+        : slideWidth * newIndex;
+      
+      sliderRef.current.scrollTo({ left: scrollPos, behavior: 'smooth' });
+      setActiveSlide(newIndex);
     }
   };
 
   const handleNext = () => {
     if (sliderRef.current) {
       const slideWidth = getCardWidth();
-      sliderRef.current.scrollBy({ left: slideWidth, behavior: 'smooth' });
-      setActiveSlide(prev => Math.min(prev + 1, caseStudies.length - 1));
+      const newIndex = Math.min(activeSlide + 1, caseStudies.length - 1);
+      
+      // Calculate position for smooth scrolling
+      const scrollPos = slideWidth * newIndex;
+      
+      sliderRef.current.scrollTo({ left: scrollPos, behavior: 'smooth' });
+      setActiveSlide(newIndex);
     }
   };
 
@@ -107,7 +134,9 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="flex gap-6 min-w-max">
+            <div 
+              className="flex gap-6 min-w-max px-4 sm:px-0 justify-center md:justify-start"
+              style={{ paddingLeft: `${getInitialOffset()}px` }}>
               {caseStudies.map((study, index) => (
                 <CaseStudyCard 
                   key={index}
@@ -141,7 +170,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
                     if (sliderRef.current) {
                       const slideWidth = getCardWidth(); // Use our responsive width function
                       sliderRef.current.scrollTo({ 
-                        left: slideWidth * index, 
+                        left: (slideWidth * index) + (index === 0 ? getInitialOffset() : 0), 
                         behavior: 'smooth' 
                       });
                       setActiveSlide(index);
