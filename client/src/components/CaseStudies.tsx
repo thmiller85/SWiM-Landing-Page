@@ -153,8 +153,9 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
         <motion.div 
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
-          animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.6 }}
         >
           <p className="mb-6 text-white/70 font-inter">
             Ready to see what AI can do for your business?
