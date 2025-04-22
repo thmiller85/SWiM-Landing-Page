@@ -53,7 +53,11 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     if (typeof window === 'undefined') return 324; // Default fallback
     
     const width = window.innerWidth;
-    if (width < 640) return 300 + 24; // Small screens (300px card + 24px gap)
+    if (width < 640) {
+      // Small screens - use a width that adapts to the screen size
+      const cardWidth = Math.min(Math.max(width * 0.85, 260), 300); // At least 85% of screen width but min 260px, max 300px
+      return cardWidth + 24; // Add gap
+    }
     if (width < 768) return 320 + 24; // Medium screens (320px card + 24px gap)
     return 350 + 24; // Large screens (350px card + 24px gap)
   };
@@ -65,12 +69,14 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
     // Only add extra padding on mobile screens
     const width = window.innerWidth;
     if (width < 640) {
+      // Calculate the responsive card width to match our CSS
+      const cardWidth = Math.min(width - 32, 300); 
+      
       // Calculate centered offset (screen width - card width) / 2
-      const centerOffset = Math.max(0, (width - 300) / 2);
+      const centerOffset = Math.max(0, (width - cardWidth) / 2);
       
       // Account for existing container padding
-      // For better centering, we need to consider the container's padding (6px on each side)
-      const containerPadding = 6;
+      const containerPadding = 0; // We're using px-0 on the container for small screens now
       return Math.max(0, centerOffset - containerPadding);
     }
     return 0;
@@ -139,7 +145,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
           >
             <div 
               className="flex gap-6 min-w-max px-4 sm:px-0 justify-center md:justify-start"
-              style={{ paddingLeft: `${getInitialOffset()}px` }}>
+              style={{ paddingLeft: `${getInitialOffset()}px`, paddingRight: '16px' }}>
               {caseStudies.map((study, index) => (
                 <CaseStudyCard 
                   key={index}
