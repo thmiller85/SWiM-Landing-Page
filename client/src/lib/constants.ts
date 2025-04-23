@@ -1,5 +1,6 @@
 export const PRIMARY_COLOR = "#0A3A5A";    // Deep Ocean Blue
 export const SECONDARY_COLOR = "#002348";  // Navy Blue
+export const DARK_NAVY = "#00111F";        // Dark Navy - Darker version for backgrounds
 export const ACCENT_COLOR = "#1A8CB7";     // Azure Blue
 export const HIGHLIGHT_COLOR = "#4BCBF2";  // Sky Blue
 export const TEXT_COLOR = "#FFFFFF";       // Crisp White
