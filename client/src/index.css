@@ -16,17 +16,17 @@
   --light-gray: 0 0% 95%;          /* #F2F2F2 */
   
   /* UI elements */
-  --background: var(--navy-blue);
+  --background: 0 0% 4%;  /* Back to black background */
   --foreground: var(--crisp-white);
   --muted: var(--light-gray);
   --muted-foreground: 213 14% 40%;
-  --popover: var(--navy-blue);
+  --popover: 0 0% 4%;  /* Black popover background */
   --popover-foreground: var(--crisp-white);
-  --card: var(--deep-ocean-blue);
+  --card: 0 0% 4%;  /* Black card background */
   --card-foreground: var(--crisp-white);
   --border: 203 89% 15%;
   --input: 203 89% 15%;
-  --primary: var(--deep-ocean-blue);
+  --primary: 0 0% 4%;  /* Black primary background */
   --primary-foreground: var(--crisp-white);
   --secondary: var(--navy-blue);
   --secondary-foreground: var(--crisp-white);
