@@ -57,7 +57,7 @@ const CaseStudyCard = ({
   return (
     <div className="pt-2 pb-2 overflow-visible">
       <motion.div 
-        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-[520px] glass rounded-2xl overflow-hidden relative group"
+        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-auto min-h-[500px] glass rounded-2xl overflow-hidden relative group"
         variants={fadeIn}
         custom={delay}
         initial="hidden"
@@ -327,11 +327,11 @@ const CaseStudyCard = ({
             {categories.map((category, index) => (
               <motion.div 
                 key={index} 
-                className={`px-3 py-1.5 ${index % 2 === 0 ? 'bg-accent/20' : 'bg-highlight/20'} rounded-full`}
+                className={`px-2 md:px-3 py-1 md:py-1.5 ${index % 2 === 0 ? 'bg-accent/20' : 'bg-highlight/20'} rounded-full`}
                 whileHover={{ scale: 1.05, y: -2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <span className={`${index % 2 === 0 ? 'text-accent' : 'text-highlight'} text-base font-semibold`}>
+                <span className={`${index % 2 === 0 ? 'text-accent' : 'text-highlight'} text-xs md:text-sm font-semibold`}>
                   {category}
                 </span>
               </motion.div>
@@ -339,7 +339,7 @@ const CaseStudyCard = ({
           </motion.div>
           
           <motion.h3 
-            className="text-2xl sm:text-2xl font-space font-bold mb-3"
+            className="text-xl md:text-2xl font-space font-bold mb-3 line-clamp-2"
             variants={scaleIn}
             custom={delay + 0.3}
           >
@@ -347,7 +347,7 @@ const CaseStudyCard = ({
           </motion.h3>
           
           <motion.p 
-            className="text-white/70 font-inter text-base sm:text-base mb-5 h-[60px] overflow-hidden"
+            className="text-white/70 font-inter text-sm md:text-base mb-5 max-h-[80px] h-auto line-clamp-3"
             variants={fadeIn}
             custom={delay + 0.4}
           >
