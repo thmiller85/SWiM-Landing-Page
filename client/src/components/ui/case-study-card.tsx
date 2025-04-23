@@ -57,7 +57,7 @@ const CaseStudyCard = ({
   return (
     <div className="pt-2 pb-2 overflow-visible">
       <motion.div 
-        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] glass rounded-2xl overflow-hidden relative group"
+        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-[520px] glass rounded-2xl overflow-hidden relative group"
         variants={fadeIn}
         custom={delay}
         initial="hidden"
@@ -347,7 +347,7 @@ const CaseStudyCard = ({
           </motion.h3>
           
           <motion.p 
-            className="text-white/70 font-inter text-base sm:text-base mb-5"
+            className="text-white/70 font-inter text-base sm:text-base mb-5 h-[60px] overflow-hidden"
             variants={fadeIn}
             custom={delay + 0.4}
           >
