@@ -44,7 +44,7 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
               </Button>
               <Button 
                 variant="outline" 
-                className="bg-transparent border border-white/20 text-white font-inter font-medium hover:border-accent hover:text-accent transition-all"
+                className="bg-transparent border border-white/20 text-white font-inter font-medium hover:border-accent hover:text-white hover:bg-accent/10 transition-all"
                 size="lg"
               >
                 <Play size={18} className="mr-2" /> Watch Our Process
