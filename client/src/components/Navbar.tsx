@@ -51,7 +51,7 @@ const Navbar = ({
       }`}
     >
       <div className="container mx-auto px-6 md:px-12">
-        <div className="flex items-center justify-between py-5 md:py-7">
+        <div className="flex items-center justify-between py-6 md:py-8">
           <div className="w-auto mr-4">
             <Logo />
           </div>

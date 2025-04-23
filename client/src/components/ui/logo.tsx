@@ -11,7 +11,7 @@ const Logo = ({ className = "" }: LogoProps) => {
       <img 
         src={swimLogo} 
         alt="SWiM Logo" 
-        className="h-20 md:h-24 w-auto" // Increased height for better visibility
+        className="h-24 md:h-32 w-auto" // Increased height for better visibility
       />
     </a>
   );
