@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- Wave elements -->
+  <path d="M100 100 C150 50 150 120 200 80 C250 50 270 120 310 100" fill="none" stroke="#00b4cc" stroke-width="15"/>
+  <path d="M100 130 C150 80 170 150 200 110 C240 80 250 150 310 130" fill="none" stroke="#00b4cc" stroke-width="15"/>
+  <path d="M100 160 C150 110 150 180 200 140 C250 110 270 180 310 160" fill="none" stroke="#00b4cc" stroke-width="15"/>
+  <!-- Text -->
+  <text x="100" y="240" font-family="Arial, sans-serif" font-weight="bold" font-size="70" fill="#13242c">SWiM</text>
+</svg>
