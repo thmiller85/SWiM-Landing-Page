@@ -1,4 +1,5 @@
 import React from "react";
+import swimLogoPath from "../../assets/swim-logo.svg";
 
 interface LogoProps {
   className?: string;
@@ -6,11 +7,12 @@ interface LogoProps {
 
 const Logo = ({ className = "" }: LogoProps) => {
   return (
-    <a href="#" className={`flex items-center space-x-2 ${className}`}>
-      <div className="relative h-10 w-10 rounded-full bg-gradient-to-r from-accent to-highlight flex items-center justify-center">
-        <span className="font-space font-bold text-xl">S</span>
-      </div>
-      <span className="text-2xl font-space font-bold text-white">SWiM</span>
+    <a href="#" className={`flex items-center ${className}`}>
+      <img 
+        src={swimLogoPath} 
+        alt="SWiM Logo" 
+        className="h-12 w-auto" 
+      />
     </a>
   );
 };
