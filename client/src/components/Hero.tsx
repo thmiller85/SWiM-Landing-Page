@@ -15,7 +15,7 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
   const isInView = useIntersectionObserver(ref, { once: false, threshold: 0.1 });
   
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24 pb-12" id="hero">
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-32 pb-12" id="hero">
       <ParticleBackground />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
