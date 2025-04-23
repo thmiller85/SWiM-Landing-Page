@@ -114,7 +114,7 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                 </div>
                 
                 {/* Interactive data tooltip */}
-                <div className="absolute -bottom-8 -right-8 glass p-4 rounded-xl min-w-[200px] animate-float" style={{ animationDelay: "0.5s" }}>
+                <div className="absolute -bottom-8 -right-8 glass p-4 rounded-xl min-w-[200px] animate-float" style={{ animationDelay: "0.7s" }}>
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-white/90 font-space text-sm font-medium">Predictive Accuracy</p>
                     <p className="text-accent font-space font-bold">96.8%</p>
@@ -127,7 +127,7 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
             </div>
             
             {/* Floating elements */}
-            <div className="absolute -top-8 -right-8 glass p-4 rounded-xl animate-float">
+            <div className="absolute -top-8 -right-8 glass p-4 rounded-xl animate-float" style={{ animationDelay: "0.2s" }}>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-highlight/20 flex items-center justify-center">
                   <LineChart className="text-highlight text-sm" />
@@ -139,7 +139,7 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
               </div>
             </div>
             
-            <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl animate-float" style={{ animationDelay: "1s" }}>
+            <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl animate-float" style={{ animationDelay: "1.2s" }}>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
                   <div className="text-accent text-sm">
