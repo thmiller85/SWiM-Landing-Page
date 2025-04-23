@@ -1,5 +1,5 @@
 import React from "react";
-import swimLogo from "../../assets/swim-logo-new.png";
+import swimLogo from "../../assets/swim-logo-transparent.png";
 
 interface LogoProps {
   className?: string;
@@ -11,7 +11,7 @@ const Logo = ({ className = "" }: LogoProps) => {
       <img 
         src={swimLogo} 
         alt="SWiM Logo" 
-        className="h-16 md:h-20 w-auto" // Increased height for better visibility
+        className="h-20 md:h-24 w-auto" // Increased height for better visibility
       />
     </a>
   );
