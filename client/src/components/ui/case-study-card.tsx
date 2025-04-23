@@ -57,7 +57,7 @@ const CaseStudyCard = ({
   return (
     <div className="pt-2 pb-2 overflow-visible">
       <motion.div 
-        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-auto min-h-[500px] glass rounded-2xl overflow-hidden relative group"
+        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-[570px] glass rounded-2xl overflow-hidden relative group"
         variants={fadeIn}
         custom={delay}
         initial="hidden"
@@ -318,7 +318,7 @@ const CaseStudyCard = ({
           </motion.div>
         </div>
         
-        <div className="p-5 sm:p-6 relative z-10">
+        <div className="p-5 sm:p-6 relative z-10 flex flex-col h-[370px]">
           <motion.div 
             className="flex items-center gap-2 mb-4 flex-wrap"
             variants={fadeIn}
@@ -347,7 +347,7 @@ const CaseStudyCard = ({
           </motion.h3>
           
           <motion.p 
-            className="text-white/70 font-inter text-sm md:text-base mb-5 max-h-[80px] h-auto line-clamp-3"
+            className="text-white/70 font-inter text-sm md:text-base mb-5 line-clamp-4"
             variants={fadeIn}
             custom={delay + 0.4}
           >
@@ -355,7 +355,7 @@ const CaseStudyCard = ({
           </motion.p>
           
           <motion.div 
-            className="flex items-center justify-between"
+            className="flex items-center justify-between mt-auto"
             variants={fadeIn}
             custom={delay + 0.5}
           >
