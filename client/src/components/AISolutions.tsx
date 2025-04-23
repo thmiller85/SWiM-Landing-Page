@@ -115,9 +115,11 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                 
                 {/* Interactive data tooltip */}
                 <div className="absolute -bottom-8 -right-8 glass p-4 rounded-xl min-w-[200px] animate-float-alt" style={{ animationDelay: "0.7s" }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-white/90 font-space text-sm font-medium">Predictive Accuracy</p>
-                    <p className="text-accent font-space font-bold">96.8%</p>
+                  <div className="flex flex-col mb-2">
+                    <div className="flex justify-between items-center mb-1.5">
+                      <p className="text-white/90 font-space text-sm font-medium">Predictive Accuracy</p>
+                    </div>
+                    <p className="text-accent font-space font-bold text-lg">96.8%</p>
                   </div>
                   <div className="h-2 bg-secondary rounded-full overflow-hidden">
                     <div className="h-full w-[96.8%] bg-gradient-to-r from-accent to-highlight"></div>
