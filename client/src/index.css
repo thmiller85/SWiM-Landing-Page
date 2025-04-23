@@ -5,46 +5,62 @@
 @tailwind utilities;
 
 :root {
-  --background: 200 40% 12%;
-  --foreground: 0 0% 100%;
-  --muted: 200 10% 95%;
-  --muted-foreground: 200 10% 46%;
-  --popover: 200 40% 12%;
-  --popover-foreground: 0 0% 100%;
-  --card: 200 40% 12%;
-  --card-foreground: 0 0% 100%;
-  --border: 200 30% 18%;
-  --input: 200 30% 18%;
-  --primary: 200 40% 12%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 200 20% 20%;
-  --secondary-foreground: 0 0% 98%;
-  --accent: 187 100% 40%;
-  --accent-foreground: 0 0% 100%;
+  /* Primary colors */
+  --deep-ocean-blue: 203 89% 20%;  /* #0A3A5A */
+  --azure-blue: 196 76% 41%;       /* #1A8CB7 */
+  --sky-blue: 193 85% 62%;         /* #4BCBF2 */
+  
+  /* Secondary colors */
+  --crisp-white: 0 0% 100%;        /* #FFFFFF */
+  --navy-blue: 213 100% 14%;       /* #002348 */
+  --light-gray: 0 0% 95%;          /* #F2F2F2 */
+  
+  /* UI elements */
+  --background: var(--navy-blue);
+  --foreground: var(--crisp-white);
+  --muted: var(--light-gray);
+  --muted-foreground: 213 14% 40%;
+  --popover: var(--navy-blue);
+  --popover-foreground: var(--crisp-white);
+  --card: var(--deep-ocean-blue);
+  --card-foreground: var(--crisp-white);
+  --border: 203 89% 15%;
+  --input: 203 89% 15%;
+  --primary: var(--deep-ocean-blue);
+  --primary-foreground: var(--crisp-white);
+  --secondary: var(--navy-blue);
+  --secondary-foreground: var(--crisp-white);
+  --accent: var(--azure-blue);
+  --accent-foreground: var(--crisp-white);
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --ring: 187 100% 40%;
+  --ring: var(--azure-blue);
   --radius: 0.5rem;
-  --sidebar-background: 200 40% 12%;
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 200 40% 12%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 187 100% 40%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 200 30% 18%;
-  --sidebar-ring: 187 100% 40%;
-  --chart-1: 187 100% 40%;
-  --chart-2: 187 50% 30%;
-  --chart-3: 200 83% 40%;
-  --chart-4: 187 78% 36%;
-  --chart-5: 200 75% 25%;
+  
+  /* Sidebar */
+  --sidebar-background: var(--navy-blue);
+  --sidebar-foreground: var(--crisp-white);
+  --sidebar-primary: var(--deep-ocean-blue);
+  --sidebar-primary-foreground: var(--crisp-white);
+  --sidebar-accent: var(--azure-blue);
+  --sidebar-accent-foreground: var(--crisp-white);
+  --sidebar-border: 213 100% 10%;
+  --sidebar-ring: var(--azure-blue);
+  
+  /* Charts */
+  --chart-1: var(--azure-blue);
+  --chart-2: var(--sky-blue);
+  --chart-3: var(--deep-ocean-blue);
+  --chart-4: 196 50% 30%;
+  --chart-5: 193 60% 40%;
   
   /* Custom variables */
-  --primary-color: #13242c;
-  --secondary-color: #2A2A2A;
-  --accent-color: #00b4cc;
-  --highlight-color: #0088a3;
-  --text-color: #FFFFFF;
+  --primary-color: #0A3A5A;    /* Deep Ocean Blue */
+  --secondary-color: #002348;  /* Navy Blue */
+  --accent-color: #1A8CB7;     /* Azure Blue */
+  --highlight-color: #4BCBF2;  /* Sky Blue */
+  --text-color: #FFFFFF;       /* Crisp White */
+  --background-color: #F2F2F2; /* Light Gray */
 }
 
 @layer base {
@@ -63,23 +79,23 @@
 
 @layer components {
   .gradient-bg {
-    background: linear-gradient(-45deg, #13242c, #1d3640, #13242c, #002c36);
+    background: linear-gradient(-45deg, #0A3A5A, #002348, #0A3A5A, #1A8CB7);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
   }
 
   .gradient-text {
-    background: linear-gradient(90deg, #00b4cc, #0088a3);
+    background: linear-gradient(90deg, #1A8CB7, #4BCBF2);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .glass {
-    background: rgba(19, 36, 44, 0.2);
+    background: rgba(10, 58, 90, 0.2);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 180, 204, 0.1);
+    border: 1px solid rgba(26, 140, 183, 0.1);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -97,7 +113,7 @@
 
   .card-hover:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 25px -5px rgba(0, 180, 204, 0.1), 0 10px 10px -5px rgba(0, 180, 204, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(26, 140, 183, 0.1), 0 10px 10px -5px rgba(75, 203, 242, 0.04);
   }
 }
 

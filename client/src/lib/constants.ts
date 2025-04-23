@@ -1,8 +1,9 @@
-export const PRIMARY_COLOR = "#13242c";
-export const SECONDARY_COLOR = "#2A2A2A";
-export const ACCENT_COLOR = "#00b4cc";
-export const HIGHLIGHT_COLOR = "#0088a3";
-export const TEXT_COLOR = "#FFFFFF";
+export const PRIMARY_COLOR = "#0A3A5A";    // Deep Ocean Blue
+export const SECONDARY_COLOR = "#002348";  // Navy Blue
+export const ACCENT_COLOR = "#1A8CB7";     // Azure Blue
+export const HIGHLIGHT_COLOR = "#4BCBF2";  // Sky Blue
+export const TEXT_COLOR = "#FFFFFF";       // Crisp White
+export const BACKGROUND_COLOR = "#F2F2F2"; // Light Gray
 
 export const SERVICES = [
   {
