@@ -114,7 +114,7 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                 </div>
                 
                 {/* Interactive data tooltip */}
-                <div className="absolute bottom-8 right-8 glass p-4 rounded-xl min-w-[200px]">
+                <div className="absolute -bottom-8 -right-8 glass p-4 rounded-xl min-w-[200px]">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-white/90 font-space text-sm font-medium">Predictive Accuracy</p>
                     <p className="text-accent font-space font-bold">96.8%</p>
