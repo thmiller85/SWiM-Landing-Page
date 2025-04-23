@@ -51,10 +51,12 @@ const Navbar = ({
       }`}
     >
       <div className="container mx-auto px-6 md:px-12">
-        <div className="flex items-center justify-between py-4">
-          <Logo />
+        <div className="flex items-center justify-between py-4 md:py-6">
+          <div className="w-auto mr-4">
+            <Logo />
+          </div>
           
-          <nav className="hidden md:flex space-x-10">
+          <nav className="hidden md:flex space-x-8">
             <button 
               onClick={() => handleNavClick(onServicesClick)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
@@ -107,7 +109,7 @@ const Navbar = ({
       
       {/* Mobile menu */}
       <div className={`md:hidden absolute w-full left-0 top-full glass ${mobileMenuOpen ? "block" : "hidden"}`}>
-        <div className="container mx-auto px-6 py-6 flex flex-col space-y-4">
+        <div className="container mx-auto px-6 py-8 flex flex-col space-y-5">
           <button 
             onClick={() => handleNavClick(onServicesClick)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
