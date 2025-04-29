@@ -42,9 +42,9 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                   <Sparkles className="text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Natural Language Processing</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">Automated Workflow Optimization</h3>
                   <p className="text-white/70 font-inter">
-                    Implement advanced NLP models to analyze customer feedback, generate content, and streamline communication.
+                    Streamline repetitive tasks, reduce manual errors, and free up your team to focus on what matters most -- growth and innovation.
                   </p>
                 </div>
               </div>
@@ -54,9 +54,9 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                   <Brain className="text-highlight" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Machine Learning Models</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">Smarter Marketing Intelligence</h3>
                   <p className="text-white/70 font-inter">
-                    Build custom ML models that continuously learn from your data to improve performance and accuracy over time.
+                    Use AI to analyze customer behavior, optimize campaign performance, and uncover insights that lead to better targeting and higher ROI.
                   </p>
                 </div>
               </div>
@@ -66,9 +66,9 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                   <LineChart className="text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Predictive Analytics</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">Custom AI-Powered Solutions</h3>
                   <p className="text-white/70 font-inter">
-                    Anticipate market trends and customer behavior with predictive models that inform your strategic decision-making.
+                    From internal tools to client-facing software, we build bespoke SaaS platforms that leverage your data to create scalable, intelligent systems.
                   </p>
                 </div>
               </div>

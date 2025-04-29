@@ -14,7 +14,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       icon: <ChartScatter className="text-3xl text-accent" />,
       title: "AI-Powered Marketing",
       description: "Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.",
-      tags: ["Predictive ChartScatter", "Customer Segmentation", "Content Optimization"],
+      tags: ["Lead Generation", "Customer Segmentation", "Content Optimization"],
       color: "accent",
       delay: 0
     },
@@ -70,7 +70,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
-              Our Core Services
+              Our SWiM Lanes
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
               Comprehensive AI Solutions for Modern Businesses

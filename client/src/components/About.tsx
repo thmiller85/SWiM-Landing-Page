@@ -92,7 +92,7 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               AI Innovation with a Human Touch
             </h2>
             <p className="text-white/70 font-inter text-lg mb-6">
-              At SWiM, we're a team of AI specialists, data scientists, engineers, and strategists
+              At SWiM, we're a team of AI specialists, sales and marketing experts, technical engineers, and strategists
               united by a passion for transforming businesses through technology.
             </p>
             <p className="text-white/70 font-inter text-lg mb-8">
@@ -106,7 +106,7 @@ const About = forwardRef<HTMLElement>((props, ref) => {
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">Certified AI development experts</p>
+                <p className="text-white font-inter">AI development experts</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
