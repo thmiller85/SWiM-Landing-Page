@@ -20,7 +20,11 @@ function App() {
   const contactRef = useRef<HTMLElement>(null);
 
   const scrollToSection = (sectionRef: React.RefObject<HTMLElement>) => {
-    sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (sectionRef.current) {
+      const yOffset = -80; // Adjust this value based on your navbar height
+      const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
   };
 
   return (
