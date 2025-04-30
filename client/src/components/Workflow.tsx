@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Search, Lightbulb, Code, Rocket, CheckCircle } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn, pulseAnimation, floatingAnimation } from "@/lib/animations";
+import discoveryAnalysisImage from "@assets/discoveryAndAnalysis.png";
 
 const Workflow = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -249,35 +250,43 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
                       transition={{ duration: 0.5 }}
                     >
                       <div className="aspect-video w-full bg-primary/50 rounded-xl flex items-center justify-center overflow-hidden">
-                        <motion.div 
-                          className="text-center"
-                          variants={floatingAnimation}
-                          initial="hidden"
-                          animate="visible"
-                        >
+                        {index === 0 ? (
+                          <img 
+                            src={discoveryAnalysisImage} 
+                            alt="Discovery & Analysis" 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
                           <motion.div 
-                            className="inline-block p-4 rounded-xl bg-accent/10 mb-4"
-                            variants={pulseAnimation}
+                            className="text-center"
+                            variants={floatingAnimation}
                             initial="hidden"
                             animate="visible"
                           >
                             <motion.div 
-                              className={`w-16 h-16 rounded-xl bg-${step.color}/20 flex items-center justify-center`}
-                              whileHover={{ scale: 1.1 }}
-                              transition={{ type: "spring", stiffness: 300 }}
+                              className="inline-block p-4 rounded-xl bg-accent/10 mb-4"
+                              variants={pulseAnimation}
+                              initial="hidden"
+                              animate="visible"
                             >
-                              <motion.div
-                                animate={{ 
-                                  rotate: hoveredStep === index ? 360 : 0,
-                                  transition: { duration: 3, ease: "linear" }
-                                }}
+                              <motion.div 
+                                className={`w-16 h-16 rounded-xl bg-${step.color}/20 flex items-center justify-center`}
+                                whileHover={{ scale: 1.1 }}
+                                transition={{ type: "spring", stiffness: 300 }}
                               >
-                                {step.icon}
+                                <motion.div
+                                  animate={{ 
+                                    rotate: hoveredStep === index ? 360 : 0,
+                                    transition: { duration: 3, ease: "linear" }
+                                  }}
+                                >
+                                  {step.icon}
+                                </motion.div>
                               </motion.div>
                             </motion.div>
+                            <p className="text-white/80 font-space">{step.title}</p>
                           </motion.div>
-                          <p className="text-white/80 font-space">{step.title}</p>
-                        </motion.div>
+                        )}
                       </div>
                     </motion.div>
                   </motion.div>
