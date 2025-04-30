@@ -98,11 +98,11 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-highlight rounded-2xl blur opacity-30"></div>
               <div className="glass rounded-2xl relative overflow-hidden">
-                <div className="aspect-video w-full bg-dark-navy rounded-2xl flex items-center justify-center overflow-hidden p-4">
+                <div className="w-full bg-[#222222] rounded-2xl flex items-center justify-center overflow-hidden p-0">
                   <img 
                     src={n8nAgentImage} 
                     alt="AI Agent Workflow Diagram" 
-                    className="w-full h-full object-contain max-h-[400px]"
+                    className="w-full object-cover"
                   />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 glass">
