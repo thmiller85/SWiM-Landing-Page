@@ -249,44 +249,43 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
                       }}
                       transition={{ duration: 0.5 }}
                     >
-                      <div className="aspect-video w-full bg-primary/50 rounded-xl flex items-center justify-center overflow-hidden">
-                        {index === 0 ? (
+                      <div className="aspect-video w-full bg-primary/50 rounded-xl flex items-center justify-center overflow-hidden relative">
+                        {index === 0 && (
                           <img 
                             src={discoveryAnalysisImage} 
                             alt="Discovery & Analysis" 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover opacity-90"
                           />
-                        ) : (
+                        )}
+                        <motion.div 
+                          className="text-center absolute z-10"
+                          variants={floatingAnimation}
+                          initial="hidden"
+                          animate="visible"
+                        >
                           <motion.div 
-                            className="text-center"
-                            variants={floatingAnimation}
+                            className="inline-block p-4 rounded-xl bg-accent/20 backdrop-blur-sm mb-4"
+                            variants={pulseAnimation}
                             initial="hidden"
                             animate="visible"
                           >
                             <motion.div 
-                              className="inline-block p-4 rounded-xl bg-accent/10 mb-4"
-                              variants={pulseAnimation}
-                              initial="hidden"
-                              animate="visible"
+                              className={`w-16 h-16 rounded-xl bg-${step.color}/20 flex items-center justify-center`}
+                              whileHover={{ scale: 1.1 }}
+                              transition={{ type: "spring", stiffness: 300 }}
                             >
-                              <motion.div 
-                                className={`w-16 h-16 rounded-xl bg-${step.color}/20 flex items-center justify-center`}
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ type: "spring", stiffness: 300 }}
+                              <motion.div
+                                animate={{ 
+                                  rotate: hoveredStep === index ? 360 : 0,
+                                  transition: { duration: 3, ease: "linear" }
+                                }}
                               >
-                                <motion.div
-                                  animate={{ 
-                                    rotate: hoveredStep === index ? 360 : 0,
-                                    transition: { duration: 3, ease: "linear" }
-                                  }}
-                                >
-                                  {step.icon}
-                                </motion.div>
+                                {step.icon}
                               </motion.div>
                             </motion.div>
-                            <p className="text-white/80 font-space">{step.title}</p>
                           </motion.div>
-                        )}
+                          <p className="text-white/80 font-space backdrop-blur-sm bg-primary/30 px-3 py-1 rounded-md">{step.title}</p>
+                        </motion.div>
                       </div>
                     </motion.div>
                   </motion.div>
