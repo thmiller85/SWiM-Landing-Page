@@ -6,6 +6,7 @@ import { fadeIn, slideIn, pulseAnimation, floatingAnimation } from "@/lib/animat
 import discoveryAnalysisImage from "../assets/discovery.png";
 import strategicPlanningImage from "../assets/strategic-planning.png";
 import developmentIntegrationImage from "../assets/development-integration.png";
+import deploymentOptimizationImage from "../assets/deployment-optimization.png";
 
 const Workflow = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -270,6 +271,13 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
                           <img 
                             src={developmentIntegrationImage} 
                             alt="Development & Integration" 
+                            className="w-full h-full object-cover opacity-90"
+                          />
+                        )}
+                        {index === 3 && (
+                          <img 
+                            src={deploymentOptimizationImage} 
+                            alt="Deployment & Optimization" 
                             className="w-full h-full object-cover opacity-90"
                           />
                         )}
