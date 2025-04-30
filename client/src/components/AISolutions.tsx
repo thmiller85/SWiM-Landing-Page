@@ -91,15 +91,15 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
             <div className="relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-highlight rounded-2xl blur opacity-20"></div>
               <div className="glass p-1 rounded-2xl relative">
-                <div className="aspect-video w-full bg-primary/50 rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="inline-block p-4 rounded-xl bg-accent/10 mb-4">
-                      <div className="w-16 h-16 rounded-xl bg-accent/20 flex items-center justify-center">
-                        <Brain className="w-8 h-8 text-accent" />
-                      </div>
-                    </div>
-                    <p className="text-white/80 font-space">AI visualization interface</p>
-                  </div>
+                <div className="aspect-video w-full bg-primary/50 rounded-xl overflow-hidden">
+                  <video 
+                    src="/assets/ai_brain_video.mp4" 
+                    autoPlay 
+                    loop 
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 
                 {/* Interactive overlay elements */}
