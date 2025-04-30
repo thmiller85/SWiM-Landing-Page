@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Search, Lightbulb, Code, Rocket, CheckCircle } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn, pulseAnimation, floatingAnimation } from "@/lib/animations";
-import discoveryAnalysisImage from "@assets/discovery.png";
+import discoveryAnalysisImage from "../assets/discovery.png";
+import strategicPlanningImage from "../assets/strategic-planning.png";
 
 const Workflow = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -254,6 +255,13 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
                           <img 
                             src={discoveryAnalysisImage} 
                             alt="Discovery & Analysis" 
+                            className="w-full h-full object-cover opacity-90"
+                          />
+                        )}
+                        {index === 1 && (
+                          <img 
+                            src={strategicPlanningImage} 
+                            alt="Strategy & Solution Design" 
                             className="w-full h-full object-cover opacity-90"
                           />
                         )}
