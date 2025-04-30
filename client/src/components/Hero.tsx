@@ -10,6 +10,7 @@ import {
   floatingAnimation,
   pulseAnimation,
 } from "@/lib/animations";
+import n8nAgentImage from "@assets/n8n_agent.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -97,28 +98,18 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-highlight rounded-2xl blur opacity-30"></div>
               <div className="glass rounded-2xl relative overflow-hidden">
-                <div className="aspect-video w-full bg-primary/50 rounded-2xl flex items-center justify-center">
-                  <div className="text-center">
-                    <motion.div
-                      className="inline-block p-3 rounded-full bg-accent/10 mb-3"
-                      variants={pulseAnimation}
-                      initial="hidden"
-                      animate="visible"
-                    >
-                      <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-accent animate-pulse"></div>
-                      </div>
-                    </motion.div>
-                    <p className="text-white/80 font-space">
-                      AI-powered analytics visualization
-                    </p>
-                  </div>
+                <div className="aspect-video w-full bg-primary/50 rounded-2xl flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={n8nAgentImage} 
+                    alt="AI Agent Workflow Diagram" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 glass">
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     <p className="text-sm font-inter text-white/90">
-                      AI-powered analytics in action
+                      AI Agent Workflow Diagram
                     </p>
                   </div>
                 </div>
