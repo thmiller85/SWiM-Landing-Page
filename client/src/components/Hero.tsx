@@ -99,16 +99,11 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
               <div className="glass rounded-2xl relative overflow-hidden">
                 <div className="aspect-video w-full bg-primary/50 rounded-2xl flex items-center justify-center">
                   <div className="text-center">
-                    <motion.div
-                      className="inline-block p-3 rounded-full bg-accent/10 mb-3"
-                      variants={pulseAnimation}
-                      initial="hidden"
-                      animate="visible"
-                    >
-                      <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-accent animate-pulse"></div>
-                      </div>
-                    </motion.div>
+                    <img 
+                      src="/src/assets/ai-agent-diagram.svg" 
+                      alt="AI Agent Architecture"
+                      className="w-64 h-48 object-contain mb-3"
+                    />
                     <p className="text-white/80 font-space">
                       AI-powered analytics visualization
                     </p>
