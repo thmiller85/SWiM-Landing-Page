@@ -38,20 +38,20 @@ const About = forwardRef<HTMLElement>((props, ref) => {
                 <div className="absolute bottom-6 right-6 glass p-4 rounded-xl">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
-                      <p className="text-accent font-space font-bold text-xl">24+</p>
-                      <p className="text-white/70 font-inter text-xs">AI Experts</p>
+                      <p className="text-accent font-space font-bold text-xl">Founder-Led</p>
+                      <p className="text-white/70 font-inter text-xs">Delivery</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-highlight font-space font-bold text-xl">12+</p>
-                      <p className="text-white/70 font-inter text-xs">Years Experience</p>
+                      <p className="text-highlight font-space font-bold text-xl">Lean</p>
+                      <p className="text-white/70 font-inter text-xs">By Design</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-accent font-space font-bold text-xl">200+</p>
-                      <p className="text-white/70 font-inter text-xs">Projects</p>
+                      <p className="text-accent font-space font-bold text-xl">U.S.-Based</p>
+                      <p className="text-white/70 font-inter text-xs">Team</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-highlight font-space font-bold text-xl">98%</p>
-                      <p className="text-white/70 font-inter text-xs">Client Retention</p>
+                      <p className="text-highlight font-space font-bold text-xl">Cross-Industry</p>
+                      <p className="text-white/70 font-inter text-xs">Experience</p>
                     </div>
                   </div>
                 </div>
