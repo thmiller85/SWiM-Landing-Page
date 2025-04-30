@@ -99,9 +99,12 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-highlight rounded-2xl blur opacity-30"></div>
               <div className="glass rounded-2xl relative overflow-hidden">
                 <div className="w-full bg-[#222222] rounded-2xl flex items-center justify-center overflow-hidden p-0">
-                  <img 
-                    src={n8nAgentImage} 
-                    alt="AI Agent Workflow Diagram" 
+                  <video 
+                    src="/assets/agent_automation.mp4" 
+                    autoPlay 
+                    loop 
+                    muted
+                    playsInline
                     className="w-full object-cover"
                   />
                 </div>
@@ -109,7 +112,7 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     <p className="text-sm font-inter text-white/90">
-                      AI Agent Workflow Diagram
+                      AI Agent Automation
                     </p>
                   </div>
                 </div>
