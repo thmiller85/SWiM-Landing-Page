@@ -112,7 +112,7 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     <p className="text-sm font-inter text-white/90">
-                      AI Agent Automation
+                      Unleash Scalable Intelligence
                     </p>
                   </div>
                 </div>
