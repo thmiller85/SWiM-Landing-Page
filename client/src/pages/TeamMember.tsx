@@ -194,7 +194,7 @@ const TeamMemberProfile: React.FC = () => {
             onAboutClick={() => {}}
             onContactClick={() => {}}
           />
-          <main className="pt-32 pb-24">
+          <main className="pt-40 pb-24">
             <div className="container mx-auto px-6 md:px-12 text-center">
               <h1 className="text-4xl font-space font-bold mb-6 text-white">Team Member Not Found</h1>
               <p className="text-white/70 mb-8">The team member you're looking for doesn't exist.</p>
@@ -231,7 +231,7 @@ const TeamMemberProfile: React.FC = () => {
           onContactClick={() => {}}
         />
         
-        <main className="pt-32 pb-24">
+        <main className="pt-40 pb-24">
           <div className="container mx-auto px-6 md:px-12">
             <Link href="/team">
               <Button 

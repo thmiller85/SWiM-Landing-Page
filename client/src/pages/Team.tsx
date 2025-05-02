@@ -197,7 +197,7 @@ const Team: React.FC = () => {
           onContactClick={() => {}}
         />
         
-        <main className="pt-32 pb-24">
+        <main className="pt-40 pb-24">
           <div className="container mx-auto px-6 md:px-12">
             <Link href="/">
               <Button 
