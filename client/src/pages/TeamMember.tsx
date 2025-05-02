@@ -120,8 +120,15 @@ const teamMembers: TeamMemberDetailed[] = [
 ];
 
 // Team member avatar component with size options
-const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | "regular" }> = ({ index, name, size }) => {
-  // Use different background colors based on index for visual variety
+const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | "regular", memberId: number }> = ({ index, name, size, memberId }) => {
+  // Use different background colors or gradients based on index
+  const gradients = [
+    `linear-gradient(135deg, ${ACCENT_COLOR}, ${HIGHLIGHT_COLOR})`,
+    `linear-gradient(135deg, ${HIGHLIGHT_COLOR}, ${ACCENT_COLOR})`,
+    `linear-gradient(45deg, ${ACCENT_COLOR}, ${PRIMARY_COLOR})`,
+    `linear-gradient(45deg, ${HIGHLIGHT_COLOR}, ${PRIMARY_COLOR})`
+  ];
+  
   const backgrounds = [
     `rgba(26, 140, 183, 0.1)`, // ACCENT_COLOR with opacity
     `rgba(75, 203, 242, 0.1)`, // HIGHLIGHT_COLOR with opacity
@@ -132,17 +139,34 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | 
   const sizeClasses = size === "large" 
     ? "w-48 h-48 md:w-64 md:h-64 rounded-3xl mb-6" 
     : "w-full aspect-square rounded-2xl mb-4";
+    
+  const fontSizeClass = size === "large" ? "text-8xl" : "text-6xl";
 
+  // Only Tom Miller (id: 2) gets the custom image
+  if (memberId === 2) {
+    return (
+      <div 
+        className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={teamMemberImage} 
+          alt={name}
+          className="w-full h-full object-contain p-4"
+        />
+      </div>
+    );
+  }
+  
+  // Others get gradient avatars with their initials
   return (
     <div 
-      className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
-      style={{ background: backgrounds[index % backgrounds.length] }}
+      className={`flex items-center justify-center overflow-hidden ${sizeClasses}`}
+      style={{ background: gradients[index % gradients.length] }}
     >
-      <img 
-        src={teamMemberImage} 
-        alt={name}
-        className="w-full h-full object-contain p-4"
-      />
+      <span className={`${fontSizeClass} text-white font-bold opacity-30`}>
+        {name.charAt(0)}
+      </span>
     </div>
   );
 };
@@ -232,7 +256,8 @@ const TeamMemberProfile: React.FC = () => {
                     <TeamMemberAvatar 
                       index={memberIndex} 
                       name={member.name} 
-                      size="large" 
+                      size="large"
+                      memberId={member.id}
                     />
                     
                     <h1 className="text-2xl md:text-3xl font-space font-bold mb-2">{member.name}</h1>

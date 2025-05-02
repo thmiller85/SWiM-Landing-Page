@@ -70,8 +70,15 @@ const teamMembers: TeamMember[] = [
 ];
 
 // Team member avatar component
-const TeamMemberAvatar: React.FC<{ index: number, name: string }> = ({ index, name }) => {
-  // Use different background colors based on index for visual variety
+const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number }> = ({ index, name, memberId }) => {
+  // Use different background colors or gradients based on index
+  const gradients = [
+    `linear-gradient(135deg, ${ACCENT_COLOR}, ${HIGHLIGHT_COLOR})`,
+    `linear-gradient(135deg, ${HIGHLIGHT_COLOR}, ${ACCENT_COLOR})`,
+    `linear-gradient(45deg, ${ACCENT_COLOR}, ${PRIMARY_COLOR})`,
+    `linear-gradient(45deg, ${HIGHLIGHT_COLOR}, ${PRIMARY_COLOR})`
+  ];
+  
   const backgrounds = [
     `rgba(26, 140, 183, 0.1)`, // ACCENT_COLOR with opacity
     `rgba(75, 203, 242, 0.1)`, // HIGHLIGHT_COLOR with opacity
@@ -79,16 +86,31 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string }> = ({ index, na
     `rgba(0, 35, 72, 0.1)`     // SECONDARY_COLOR with opacity
   ];
 
+  // Only Tom Miller (id: 2) gets the custom image
+  if (memberId === 2) {
+    return (
+      <div 
+        className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={teamMemberImage} 
+          alt={name}
+          className="w-full h-full object-contain p-2"
+        />
+      </div>
+    );
+  }
+  
+  // Others get gradient avatars with their initials
   return (
     <div 
-      className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
-      style={{ background: backgrounds[index % backgrounds.length] }}
+      className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden"
+      style={{ background: gradients[index % gradients.length] }}
     >
-      <img 
-        src={teamMemberImage} 
-        alt={name}
-        className="w-full h-full object-contain p-2"
-      />
+      <span className="text-6xl text-white font-bold opacity-30">
+        {name.charAt(0)}
+      </span>
     </div>
   );
 };
@@ -105,7 +127,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember, index: number }> = ({ membe
         <span className="sr-only">View profile of {member.name}</span>
       </Link>
       
-      <TeamMemberAvatar index={index} name={member.name} />
+      <TeamMemberAvatar index={index} name={member.name} memberId={member.id} />
       
       <div className="flex justify-between items-center mb-1">
         <h3 className="text-xl font-space font-bold">{member.name}</h3>
