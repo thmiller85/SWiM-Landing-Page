@@ -1,4 +1,5 @@
 import React, { forwardRef, useRef } from "react";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, Play } from "lucide-react";
@@ -128,12 +129,14 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               </div>
             </div>
             
-            <Button 
-              variant="outline"
-              className="bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
-            >
-              Meet Our Team
-            </Button>
+            <Link href="/team">
+              <Button 
+                variant="outline"
+                className="bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+              >
+                Meet Our Team
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
