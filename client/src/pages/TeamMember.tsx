@@ -7,6 +7,7 @@ import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ACCENT_COLOR, DARK_NAVY, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import teamMemberImage from "@/assets/team-member.png";
 
 // Extended team member type with detailed bio information
 interface TeamMemberDetailed {
@@ -118,30 +119,30 @@ const teamMembers: TeamMemberDetailed[] = [
   }
 ];
 
-// Gradient Avatar component with larger size for individual profiles
-const GradientAvatar: React.FC<{ index: number, name: string, size: "large" | "regular" }> = ({ index, name, size }) => {
-  // Use different gradient colors based on index
-  const gradients = [
-    `linear-gradient(135deg, ${ACCENT_COLOR}, ${HIGHLIGHT_COLOR})`,
-    `linear-gradient(135deg, ${HIGHLIGHT_COLOR}, ${ACCENT_COLOR})`,
-    `linear-gradient(45deg, ${ACCENT_COLOR}, ${PRIMARY_COLOR})`,
-    `linear-gradient(45deg, ${HIGHLIGHT_COLOR}, ${PRIMARY_COLOR})`
+// Team member avatar component with size options
+const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | "regular" }> = ({ index, name, size }) => {
+  // Use different background colors based on index for visual variety
+  const backgrounds = [
+    `rgba(26, 140, 183, 0.1)`, // ACCENT_COLOR with opacity
+    `rgba(75, 203, 242, 0.1)`, // HIGHLIGHT_COLOR with opacity
+    `rgba(10, 58, 90, 0.1)`,   // PRIMARY_COLOR with opacity
+    `rgba(0, 35, 72, 0.1)`     // SECONDARY_COLOR with opacity
   ];
 
   const sizeClasses = size === "large" 
     ? "w-48 h-48 md:w-64 md:h-64 rounded-3xl mb-6" 
     : "w-full aspect-square rounded-2xl mb-4";
 
-  const fontSizeClass = size === "large" ? "text-8xl" : "text-6xl";
-
   return (
     <div 
-      className={`flex items-center justify-center overflow-hidden ${sizeClasses}`}
-      style={{ background: gradients[index % gradients.length] }}
+      className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
+      style={{ background: backgrounds[index % backgrounds.length] }}
     >
-      <span className={`${fontSizeClass} text-white font-bold opacity-30`}>
-        {name.charAt(0)}
-      </span>
+      <img 
+        src={teamMemberImage} 
+        alt={name}
+        className="w-full h-full object-contain p-4"
+      />
     </div>
   );
 };
@@ -228,7 +229,7 @@ const TeamMemberProfile: React.FC = () => {
               >
                 <div className="glass rounded-3xl p-6 sticky top-24">
                   <div className="flex flex-col items-center text-center">
-                    <GradientAvatar 
+                    <TeamMemberAvatar 
                       index={memberIndex} 
                       name={member.name} 
                       size="large" 

@@ -7,6 +7,7 @@ import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ACCENT_COLOR, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import teamMemberImage from "@/assets/team-member.png";
 
 // Define the team member type
 interface TeamMember {
@@ -68,24 +69,26 @@ const teamMembers: TeamMember[] = [
   }
 ];
 
-// Avatar component with gradient background
-const GradientAvatar: React.FC<{ index: number, name: string }> = ({ index, name }) => {
-  // Use different gradient colors based on index
-  const gradients = [
-    `linear-gradient(135deg, ${ACCENT_COLOR}, ${HIGHLIGHT_COLOR})`,
-    `linear-gradient(135deg, ${HIGHLIGHT_COLOR}, ${ACCENT_COLOR})`,
-    `linear-gradient(45deg, ${ACCENT_COLOR}, ${PRIMARY_COLOR})`,
-    `linear-gradient(45deg, ${HIGHLIGHT_COLOR}, ${PRIMARY_COLOR})`
+// Team member avatar component
+const TeamMemberAvatar: React.FC<{ index: number, name: string }> = ({ index, name }) => {
+  // Use different background colors based on index for visual variety
+  const backgrounds = [
+    `rgba(26, 140, 183, 0.1)`, // ACCENT_COLOR with opacity
+    `rgba(75, 203, 242, 0.1)`, // HIGHLIGHT_COLOR with opacity
+    `rgba(10, 58, 90, 0.1)`,   // PRIMARY_COLOR with opacity
+    `rgba(0, 35, 72, 0.1)`     // SECONDARY_COLOR with opacity
   ];
 
   return (
     <div 
-      className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden"
-      style={{ background: gradients[index % gradients.length] }}
+      className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
+      style={{ background: backgrounds[index % backgrounds.length] }}
     >
-      <span className="text-6xl text-white font-bold opacity-30">
-        {name.charAt(0)}
-      </span>
+      <img 
+        src={teamMemberImage} 
+        alt={name}
+        className="w-full h-full object-contain p-2"
+      />
     </div>
   );
 };
@@ -102,7 +105,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember, index: number }> = ({ membe
         <span className="sr-only">View profile of {member.name}</span>
       </Link>
       
-      <GradientAvatar index={index} name={member.name} />
+      <TeamMemberAvatar index={index} name={member.name} />
       
       <div className="flex justify-between items-center mb-1">
         <h3 className="text-xl font-space font-bold">{member.name}</h3>
