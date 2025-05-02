@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Github, Linkedin, Twitter } from "lucide-react";
+import { ArrowLeft, ArrowRight, Github, Linkedin, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ACCENT_COLOR, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
@@ -13,7 +13,7 @@ interface TeamMember {
   id: number;
   name: string;
   title: string;
-  bio: string;
+  shortBio: string;
   photo: string;
   social?: {
     linkedin?: string;
@@ -28,7 +28,7 @@ const teamMembers: TeamMember[] = [
     id: 1,
     name: "Ross Stockdale",
     title: "Chief Marketing Officer",
-    bio: "Leads marketing strategy and brand development, leveraging AI tools to optimize customer acquisition and engagement across all channels.",
+    shortBio: "Leads marketing strategy and brand development, leveraging AI tools to optimize customer acquisition and engagement across all channels.",
     photo: "gradient-avatar", // We'll use gradient avatars as placeholders
     social: {
       linkedin: "https://linkedin.com/in/",
@@ -38,7 +38,7 @@ const teamMembers: TeamMember[] = [
     id: 2,
     name: "Tom Miller",
     title: "Chief Product Officer",
-    bio: "Drives product vision and implementation, ensuring our AI solutions address real customer needs and deliver measurable value.",
+    shortBio: "Drives product vision and implementation, ensuring our AI solutions address real customer needs and deliver measurable value.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",
@@ -49,7 +49,7 @@ const teamMembers: TeamMember[] = [
     id: 3,
     name: "Steve Wurster",
     title: "Chief Growth Officer",
-    bio: "Focuses on strategic partnerships and business development, identifying new markets and opportunities for AI-powered solutions.",
+    shortBio: "Focuses on strategic partnerships and business development, identifying new markets and opportunities for AI-powered solutions.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",
@@ -59,7 +59,7 @@ const teamMembers: TeamMember[] = [
     id: 4,
     name: "David Stockdale",
     title: "AI Solutions Architect",
-    bio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
+    shortBio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",
@@ -94,25 +94,34 @@ const GradientAvatar: React.FC<{ index: number, name: string }> = ({ index, name
 const TeamMemberCard: React.FC<{ member: TeamMember, index: number }> = ({ member, index }) => {
   return (
     <motion.div 
-      className="glass rounded-xl p-6 h-full flex flex-col"
+      className="glass rounded-xl p-6 h-full flex flex-col group relative"
       variants={fadeIn}
       custom={index * 0.1}
     >
+      <Link href={`/team/${member.id}`} className="absolute inset-0 z-10">
+        <span className="sr-only">View profile of {member.name}</span>
+      </Link>
+      
       <GradientAvatar index={index} name={member.name} />
       
-      <h3 className="text-xl font-space font-bold mb-1">{member.name}</h3>
+      <div className="flex justify-between items-center mb-1">
+        <h3 className="text-xl font-space font-bold">{member.name}</h3>
+        <ArrowRight className="h-5 w-5 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+      
       <p className="text-accent font-inter text-sm mb-4">{member.title}</p>
       
-      <p className="text-white/70 font-inter text-sm mb-6 flex-grow">{member.bio}</p>
+      <p className="text-white/70 font-inter text-sm mb-6 flex-grow">{member.shortBio}</p>
       
       {member.social && (
-        <div className="flex gap-3">
+        <div className="flex gap-3 relative z-20">
           {member.social.linkedin && (
             <a 
               href={member.social.linkedin} 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center hover:bg-accent/40 transition-all"
+              onClick={(e) => e.stopPropagation()}
             >
               <Linkedin className="w-4 h-4 text-white" />
             </a>
@@ -123,6 +132,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember, index: number }> = ({ membe
               target="_blank" 
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center hover:bg-accent/40 transition-all"
+              onClick={(e) => e.stopPropagation()}
             >
               <Twitter className="w-4 h-4 text-white" />
             </a>
@@ -133,6 +143,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember, index: number }> = ({ membe
               target="_blank" 
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center hover:bg-accent/40 transition-all"
+              onClick={(e) => e.stopPropagation()}
             >
               <Github className="w-4 h-4 text-white" />
             </a>

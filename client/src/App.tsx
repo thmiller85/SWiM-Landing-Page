@@ -10,6 +10,7 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Team from "./pages/Team";
+import TeamMember from "./pages/TeamMember";
 import NotFound from "./pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -65,6 +66,7 @@ function App() {
       <Switch>
         <Route path="/" component={HomePage} />
         <Route path="/team" component={Team} />
+        <Route path="/team/:id" component={TeamMember} />
         <Route component={NotFound} />
       </Switch>
       <Toaster />
