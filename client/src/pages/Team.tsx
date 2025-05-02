@@ -8,6 +8,7 @@ import { ACCENT_COLOR, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import teamMemberImage from "@/assets/team-member.png";
+import rossAvatarImage from "@/assets/ross-avatar.png";
 
 // Define the team member type
 interface TeamMember {
@@ -86,7 +87,23 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number
     `rgba(0, 35, 72, 0.1)`     // SECONDARY_COLOR with opacity
   ];
 
-  // Only Tom Miller (id: 2) gets the custom image
+  // Ross Stockdale (id: 1) and Tom Miller (id: 2) get custom images
+  if (memberId === 1) {
+    return (
+      <div 
+        className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={rossAvatarImage} 
+          alt={name}
+          className="w-full h-full object-contain p-2"
+        />
+      </div>
+    );
+  }
+  
+  // Tom Miller gets his custom image
   if (memberId === 2) {
     return (
       <div 

@@ -8,6 +8,7 @@ import { ACCENT_COLOR, DARK_NAVY, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/c
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import teamMemberImage from "@/assets/team-member.png";
+import rossAvatarImage from "@/assets/ross-avatar.png";
 
 // Extended team member type with detailed bio information
 interface TeamMemberDetailed {
@@ -142,7 +143,23 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | 
     
   const fontSizeClass = size === "large" ? "text-8xl" : "text-6xl";
 
-  // Only Tom Miller (id: 2) gets the custom image
+  // Ross Stockdale (id: 1) gets custom image
+  if (memberId === 1) {
+    return (
+      <div 
+        className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={rossAvatarImage} 
+          alt={name}
+          className="w-full h-full object-contain p-4"
+        />
+      </div>
+    );
+  }
+  
+  // Tom Miller (id: 2) gets custom image
   if (memberId === 2) {
     return (
       <div 
