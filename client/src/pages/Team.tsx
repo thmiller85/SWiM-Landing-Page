@@ -7,8 +7,8 @@ import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ACCENT_COLOR, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import teamMemberImage from "@/assets/team-member.png";
 import rossAvatarImage from "@/assets/ross-avatar.png";
+import tomAvatarImage from "@/assets/tom-avatar.png";
 
 // Define the team member type
 interface TeamMember {
@@ -111,7 +111,7 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number
         style={{ background: backgrounds[index % backgrounds.length] }}
       >
         <img 
-          src={teamMemberImage} 
+          src={tomAvatarImage} 
           alt={name}
           className="w-full h-full object-contain p-2"
         />
