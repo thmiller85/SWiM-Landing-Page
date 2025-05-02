@@ -60,7 +60,7 @@ const teamMembers: TeamMember[] = [
   {
     id: 4,
     name: "David Stockdale",
-    title: "AI Solutions Architect",
+    title: "Chief Technology Officer",
     shortBio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
     photo: "gradient-avatar",
     social: {

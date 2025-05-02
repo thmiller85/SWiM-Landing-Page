@@ -98,7 +98,7 @@ const teamMembers: TeamMemberDetailed[] = [
   {
     id: 4,
     name: "David Stockdale",
-    title: "AI Solutions Architect",
+    title: "Chief Technology Officer",
     shortBio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
     detailedBio: [
       "David is a technology leader with deep expertise in artificial intelligence and machine learning systems. His technical knowledge spans various AI disciplines, including natural language processing, computer vision, and predictive analytics.",
