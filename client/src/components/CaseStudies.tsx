@@ -16,10 +16,10 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
   const caseStudies = [
     {
       image: "e-commerce",
-      title: "GlobalShop Revenue Boost",
-      description: "Implemented personalized recommendation engine that increased conversion rates by 32% and average order value by 18%.",
-      categories: ["E-commerce", "AI Marketing"],
-      results: "+41% Revenue",
+      title: "Self-Storage Revenue Boost",
+      description: "Developed competitor research and unit price recommendation engines to identify gaps in unit pricing structure, delivering real-time recommendations that increased revenue by 23% while maintaining 92% occupancy rates.",
+      categories: ["Real Estate", "Data Analytics"],
+      results: "+23% Revenue",
       delay: 0
     },
     {
