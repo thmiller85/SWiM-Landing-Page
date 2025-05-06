@@ -26,7 +26,7 @@ const CaseStudyCard = ({
   const getBgColor = () => {
     switch (image) {
       case 'e-commerce':
-        return 'bg-blue-900/30';
+        return 'bg-gradient-to-br from-cyan-900/40 to-blue-800/30';
       case 'finance':
         return 'bg-emerald-900/30';
       case 'healthcare':
@@ -98,17 +98,35 @@ const CaseStudyCard = ({
             {image === 'e-commerce' && (
               <div className="flex flex-col items-center">
                 <motion.div 
-                  className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3"
+                  className="w-16 h-16 bg-accent/20 flex items-center justify-center mx-auto mb-3 rounded-md"
                   variants={pulseAnimation}
                   initial="hidden"
                   animate="visible"
                 >
                   <motion.div 
-                    className="w-10 h-10 rounded-full bg-accent/30 flex items-center justify-center"
+                    className="w-12 h-12 bg-accent/30 flex items-center justify-center"
                     whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    <div className="w-6 h-6 bg-accent rounded-full animate-pulse"></div>
+                    {/* Building icon for Real Estate */}
+                    <motion.svg 
+                      className="w-8 h-8 text-accent" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      animate={{ 
+                        y: [0, -2, 0],
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 3,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <path d="M3 21H21M5 21V7L13 3V21M19 21V11L13 7M9 8V8.01M9 12V12.01M9 16V16.01M13 12V12.01M13 16V16.01M17 12V12.01M17 16V16.01" 
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
                   </motion.div>
                 </motion.div>
                 <motion.p 
@@ -116,7 +134,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  E-commerce Analytics
+                  Real Estate
                 </motion.p>
               </div>
             )}
