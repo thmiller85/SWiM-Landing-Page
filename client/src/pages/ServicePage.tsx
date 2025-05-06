@@ -578,7 +578,14 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                 animate="visible"
                 variants={fadeIn}
               >
-                <Link href="/" className="inline-flex items-center text-sm text-white/60 hover:text-white mb-6 transition-colors">
+                <Link 
+                  href="/" 
+                  className={`inline-flex items-center text-sm mb-6 transition-colors ${
+                    service.color === "accent" 
+                      ? "text-accent/60 hover:text-accent" 
+                      : "text-highlight/60 hover:text-highlight"
+                  }`}
+                >
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Services
                 </Link>
@@ -607,7 +614,11 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="border-white/20 text-white hover:bg-white/10"
+                    className={`${
+                      service.color === "accent" 
+                        ? "border-accent/20 text-accent hover:bg-accent/10" 
+                        : "border-highlight/20 text-highlight hover:bg-highlight/10"
+                    }`}
                     onClick={() => scrollToSection("features")}
                   >
                     Explore Features
@@ -688,7 +699,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                 >
                   {feature.icon}
                   <div>
-                    <h3 className="text-xl font-space font-bold mb-2">{feature.title}</h3>
+                    <h3 className={`text-xl font-space font-bold mb-2 ${service.color === "accent" ? "text-accent" : "text-highlight"}`}>{feature.title}</h3>
                     <p className="text-white/70">{feature.description}</p>
                   </div>
                 </motion.div>
@@ -701,7 +712,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
         <section className="py-16 relative">
           <div className="container mx-auto px-6 md:px-12 relative z-10">
             <div className="text-center mb-16">
-              <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
+              <span className={`font-inter text-sm uppercase tracking-widest ${service.color === "accent" ? "text-accent" : "text-highlight"} mb-3 inline-block`}>
                 Our Approach
               </span>
               <h2 className="text-3xl md:text-4xl font-space font-bold mb-6">
@@ -737,7 +748,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                   )}
                   
                   {/* Content */}
-                  <h3 className="text-xl font-space font-bold mb-2">{step.title}</h3>
+                  <h3 className={`text-xl font-space font-bold mb-2 ${service.color === "accent" ? "text-accent" : "text-highlight"}`}>{step.title}</h3>
                   <p className="text-white/70">{step.description}</p>
                 </motion.div>
               ))}
@@ -749,7 +760,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
         <section className="py-16 relative">
           <div className="container mx-auto px-6 md:px-12 relative z-10">
             <div className="text-center mb-16">
-              <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
+              <span className={`font-inter text-sm uppercase tracking-widest ${service.color === "accent" ? "text-accent" : "text-highlight"} mb-3 inline-block`}>
                 FAQs
               </span>
               <h2 className="text-3xl md:text-4xl font-space font-bold mb-6">
@@ -770,7 +781,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true, margin: "-100px" }}
                 >
-                  <h3 className="text-xl font-space font-bold mb-2">{faq.question}</h3>
+                  <h3 className={`text-xl font-space font-bold mb-2 ${service.color === "accent" ? "text-accent" : "text-highlight"}`}>{faq.question}</h3>
                   <p className="text-white/70">{faq.answer}</p>
                 </motion.div>
               ))}
@@ -805,7 +816,11 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
           <Button
             size="icon"
             variant="outline"
-            className="rounded-full bg-secondary/50 backdrop-blur-sm border-white/10 text-white hover:bg-secondary/80"
+            className={`rounded-full backdrop-blur-sm ${
+              service.color === "accent" 
+                ? "bg-accent/10 border-accent/20 text-accent hover:bg-accent/20" 
+                : "bg-highlight/10 border-highlight/20 text-highlight hover:bg-highlight/20"
+            }`}
             onClick={scrollToTop}
           >
             <ArrowRight className="h-4 w-4 rotate-[270deg]" />
