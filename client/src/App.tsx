@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Route, Switch } from "wouter";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -15,23 +14,19 @@ import ServicePage from "./pages/ServicePage";
 import NotFound from "./pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { NavigationProvider, useNavigation } from "./context/NavigationContext";
 
 // Home page component
 const HomePage = () => {
-  const servicesRef = useRef<HTMLElement>(null);
-  const aiSolutionsRef = useRef<HTMLElement>(null);
-  const workflowRef = useRef<HTMLElement>(null);
-  const caseStudiesRef = useRef<HTMLElement>(null);
-  const aboutRef = useRef<HTMLElement>(null);
-  const contactRef = useRef<HTMLElement>(null);
-
-  const scrollToSection = (sectionRef: React.RefObject<HTMLElement>) => {
-    if (sectionRef.current) {
-      const yOffset = -80; // Adjust this value based on your navbar height
-      const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
-  };
+  const { 
+    servicesRef, 
+    aiSolutionsRef, 
+    workflowRef, 
+    caseStudiesRef, 
+    aboutRef, 
+    contactRef, 
+    scrollToSection
+  } = useNavigation();
 
   return (
     <div className="relative bg-primary min-h-screen overflow-x-hidden">
@@ -63,18 +58,20 @@ const HomePage = () => {
 
 function App() {
   return (
-    <TooltipProvider>
-      <Switch>
-        <Route path="/" component={HomePage} />
-        <Route path="/team" component={Team} />
-        <Route path="/team/:id" component={TeamMember} />
-        <Route path="/services/:id">
-          {params => <ServicePage id={params.id} />}
-        </Route>
-        <Route component={NotFound} />
-      </Switch>
-      <Toaster />
-    </TooltipProvider>
+    <NavigationProvider>
+      <TooltipProvider>
+        <Switch>
+          <Route path="/" component={HomePage} />
+          <Route path="/team" component={Team} />
+          <Route path="/team/:id" component={TeamMember} />
+          <Route path="/services/:id">
+            {params => <ServicePage id={params.id} />}
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
+        <Toaster />
+      </TooltipProvider>
+    </NavigationProvider>
   );
 }
 

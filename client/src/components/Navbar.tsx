@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import Logo from "./ui/logo";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { scrollToSection } from "../App";
 
 interface NavbarProps {
   onServicesClick: () => void;
@@ -46,12 +47,15 @@ const Navbar = ({
     
     // If we're not on the homepage, navigate there first, then scroll
     if (location !== '/') {
+      // Navigate to homepage
       navigate('/');
-      // Use a small timeout to ensure navigation completes before scrolling
+      
+      // Use a longer timeout to ensure DOM is fully loaded before scrolling
       setTimeout(() => {
         callback();
-      }, 50);
+      }, 300); // Increased timeout for better reliability
     } else {
+      // Already on homepage, just scroll
       callback();
     }
   };
