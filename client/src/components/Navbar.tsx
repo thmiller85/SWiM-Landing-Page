@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import Logo from "./ui/logo";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -22,6 +23,7 @@ const Navbar = ({
 }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location, navigate] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,7 +43,17 @@ const Navbar = ({
 
   const handleNavClick = (callback: () => void) => {
     closeMobileMenu();
-    callback();
+    
+    // If we're not on the homepage, navigate there first, then scroll
+    if (location !== '/') {
+      navigate('/');
+      // Use a small timeout to ensure navigation completes before scrolling
+      setTimeout(() => {
+        callback();
+      }, 50);
+    } else {
+      callback();
+    }
   };
 
   return (
