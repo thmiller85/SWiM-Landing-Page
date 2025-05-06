@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "wouter";
 import Logo from "./ui/logo";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import { scrollToSection } from "../App";
+import { useNavigation } from "../context/NavigationContext";
 
 interface FooterProps {
   onServicesClick: () => void;
@@ -11,22 +11,10 @@ interface FooterProps {
 }
 
 const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) => {
-  const [location, navigate] = useLocation();
+  const { servicesRef, aboutRef, contactRef, navigateAndScroll } = useNavigation();
   
-  const handleNavClick = (callback: () => void) => {
-    // If we're not on the homepage, navigate there first, then scroll
-    if (location !== '/') {
-      // Navigate to homepage
-      navigate('/');
-      
-      // Use a longer timeout to ensure DOM is fully loaded before scrolling
-      setTimeout(() => {
-        callback();
-      }, 300); // Increased timeout for better reliability
-    } else {
-      // Already on homepage, just scroll
-      callback();
-    }
+  const handleNavClick = (ref: React.RefObject<HTMLElement>) => {
+    navigateAndScroll(ref);
   };
   return (
     <footer className="py-12 relative">
@@ -56,24 +44,24 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <h4 className="text-lg font-space font-bold mb-6">Services</h4>
             <ul className="space-y-3">
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI-Powered Marketing</button></li>
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Workflow Automation</button></li>
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">B2B SaaS Development</button></li>
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Data Intelligence</button></li>
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Strategy Consulting</button></li>
-              <li><button onClick={() => handleNavClick(onServicesClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Security & Ethics</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI-Powered Marketing</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Workflow Automation</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">B2B SaaS Development</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Data Intelligence</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Strategy Consulting</button></li>
+              <li><button onClick={() => handleNavClick(servicesRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Security & Ethics</button></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-lg font-space font-bold mb-6">Company</h4>
             <ul className="space-y-3">
-              <li><button onClick={() => handleNavClick(onAboutClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">About Us</button></li>
-              <li><button onClick={() => handleNavClick(onAboutClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Case Studies</button></li>
-              <li><button onClick={() => handleNavClick(onAboutClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Team</button></li>
+              <li><button onClick={() => handleNavClick(aboutRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">About Us</button></li>
+              <li><button onClick={() => handleNavClick(aboutRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Case Studies</button></li>
+              <li><button onClick={() => handleNavClick(aboutRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Team</button></li>
               <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Careers</a></li>
               <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Blog</a></li>
-              <li><button onClick={() => handleNavClick(onContactClick)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Contact</button></li>
+              <li><button onClick={() => handleNavClick(contactRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Contact</button></li>
             </ul>
           </div>
           

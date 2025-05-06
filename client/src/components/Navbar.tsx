@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import Logo from "./ui/logo";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { scrollToSection } from "../App";
+import { useNavigation } from "../context/NavigationContext";
 
 interface NavbarProps {
   onServicesClick: () => void;
@@ -24,7 +24,7 @@ const Navbar = ({
 }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [location, navigate] = useLocation();
+  const { servicesRef, aiSolutionsRef, workflowRef, caseStudiesRef, aboutRef, contactRef, navigateAndScroll } = useNavigation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,22 +42,9 @@ const Navbar = ({
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  const handleNavClick = (callback: () => void) => {
+  const handleNavClick = (ref: React.RefObject<HTMLElement>) => {
     closeMobileMenu();
-    
-    // If we're not on the homepage, navigate there first, then scroll
-    if (location !== '/') {
-      // Navigate to homepage
-      navigate('/');
-      
-      // Use a longer timeout to ensure DOM is fully loaded before scrolling
-      setTimeout(() => {
-        callback();
-      }, 300); // Increased timeout for better reliability
-    } else {
-      // Already on homepage, just scroll
-      callback();
-    }
+    navigateAndScroll(ref);
   };
 
   return (
@@ -74,31 +61,31 @@ const Navbar = ({
           
           <nav className="hidden md:flex space-x-8">
             <button 
-              onClick={() => handleNavClick(onServicesClick)} 
+              onClick={() => handleNavClick(servicesRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
               Services
             </button>
             <button 
-              onClick={() => handleNavClick(onAISolutionsClick)} 
+              onClick={() => handleNavClick(aiSolutionsRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
               AI Solutions
             </button>
             <button 
-              onClick={() => handleNavClick(onWorkflowClick)} 
+              onClick={() => handleNavClick(workflowRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
               Workflow
             </button>
             <button 
-              onClick={() => handleNavClick(onCaseStudiesClick)} 
+              onClick={() => handleNavClick(caseStudiesRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
               Case Studies
             </button>
             <button 
-              onClick={() => handleNavClick(onAboutClick)} 
+              onClick={() => handleNavClick(aboutRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
               About
@@ -106,7 +93,7 @@ const Navbar = ({
           </nav>
           
           <Button 
-            onClick={() => handleNavClick(onContactClick)}
+            onClick={() => handleNavClick(contactRef)}
             variant="outline" 
             className="hidden md:flex bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
           >
@@ -127,37 +114,37 @@ const Navbar = ({
       <div className={`md:hidden absolute w-full left-0 top-full glass ${mobileMenuOpen ? "block" : "hidden"}`}>
         <div className="container mx-auto px-6 py-8 flex flex-col space-y-5">
           <button 
-            onClick={() => handleNavClick(onServicesClick)}
+            onClick={() => handleNavClick(servicesRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
             Services
           </button>
           <button 
-            onClick={() => handleNavClick(onAISolutionsClick)}
+            onClick={() => handleNavClick(aiSolutionsRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
             AI Solutions
           </button>
           <button 
-            onClick={() => handleNavClick(onWorkflowClick)}
+            onClick={() => handleNavClick(workflowRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
             Workflow
           </button>
           <button 
-            onClick={() => handleNavClick(onCaseStudiesClick)}
+            onClick={() => handleNavClick(caseStudiesRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
             Case Studies
           </button>
           <button 
-            onClick={() => handleNavClick(onAboutClick)}
+            onClick={() => handleNavClick(aboutRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
             About
           </button>
           <Button 
-            onClick={() => handleNavClick(onContactClick)}
+            onClick={() => handleNavClick(contactRef)}
             variant="outline" 
             className="w-full bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
           >
