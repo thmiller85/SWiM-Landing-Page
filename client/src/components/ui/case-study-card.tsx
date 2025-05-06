@@ -57,7 +57,7 @@ const CaseStudyCard = ({
   return (
     <div className="pt-2 pb-2 overflow-visible">
       <motion.div 
-        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-[570px] glass rounded-2xl overflow-hidden relative group"
+        className="w-[calc(100vw-40px)] max-w-[400px] sm:w-[380px] md:w-[400px] h-[590px] glass rounded-2xl overflow-hidden relative group"
         variants={fadeIn}
         custom={delay}
         initial="hidden"
@@ -318,7 +318,7 @@ const CaseStudyCard = ({
           </motion.div>
         </div>
         
-        <div className="p-5 sm:p-6 relative z-10 flex flex-col h-[370px]">
+        <div className="p-5 sm:p-6 relative z-10 flex flex-col h-[390px]">
           <motion.div 
             className="flex items-center gap-2 mb-4 flex-wrap"
             variants={fadeIn}
@@ -347,9 +347,13 @@ const CaseStudyCard = ({
           </motion.h3>
           
           <motion.p 
-            className="text-white/70 font-inter text-sm md:text-base mb-5 line-clamp-4"
+            className="text-white/70 font-inter text-sm md:text-base mb-5 overflow-y-auto max-h-[140px] pr-2"
             variants={fadeIn}
             custom={delay + 0.4}
+            style={{ 
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(26, 140, 183, 0.3) transparent'
+            }}
           >
             {description}
           </motion.p>
