@@ -569,7 +569,7 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
         />
         
         {/* Hero Section */}
-        <section className="py-24 relative">
+        <section className="pt-56 pb-24 relative">
           <div className="container mx-auto px-6 md:px-12 relative z-10">
             <div className="flex flex-col-reverse md:flex-row md:items-center gap-12">
               <motion.div 
