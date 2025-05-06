@@ -5,12 +5,23 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ChartScatter, Repeat2, Code, LineChart, Brain, ShieldCheck } from "lucide-react";
 
+interface Service {
+  id: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  tags: string[];
+  color: "accent" | "highlight";
+  delay: number;
+}
+
 const Services = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const isTitleInView = useIntersectionObserver(titleRef, { once: false, threshold: 0.1 });
   
-  const services = [
+  const services: Service[] = [
     {
+      id: "ai-powered-marketing",
       icon: <ChartScatter className="text-3xl text-accent" />,
       title: "AI-Powered Marketing",
       description: "Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.",
@@ -19,6 +30,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       delay: 0
     },
     {
+      id: "workflow-automation",
       icon: <Repeat2 className="text-3xl text-highlight" />,
       title: "Workflow Automation",
       description: "Streamline your operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.",
@@ -27,6 +39,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       delay: 0.2
     },
     {
+      id: "b2b-saas-development",
       icon: <Code className="text-3xl text-accent" />,
       title: "B2B SaaS Development",
       description: "Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.",
@@ -35,6 +48,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       delay: 0.4
     },
     {
+      id: "data-intelligence",
       icon: <LineChart className="text-3xl text-highlight" />,
       title: "Data Intelligence",
       description: "Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.",
@@ -43,6 +57,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       delay: 0
     },
     {
+      id: "ai-strategy-consulting",
       icon: <Brain className="text-3xl text-accent" />,
       title: "AI Strategy Consulting",
       description: "Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.",
@@ -51,6 +66,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
       delay: 0.2
     },
     {
+      id: "ai-security-ethics",
       icon: <ShieldCheck className="text-3xl text-highlight" />,
       title: "AI Security & Ethics",
       description: "Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.",
@@ -91,6 +107,7 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
           {services.map((service, index) => (
             <ServiceCard 
               key={index}
+              id={service.id}
               icon={service.icon}
               title={service.title}
               description={service.description}

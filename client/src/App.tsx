@@ -11,6 +11,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
+import ServicePage from "./pages/ServicePage";
 import NotFound from "./pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -67,6 +68,9 @@ function App() {
         <Route path="/" component={HomePage} />
         <Route path="/team" component={Team} />
         <Route path="/team/:id" component={TeamMember} />
+        <Route path="/services/:id">
+          {params => <ServicePage id={params.id} />}
+        </Route>
         <Route component={NotFound} />
       </Switch>
       <Toaster />

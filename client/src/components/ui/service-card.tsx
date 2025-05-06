@@ -123,23 +123,23 @@ const ServiceCard = ({ icon, title, description, tags, color, delay, id }: Servi
           </motion.div>
           
           {/* Learn more link */}
-          <Link href={`/services/${id}`}>
-            <motion.a 
-              variants={itemVariants}
-              className={`flex items-center font-inter font-medium text-sm mt-auto ${
-                color === "accent" ? "text-accent" : "text-highlight"
-              } cursor-pointer`}
-              whileHover={{ x: 5, transition: { duration: 0.2 } }}
-            >
-              <span>Learn more</span>
-              <motion.div
-                className="inline-block ml-1"
-                whileHover={{ x: 2, transition: { duration: 0.2 } }}
+          <motion.div 
+            variants={itemVariants}
+            className="mt-auto"
+          >
+            <Link href={`/services/${id}`}>
+              <div 
+                className={`flex items-center font-inter font-medium text-sm ${
+                  color === "accent" ? "text-accent" : "text-highlight"
+                } cursor-pointer hover:translate-x-1 transition-transform duration-200`}
               >
-                <ArrowRight className="h-4 w-4" />
-              </motion.div>
-            </motion.a>
-          </Link>
+                <span>Learn more</span>
+                <div className="inline-block ml-1">
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
