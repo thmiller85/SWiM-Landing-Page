@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 
 interface ServiceCardProps {
   icon: React.ReactNode;
@@ -16,6 +16,7 @@ interface ServiceCardProps {
 const ServiceCard = ({ icon, title, description, tags, color, delay, id }: ServiceCardProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [_, setLocation] = useLocation();
   
   // Card animation variants
   const cardVariants = {
@@ -52,15 +53,20 @@ const ServiceCard = ({ icon, title, description, tags, color, delay, id }: Servi
       transition: { type: "spring", damping: 20, stiffness: 90 }
     }
   };
+
+  const handleCardClick = () => {
+    setLocation(`/services/${id}`);
+  };
   
   return (
     <div ref={ref} className="h-full">
       <motion.div 
-        className="glass rounded-2xl p-8 h-full flex flex-col relative group overflow-hidden"
+        className="glass rounded-2xl p-8 h-full flex flex-col relative group overflow-hidden cursor-pointer"
         variants={cardVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         whileHover={{ y: -10, transition: { duration: 0.3, ease: "easeOut" } }}
+        onClick={handleCardClick}
       >
         {/* Animated background gradient */}
         <div 
@@ -127,18 +133,16 @@ const ServiceCard = ({ icon, title, description, tags, color, delay, id }: Servi
             variants={itemVariants}
             className="mt-auto"
           >
-            <Link href={`/services/${id}`}>
-              <div 
-                className={`flex items-center font-inter font-medium text-sm ${
-                  color === "accent" ? "text-accent" : "text-highlight"
-                } cursor-pointer hover:translate-x-1 transition-transform duration-200`}
-              >
-                <span>Learn more</span>
-                <div className="inline-block ml-1">
-                  <ArrowRight className="h-4 w-4" />
-                </div>
+            <div 
+              className={`flex items-center font-inter font-medium text-sm ${
+                color === "accent" ? "text-accent" : "text-highlight"
+              } cursor-pointer hover:translate-x-1 transition-transform duration-200`}
+            >
+              <span>Learn more</span>
+              <div className="inline-block ml-1">
+                <ArrowRight className="h-4 w-4" />
               </div>
-            </Link>
+            </div>
           </motion.div>
         </motion.div>
       </motion.div>
