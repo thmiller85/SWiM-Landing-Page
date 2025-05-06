@@ -547,11 +547,19 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Helper function to scroll to section with an ID
+  // Helper function to scroll to section with an ID, accounting for header height
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      // Get the header height (approximately 100px), plus some extra padding
+      const headerOffset = 120;
+      const elementPosition = section.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
     }
   };
 
