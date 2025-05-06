@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import rossAvatarImage from "@/assets/ross-avatar.png";
 import tomAvatarImage from "@/assets/tom-avatar.png";
+import steveAvatarImage from "@/assets/steve-avatar.png";
 
 // Define the team member type
 interface TeamMember {
@@ -87,7 +88,7 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number
     `rgba(0, 35, 72, 0.1)`     // SECONDARY_COLOR with opacity
   ];
 
-  // Ross Stockdale (id: 1) and Tom Miller (id: 2) get custom images
+  // Ross Stockdale (id: 1), Tom Miller (id: 2), and Steve Wurster (id: 3) get custom images
   if (memberId === 1) {
     return (
       <div 
@@ -112,6 +113,22 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number
       >
         <img 
           src={tomAvatarImage} 
+          alt={name}
+          className="w-full h-full object-contain p-2"
+        />
+      </div>
+    );
+  }
+  
+  // Steve Wurster gets his custom image
+  if (memberId === 3) {
+    return (
+      <div 
+        className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={steveAvatarImage} 
           alt={name}
           className="w-full h-full object-contain p-2"
         />
