@@ -63,7 +63,7 @@ const teamMembers: TeamMemberDetailed[] = [
       "As an Executive Director in private banking, he mastered the art of navigating complex financial waters—by night and on weekends, he dove headfirst into self-taught AI mastery, binge-learning the latest frameworks between soccer practices and golf tee times.",
       "Tom's highlights include architecting a bespoke golf app to track friendly course competitions, engineering AI-driven micro-SaaS tools that streamlined operations and cut costs for boutique clients, and maintaining a relentless learning regimen fueled by tech podcasts and family time.",
       "Armed with a B.A. in Business (Finance concentration) from Franklin & Marshall College and a Kolbe Quick-Start instinct for rapid prototyping, Tom leads SWiM's Product Development \"practice\" with swimmer's precision: setting clear lanes for each sprint, soliciting feedback, and fine-tuning until every stroke is seamless.",
-      "When he's not devising the next wave of AI solutions, you'll find him on the fairway or coaching his kids through life's drills—ensuring SWiM AI always surges ahead."
+      "When he's not devising the next wave of AI solutions, you'll find him on the fairway or coaching his kids through life's drills—ensuring SWiM always surges ahead."
     ],
     expertise: [
       "AI Solution Design",
@@ -88,7 +88,7 @@ const teamMembers: TeamMemberDetailed[] = [
       "As the founder of Wurster Digital Group, Steve built a consultancy dedicated to bridging the gap between data analytics and creative marketing—an ethos that aligns perfectly with SWiM's mission to help businesses grow smarter, not just faster.",
       "Steve's career started in digital advertising at Liberty Travel, where he managed a $2.1M ad budget and cut cost per inquiry by 50% through data-driven optimizations. At Merkle, he stewarded over $25M in advertising spend and helped launch display campaigns that boosted both brand awareness and revenue. His leadership at Fishbowl saw him managing campaigns for 120 national restaurant accounts and generating $2M annually through email performance enhancements.",
       "At Dentsu, as Director of Performance Media, Steve led a 14-person team and managed $60M in annual ad spend—driving record-breaking growth for one of the largest U.S. furniture retailers and stabilizing performance for major beverage clients during key transitions. His approach blends rigorous analytics with agile execution, always focused on impact over vanity.",
-      "Today, at SWiM AI Marketing Solutions, Steve helps lead the charge in transforming paid media and marketing into growth engines powered by automation, AI, and strategic clarity.",
+      "Today, at SWiM, Steve helps lead the charge in transforming paid media and marketing into growth engines powered by automation, AI, and strategic clarity.",
       "When he's not deep in campaign metrics or strategy maps, you'll find him out on the golf course—reminding us all that growth, like a good swing, is all about rhythm, balance, and precision."
     ],
     expertise: [
@@ -107,18 +107,19 @@ const teamMembers: TeamMemberDetailed[] = [
     id: 4,
     name: "David Stockdale",
     title: "Chief Technology Officer",
-    shortBio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
+    shortBio: "Self-taught technician with a decade of experience in network infrastructure, systems integration, and hands-on technical leadership.",
     detailedBio: [
-      "David is a technology leader with deep expertise in artificial intelligence and machine learning systems. His technical knowledge spans various AI disciplines, including natural language processing, computer vision, and predictive analytics.",
-      "Throughout his career, David has designed and implemented AI solutions for diverse industries, helping organizations leverage cutting-edge technology to solve complex business challenges and create competitive advantages.",
-      "At SWiM, David leads the technical design and implementation of our AI solutions, ensuring they are scalable, secure, and deliver measurable business value."
+      "David Stockdale brings a builder's mindset and a technician's precision to SWiM's technology lane. With nearly a decade of hands-on experience in network infrastructure, low-voltage systems, and systems integration, David's path into tech didn't start in a classroom—it was pulled through walls, wired into racks, and booted up one machine at a time.",
+      "From laying 250,000+ feet of cabling for a multi-floor healthcare facility to designing full-scale commercial network systems, David has been architecting complex environments long before stepping into his official CTO role. His time as a technician for a digital gambling company sharpened his ability to combine hardware, software, and scalable connectivity—skills he now brings to bear on SWiM's rapidly evolving product architecture.",
+      "Self-taught in networking and computing, and currently pursuing a Developer Certificate, David leads from the trenches. Whether designing the next-gen infrastructure that powers SWiM's automations or debugging a line of rogue code, he believes in doing the work alongside the team, not above it. His leadership is rooted in clarity, accountability, and velocity—qualities forged during his years as an Eagle Scout and youth leader, where solving problems under pressure became second nature.",
+      "When he's not streamlining digital systems, you'll find David deep in the wilderness, tending to his personal horticulture studies or simply reconnecting with the wild. For him, building with purpose—whether in the woods or in the codebase—is what keeps things flowing."
     ],
     expertise: [
-      "AI System Architecture",
-      "Machine Learning",
-      "Natural Language Processing",
-      "Technical Leadership",
-      "Solution Integration"
+      "Network Infrastructure",
+      "Systems Integration",
+      "Technical Architecture",
+      "Hands-on Leadership",
+      "Problem-Solving"
     ],
     photo: "gradient-avatar",
     social: {

@@ -63,7 +63,7 @@ const teamMembers: TeamMember[] = [
     id: 4,
     name: "David Stockdale",
     title: "Chief Technology Officer",
-    shortBio: "Designs and implements custom AI architectures, ensuring technical excellence and alignment with business objectives.",
+    shortBio: "Self-taught technician with a decade of experience in network infrastructure, systems integration, and hands-on technical leadership.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",

@@ -18,15 +18,15 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
       image: "e-commerce",
       title: "Self-Storage Revenue Boost",
       description: "Developed competitor research and unit price recommendation engines to identify gaps in unit pricing structure, delivering real-time recommendations that increased revenue by 23% while maintaining 92% occupancy rates.",
-      categories: ["Real Estate", "Data Analytics"],
+      categories: ["Real Estate", "SaaS", "Data Analytics"],
       results: "+23% Revenue",
       delay: 0
     },
     {
       image: "finance",
-      title: "FinTech Process Optimization",
-      description: "Automated document processing and compliance verification, reducing processing time from days to minutes.",
-      categories: ["Finance", "Automation"],
+      title: "Retail Content Automation",
+      description: "Automated SEO-optimized content generation for website blogs and social media postings to drive internet traffic and increase organic sales.",
+      categories: ["Retail", "E-commerce", "Automation"],
       results: "93% Time Savings",
       delay: 0.2
     },
