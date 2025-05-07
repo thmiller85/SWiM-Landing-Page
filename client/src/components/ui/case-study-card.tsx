@@ -124,7 +124,7 @@ const CaseStudyCard = ({
                         ease: "easeInOut"
                       }}
                     >
-                      <path d="M3 21H21M5 21V7L13 3V21M19 21V11L13 7M9 8V8.01M9 12V12.01M9 16V16.01M13 12V12.01M13 16V16.01M17 12V12.01M17 16V16.01" 
+                      <path d="M4 4H20V20H4V4ZM4 8H20M4 12H20M4 16H20M8 8V20M12 8V20M16 8V20" 
                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </motion.svg>
                   </motion.div>
