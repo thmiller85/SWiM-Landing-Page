@@ -9,6 +9,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import rossAvatarImage from "@/assets/ross-avatar.png";
 import tomAvatarImage from "@/assets/tom-avatar.png";
+import steveAvatarImage from "@/assets/steve-avatar.png";
+import davidAvatarImage from "@/assets/david-avatar.png";
 
 // Extended team member type with detailed bio information
 interface TeamMemberDetailed {
@@ -168,6 +170,38 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | 
       >
         <img 
           src={tomAvatarImage} 
+          alt={name}
+          className="w-full h-full object-contain p-4"
+        />
+      </div>
+    );
+  }
+  
+  // Steve Wurster (id: 3) gets custom image
+  if (memberId === 3) {
+    return (
+      <div 
+        className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={steveAvatarImage} 
+          alt={name}
+          className="w-full h-full object-contain p-4"
+        />
+      </div>
+    );
+  }
+  
+  // David Stockdale (id: 4) gets custom image
+  if (memberId === 4) {
+    return (
+      <div 
+        className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
+        style={{ background: backgrounds[index % backgrounds.length] }}
+      >
+        <img 
+          src={davidAvatarImage} 
           alt={name}
           className="w-full h-full object-contain p-4"
         />
