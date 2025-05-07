@@ -108,7 +108,7 @@ const CaseStudyCard = ({
                     whileHover={{ scale: 1.1 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    {/* Building icon for Real Estate */}
+                    {/* Storage units icon */}
                     <motion.svg 
                       className="w-8 h-8 text-accent" 
                       viewBox="0 0 24 24" 
@@ -134,7 +134,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Real Estate
+                  Self-Storage Revenue
                 </motion.p>
               </div>
             )}
@@ -175,7 +175,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Financial Growth
+                  Retail Content
                 </motion.p>
               </div>
             )}
@@ -229,7 +229,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Patient Monitoring
+                  Patient Analytics
                 </motion.p>
               </div>
             )}
@@ -298,7 +298,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Predictive Analytics
+                  Predictive Maintenance
                 </motion.p>
               </div>
             )}
