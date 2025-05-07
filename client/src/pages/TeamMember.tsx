@@ -57,18 +57,20 @@ const teamMembers: TeamMemberDetailed[] = [
     id: 2,
     name: "Tom Miller",
     title: "Chief Product Officer",
-    shortBio: "Drives product vision and implementation, ensuring our AI solutions address real customer needs and deliver measurable value.",
+    shortBio: "Former J.P. Morgan Executive Director turned self-taught AI expert who blends financial expertise with cutting-edge technology solutions.",
     detailedBio: [
-      "Tom has dedicated his career to building innovative products that solve complex business problems. With a background in both software development and business strategy, he brings a unique perspective to product management.",
-      "His experience includes leading product teams at several successful technology companies, where he developed AI-powered solutions for various industries.",
-      "At SWiM, Tom oversees the entire product lifecycle, from concept and design to development and launch, ensuring that our solutions deliver exceptional user experiences and business outcomes."
+      "From the high-stakes boardrooms of J.P. Morgan to the cutting-edge currents of artificial intelligence, Tom Miller has spent his career charting new lanes in finance and technology.",
+      "As an Executive Director in private banking, he mastered the art of navigating complex financial waters—by night and on weekends, he dove headfirst into self-taught AI mastery, binge-learning the latest frameworks between soccer practices and golf tee times.",
+      "Tom's highlights include architecting a bespoke golf app to track friendly course competitions, engineering AI-driven micro-SaaS tools that streamlined operations and cut costs for boutique clients, and maintaining a relentless learning regimen fueled by tech podcasts and family time.",
+      "Armed with a B.A. in Business (Finance concentration) from Franklin & Marshall College and a Kolbe Quick-Start instinct for rapid prototyping, Tom leads SWiM's Product Development \"practice\" with swimmer's precision: setting clear lanes for each sprint, soliciting feedback, and fine-tuning until every stroke is seamless.",
+      "When he's not devising the next wave of AI solutions, you'll find him on the fairway or coaching his kids through life's drills—ensuring SWiM AI always surges ahead."
     ],
     expertise: [
-      "Product Strategy",
       "AI Solution Design",
-      "User Experience",
-      "Product Management",
-      "Agile Methodologies"
+      "Financial Technology",
+      "Rapid Prototyping",
+      "Product Development",
+      "Self-Taught Engineering"
     ],
     photo: "gradient-avatar",
     social: {

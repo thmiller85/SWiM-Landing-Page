@@ -42,7 +42,7 @@ const teamMembers: TeamMember[] = [
     id: 2,
     name: "Tom Miller",
     title: "Chief Product Officer",
-    shortBio: "Drives product vision and implementation, ensuring our AI solutions address real customer needs and deliver measurable value.",
+    shortBio: "Former J.P. Morgan Executive Director turned self-taught AI expert who blends financial expertise with cutting-edge technology solutions.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",
