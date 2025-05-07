@@ -142,33 +142,36 @@ const CaseStudyCard = ({
             {image === 'finance' && (
               <div className="flex flex-col items-center">
                 <motion.div 
-                  className="flex space-x-2 mb-3"
-                  animate={{ 
-                    y: [0, -5, 0],
-                  }}
-                  transition={{ 
-                    repeat: Infinity, 
-                    duration: 2,
-                    repeatType: "mirror",
-                    times: [0, 0.5, 1]
-                  }}
+                  className="w-16 h-16 bg-emerald-400/20 flex items-center justify-center mx-auto mb-3 rounded-md"
+                  variants={pulseAnimation}
+                  initial="hidden"
+                  animate="visible"
                 >
-                  {[1, 2, 3, 4].map((_, i) => (
-                    <motion.div 
-                      key={i}
-                      className="w-3 h-14 bg-emerald-400/80 rounded-t-sm"
-                      initial={{ height: 6 }}
+                  <motion.div 
+                    className="w-12 h-12 bg-emerald-400/30 flex items-center justify-center"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    {/* Document/Content icon */}
+                    <motion.svg 
+                      className="w-8 h-8 text-emerald-400" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
                       animate={{ 
-                        height: [6, 14, 6 + i * 3, 10 + i * 2],
+                        y: [0, -2, 0],
+                        scale: [1, 1.05, 1]
                       }}
                       transition={{ 
-                        duration: 1.5, 
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        delay: i * 0.1
+                        repeat: Infinity, 
+                        duration: 3,
+                        ease: "easeInOut"
                       }}
-                    />
-                  ))}
+                    >
+                      <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8M14 2L20 8M14 2V8H20M16 13H8M16 17H8M10 9H8" 
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
+                  </motion.div>
                 </motion.div>
                 <motion.p 
                   className="text-white/90 font-space font-medium mt-2"
