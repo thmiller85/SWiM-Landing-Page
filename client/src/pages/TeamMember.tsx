@@ -82,18 +82,21 @@ const teamMembers: TeamMemberDetailed[] = [
     id: 3,
     name: "Steve Wurster",
     title: "Chief Growth Officer",
-    shortBio: "Focuses on strategic partnerships and business development, identifying new markets and opportunities for AI-powered solutions.",
+    shortBio: "Founder of Wurster Digital Group with 15+ years experience in performance media strategy, managing multi-million-dollar budgets, and scaling marketing teams.",
     detailedBio: [
-      "Steve is a seasoned business development executive with a proven track record of driving growth through strategic partnerships and market expansion.",
-      "His expertise in identifying and capitalizing on emerging market trends has helped numerous companies achieve significant revenue growth and market penetration.",
-      "At SWiM, Steve leads our growth initiatives, focusing on building relationships with key stakeholders, identifying new business opportunities, and developing strategies to scale our solutions across different industries and markets."
+      "Steve Wurster captains SWiM's growth lane with over 15 years of hands-on experience leading performance media strategy, scaling marketing teams, and managing multi-million-dollar budgets.", 
+      "As the founder of Wurster Digital Group, Steve built a consultancy dedicated to bridging the gap between data analytics and creative marketing—an ethos that aligns perfectly with SWiM's mission to help businesses grow smarter, not just faster.",
+      "Steve's career started in digital advertising at Liberty Travel, where he managed a $2.1M ad budget and cut cost per inquiry by 50% through data-driven optimizations. At Merkle, he stewarded over $25M in advertising spend and helped launch display campaigns that boosted both brand awareness and revenue. His leadership at Fishbowl saw him managing campaigns for 120 national restaurant accounts and generating $2M annually through email performance enhancements.",
+      "At Dentsu, as Director of Performance Media, Steve led a 14-person team and managed $60M in annual ad spend—driving record-breaking growth for one of the largest U.S. furniture retailers and stabilizing performance for major beverage clients during key transitions. His approach blends rigorous analytics with agile execution, always focused on impact over vanity.",
+      "Today, at SWiM AI Marketing Solutions, Steve helps lead the charge in transforming paid media and marketing into growth engines powered by automation, AI, and strategic clarity.",
+      "When he's not deep in campaign metrics or strategy maps, you'll find him out on the golf course—reminding us all that growth, like a good swing, is all about rhythm, balance, and precision."
     ],
     expertise: [
-      "Business Development",
-      "Strategic Partnerships",
-      "Market Expansion",
-      "Revenue Growth",
-      "Sales Leadership"
+      "Performance Media Strategy",
+      "Data-Driven Marketing",
+      "Budget Optimization",
+      "Team Leadership",
+      "Digital Advertising"
     ],
     photo: "gradient-avatar",
     social: {

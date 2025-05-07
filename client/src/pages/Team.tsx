@@ -53,7 +53,7 @@ const teamMembers: TeamMember[] = [
     id: 3,
     name: "Steve Wurster",
     title: "Chief Growth Officer",
-    shortBio: "Focuses on strategic partnerships and business development, identifying new markets and opportunities for AI-powered solutions.",
+    shortBio: "Founder of Wurster Digital Group with 15+ years experience in performance media strategy, managing multi-million-dollar budgets, and scaling marketing teams.",
     photo: "gradient-avatar",
     social: {
       linkedin: "https://linkedin.com/in/",
