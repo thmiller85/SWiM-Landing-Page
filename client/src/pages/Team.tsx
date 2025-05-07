@@ -32,7 +32,7 @@ const teamMembers: TeamMember[] = [
     id: 1,
     name: "Ross Stockdale",
     title: "Chief Marketing Officer",
-    shortBio: "Leads marketing strategy and brand development, leveraging AI tools to optimize customer acquisition and engagement across all channels.",
+    shortBio: "Fractional CMO and founder of Thunder Stock Marketing, helping B2B service companies craft data-driven campaigns and lean operational workflows.",
     photo: "gradient-avatar", // We'll use gradient avatars as placeholders
     social: {
       linkedin: "https://linkedin.com/in/",

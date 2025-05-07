@@ -34,18 +34,19 @@ const teamMembers: TeamMemberDetailed[] = [
     id: 1,
     name: "Ross Stockdale",
     title: "Chief Marketing Officer",
-    shortBio: "Leads marketing strategy and brand development, leveraging AI tools to optimize customer acquisition and engagement across all channels.",
+    shortBio: "Fractional CMO and founder of Thunder Stock Marketing, helping B2B service companies craft data-driven campaigns and lean operational workflows.",
     detailedBio: [
-      "Ross brings over 15 years of experience in marketing leadership roles, with expertise in developing and implementing comprehensive marketing strategies for technology companies.",
-      "His approach to marketing focuses on data-driven decision making, customer-centric messaging, and innovative campaign development that drives measurable business results.",
-      "At SWiM, Ross leads all marketing initiatives, from brand strategy and content development to demand generation and marketing analytics."
+      "Ross Stockdale steers SWiM's marketing \"lanes\" with the precision of a veteran swimmer and the strategic vision of a stoic captain. A self-made Fractional CMO and founder of Thunder Stock Marketing, Ross has spent over a decade helping B2B service companies dive into profitability by crafting data-driven campaigns and lean operational workflows.",
+      "From his early days optimizing SEO for family businesses to scaling a $600M enterprise in private equity and agency roles, Ross charted his own course—culminating in the Q4 2022 launch of his solopreneur-led firm. He balances profit-over-revenue mindsets with community-first ideals, slashing client acquisition costs by up to 75% and guiding entrepreneurs to financial freedom.",
+      "Whether developing campaign KPIs in swim practice sessions, building agile marketing teams in collaborative relays, or integrating generative AI to generate trust strokes in every touchpoint, Ross's philosophy is clear: align each stroke with net profit, empower small businesses as the backbone of our economy, and aim for that Big Hairy Audacious Goal—helping 100 companies achieve lasting success.",
+      "When he's not fine-tuning a campaign relay, you'll find Ross sharing insights on The Thunder Stock Show or mentoring peers in Vistage and local forums."
     ],
     expertise: [
-      "Digital Marketing Strategy",
-      "Brand Development",
-      "Marketing Analytics",
-      "Content Strategy",
-      "Customer Acquisition"
+      "Fractional CMO",
+      "Data-Driven Marketing",
+      "B2B Service Marketing",
+      "Profit-Focused Campaigns",
+      "Marketing Operations"
     ],
     photo: "gradient-avatar",
     social: {
