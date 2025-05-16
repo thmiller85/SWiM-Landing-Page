@@ -28,8 +28,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
     const formValues = Object.fromEntries(formData.entries());
     
     try {
-      // Send data to webhook
-      const response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
+      // Send data to our proxy endpoint
+      const response = await fetch('/api/contact-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
