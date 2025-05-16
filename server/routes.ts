@@ -15,13 +15,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log('Sending form data to n8n webhook:', req.body);
       
-      // Forward the request to the webhook
-      const response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(req.body),
+      // Convert request body to query parameters
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(req.body)) {
+        params.append(key, String(value));
+      }
+      
+      // Forward the request to the webhook using GET with query parameters
+      const webhookUrl = `https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit?${params.toString()}`;
+      console.log('Sending request to webhook URL:', webhookUrl);
+      
+      const response = await fetch(webhookUrl, {
+        method: 'GET'
       });
       
       const statusCode = response.status;
