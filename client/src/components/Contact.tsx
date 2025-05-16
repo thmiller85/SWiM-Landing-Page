@@ -18,18 +18,43 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // In a real application, this would send the form data to a backend
-    toast({
-      title: "Form submitted",
-      description: "We'll be in touch shortly!",
-    });
+    if (!formRef.current) return;
     
-    // Reset form
-    if (formRef.current) {
-      formRef.current.reset();
+    // Get form data
+    const formData = new FormData(formRef.current);
+    const formValues = Object.fromEntries(formData.entries());
+    
+    try {
+      // Send data to webhook
+      const response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Form submitted successfully",
+          description: "We'll be in touch shortly!",
+        });
+        
+        // Reset form
+        formRef.current.reset();
+      } else {
+        throw new Error('Failed to submit form');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission error",
+        description: "There was a problem submitting your form. Please try again.",
+        variant: "destructive",
+      });
     }
   };
   
