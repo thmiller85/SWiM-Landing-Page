@@ -2,9 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import path from "path";
-
-// Store form submissions in memory
-const contactSubmissions: any[] = [];
+import fetch from "node-fetch";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Serve sitemap.xml
@@ -12,41 +10,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(process.cwd(), 'client/public/sitemap.xml'));
   });
   
-  // Endpoint to handle contact form submissions
-  app.post('/api/contact-form', (req, res) => {
+  // Proxy endpoint for form submissions
+  app.post('/api/contact-form', async (req, res) => {
     try {
-      // Get the form data from the request body
-      const formData = req.body;
+      console.log('Sending form data to n8n webhook:', req.body);
       
-      // Add timestamp
-      const submission = {
-        ...formData,
-        timestamp: new Date().toISOString()
-      };
+      // Forward the request to the webhook
+      const response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req.body),
+      });
       
-      // Store the submission
-      contactSubmissions.push(submission);
+      const statusCode = response.status;
+      console.log('Webhook response status:', statusCode);
       
-      console.log('New contact form submission:', submission);
+      // Try to get response body if available
+      let responseBody;
+      try {
+        responseBody = await response.text();
+        console.log('Webhook response body:', responseBody);
+      } catch (e) {
+        console.log('Could not parse webhook response body');
+      }
       
-      // Return success response
+      if (!response.ok) {
+        throw new Error(`Webhook responded with status: ${response.status}`);
+      }
+      
       res.status(200).json({ 
-        success: true, 
-        message: 'Form submitted successfully',
-        submissionId: contactSubmissions.length
+        success: true,
+        message: 'Form submitted successfully to n8n webhook' 
       });
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('Webhook proxy error:', error);
       res.status(500).json({ 
         success: false, 
-        error: 'Failed to process form submission'
+        error: 'Failed to forward request to webhook' 
       });
     }
-  });
-  
-  // Endpoint to view submissions (would be protected in a real application)
-  app.get('/api/contact-submissions', (req, res) => {
-    res.json({ submissions: contactSubmissions });
   });
   
   // put other application routes here
