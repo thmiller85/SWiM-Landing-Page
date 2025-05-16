@@ -123,6 +123,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               <Input 
                 type="text" 
                 id="name" 
+                name="name"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Your name"
                 required
@@ -133,6 +134,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               <Input 
                 type="email" 
                 id="email" 
+                name="email"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="your.email@company.com"
                 required
@@ -143,13 +145,14 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               <Input 
                 type="text" 
                 id="company" 
+                name="company"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Your company name"
               />
             </div>
             <div>
               <Label htmlFor="service" className="block mb-2 text-white/80 font-inter text-sm">Service of Interest</Label>
-              <Select>
+              <Select name="service">
                 <SelectTrigger className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent">
                   <SelectValue placeholder="Select a service" />
                 </SelectTrigger>
@@ -166,6 +169,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
               <Label htmlFor="message" className="block mb-2 text-white/80 font-inter text-sm">Your Message</Label>
               <Textarea 
                 id="message" 
+                name="message"
                 rows={4} 
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Tell us about your project or requirements..."
@@ -174,7 +178,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
             </div>
             <div className="md:col-span-2 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="flex items-center gap-2">
-                <Checkbox id="privacy" className="rounded bg-secondary/50 border-white/10 text-accent focus:ring-accent" />
+                <Checkbox id="privacy" name="privacy" className="rounded bg-secondary/50 border-white/10 text-accent focus:ring-accent" />
                 <Label htmlFor="privacy" className="text-white/70 font-inter text-sm">
                   I agree to the <a href="#" className="text-accent">Privacy Policy</a>
                 </Label>
