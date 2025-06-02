@@ -28,6 +28,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
     const formValues = Object.fromEntries(formData.entries());
     
     try {
+      console.log('Submitting form data:', formValues);
+      
       // Send data to our proxy endpoint
       const response = await fetch('/api/contact-form', {
         method: 'POST',
@@ -37,7 +39,13 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         body: JSON.stringify(formValues),
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
       if (response.ok) {
+        const responseData = await response.json();
+        console.log('Success response:', responseData);
+        
         toast({
           title: "Form submitted successfully",
           description: "We'll be in touch shortly!",
@@ -46,13 +54,28 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         // Reset form
         formRef.current.reset();
       } else {
-        throw new Error('Failed to submit form');
+        const errorText = await response.text();
+        console.error('Server error response:', errorText);
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      
+      // More detailed error message for debugging
+      let errorMessage = "There was a problem submitting your form. Please try again.";
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = "Unable to connect to server. Please check your internet connection.";
+        } else if (error.message.includes('404')) {
+          errorMessage = "Form submission endpoint not found. Please contact support.";
+        } else if (error.message.includes('500')) {
+          errorMessage = "Server error occurred. Please try again later.";
+        }
+      }
+      
       toast({
         title: "Submission error",
-        description: "There was a problem submitting your form. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -124,6 +147,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                 type="text" 
                 id="name" 
                 name="name"
+                autoComplete="name"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Your name"
                 required
@@ -135,6 +159,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                 type="email" 
                 id="email" 
                 name="email"
+                autoComplete="email"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="your.email@company.com"
                 required
@@ -146,6 +171,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                 type="text" 
                 id="company" 
                 name="company"
+                autoComplete="organization"
                 className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Your company name"
               />
