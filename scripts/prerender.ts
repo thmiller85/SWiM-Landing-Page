@@ -1,0 +1,202 @@
+
+import fs from 'fs';
+import path from 'path';
+import { JSDOM } from 'jsdom';
+
+// Define all routes that need to be pre-rendered
+const routes = [
+  '/',
+  '/team',
+  '/team/ross-stockdale',
+  '/team/tom-miller', 
+  '/team/steve-wurster',
+  '/team/david-stockdale',
+  '/services/ai-powered-marketing',
+  '/services/workflow-automation',
+  '/services/b2b-saas-development',
+  '/services/data-intelligence',
+  '/services/ai-strategy-consulting',
+  '/services/ai-security-ethics'
+];
+
+const distPath = path.resolve('dist/public');
+const templatePath = path.join(distPath, 'index.html');
+
+async function prerenderRoutes() {
+  if (!fs.existsSync(templatePath)) {
+    console.error('Build files not found. Run "npm run build" first.');
+    process.exit(1);
+  }
+
+  const template = fs.readFileSync(templatePath, 'utf-8');
+  
+  for (const route of routes) {
+    const filePath = route === '/' 
+      ? path.join(distPath, 'index.html')
+      : path.join(distPath, route, 'index.html');
+    
+    // Create directory if it doesn't exist
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    
+    // Generate static HTML with proper meta tags and content
+    let html = template;
+    
+    // Add route-specific meta tags and content
+    html = addRouteSpecificContent(html, route);
+    
+    fs.writeFileSync(filePath, html);
+    console.log(`✓ Pre-rendered: ${route}`);
+  }
+  
+  console.log(`\n🎉 Successfully pre-rendered ${routes.length} routes`);
+}
+
+function addRouteSpecificContent(html: string, route: string): string {
+  let title = 'SWiM | AI-Powered Marketing & Business Solutions';
+  let description = 'Transform your business with AI-powered marketing, workflow automation, and custom SaaS solutions.';
+  let additionalContent = '';
+
+  switch (route) {
+    case '/':
+      additionalContent = `
+        <div style="display: none;">
+          <h1>Transform your business with AI-Powered Solutions</h1>
+          <p>SWiM helps B2B companies leverage artificial intelligence to automate workflows, optimize marketing strategies, and create cutting-edge SaaS solutions that drive results.</p>
+          <div>AI-Powered Marketing, Workflow Automation, B2B SaaS Development, Data Intelligence, AI Strategy Consulting, AI Security & Ethics</div>
+          <div>500+ satisfied clients, 4.9/5 average rating</div>
+          <div>ACME Corp, TechGiant, FutureSoft, InnovateX, DataFlow</div>
+        </div>
+      `;
+      break;
+    case '/team':
+      title = 'Meet the SWiM Team | AI & Marketing Experts';
+      description = 'Meet our team of AI specialists, marketing experts, and technical engineers who transform businesses through technology.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>Meet the SWiM Team</h1>
+          <div>Ross Stockdale - Chief Marketing Officer</div>
+          <div>Tom Miller - Chief Product Officer</div>
+          <div>Steve Wurster - Chief Growth Officer</div>
+          <div>David Stockdale - Chief Technology Officer</div>
+        </div>
+      `;
+      break;
+    case '/team/ross-stockdale':
+      title = 'Ross Stockdale - Chief Marketing Officer | SWiM';
+      description = 'Fractional CMO and founder of Thunder Stock Marketing, helping B2B service companies craft data-driven campaigns.';
+      break;
+    case '/team/tom-miller':
+      title = 'Tom Miller - Chief Product Officer | SWiM';
+      description = 'Finance veteran and AI innovator creating bespoke technology solutions and transforming business challenges.';
+      break;
+    case '/team/steve-wurster':
+      title = 'Steve Wurster - Chief Growth Officer | SWiM';
+      description = 'Founder of Wurster Digital Group with 15+ years experience in performance media strategy.';
+      break;
+    case '/team/david-stockdale':
+      title = 'David Stockdale - Chief Technology Officer | SWiM';
+      description = 'Self-taught technician with a decade of experience in network infrastructure and systems integration.';
+      break;
+    case '/services/ai-powered-marketing':
+      title = 'AI-Powered Marketing Solutions | SWiM';
+      description = 'Leverage machine learning algorithms to optimize marketing campaigns, predict customer behavior, and increase ROI.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>AI-Powered Marketing</h1>
+          <p>Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.</p>
+          <div>Lead Generation, Customer Segmentation, Content Optimization</div>
+        </div>
+      `;
+      break;
+    case '/services/workflow-automation':
+      title = 'Workflow Automation Solutions | SWiM';
+      description = 'Streamline operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>Workflow Automation</h1>
+          <p>Streamline your operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.</p>
+          <div>Process Optimization, Task Automation, Efficiency Analysis</div>
+        </div>
+      `;
+      break;
+    case '/services/b2b-saas-development':
+      title = 'B2B SaaS Development | Custom AI Solutions | SWiM';
+      description = 'Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>B2B SaaS Development</h1>
+          <p>Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.</p>
+          <div>Custom Software, API Integration, Scalable Solutions</div>
+        </div>
+      `;
+      break;
+    case '/services/data-intelligence':
+      title = 'Data Intelligence & Analytics | SWiM';
+      description = 'Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>Data Intelligence</h1>
+          <p>Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.</p>
+          <div>Business Intelligence, Data Visualization, Predictive Models</div>
+        </div>
+      `;
+      break;
+    case '/services/ai-strategy-consulting':
+      title = 'AI Strategy Consulting | Implementation Planning | SWiM';
+      description = 'Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>AI Strategy Consulting</h1>
+          <p>Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.</p>
+          <div>Technology Assessment, Implementation Planning, ROI Analysis</div>
+        </div>
+      `;
+      break;
+    case '/services/ai-security-ethics':
+      title = 'AI Security & Ethics | Compliance Solutions | SWiM';
+      description = 'Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.';
+      additionalContent = `
+        <div style="display: none;">
+          <h1>AI Security & Ethics</h1>
+          <p>Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.</p>
+          <div>Risk Assessment, Compliance, Ethical AI</div>
+        </div>
+      `;
+      break;
+  }
+
+  // Update title and description
+  html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+  html = html.replace(/<meta name="description" content=".*?"/, `<meta name="description" content="${description}"`);
+  
+  // Add structured data
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": title,
+    "description": description,
+    "url": `https://your-domain.com${route}`,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "SWiM Agency",
+      "url": "https://your-domain.com"
+    }
+  };
+  
+  html = html.replace(
+    '</head>',
+    `  <script type="application/ld+json">${JSON.stringify(structuredData, null, 2)}</script>\n</head>`
+  );
+  
+  // Add SEO content in hidden div
+  if (additionalContent) {
+    html = html.replace('<div id="root"></div>', `<div id="root"></div>${additionalContent}`);
+  }
+  
+  return html;
+}
+
+prerenderRoutes().catch(console.error);
