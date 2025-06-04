@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
 
-// Define all routes that need to be pre-rendered
+// Define routes that need to be pre-rendered for SEO (marketing pages only)
 const routes = [
   '/',
   '/team',
@@ -30,10 +30,13 @@ async function prerenderRoutes() {
 
   const template = fs.readFileSync(templatePath, 'utf-8');
   
+  // Keep the original index.html for the SPA fallback
+  console.log('✓ Keeping SPA fallback: /');
+  
   for (const route of routes) {
-    const filePath = route === '/' 
-      ? path.join(distPath, 'index.html')
-      : path.join(distPath, route, 'index.html');
+    if (route === '/') continue; // Skip root, we'll handle it separately
+    
+    const filePath = path.join(distPath, route, 'index.html');
     
     // Create directory if it doesn't exist
     const dir = path.dirname(filePath);
@@ -51,7 +54,13 @@ async function prerenderRoutes() {
     console.log(`✓ Pre-rendered: ${route}`);
   }
   
-  console.log(`\n🎉 Successfully pre-rendered ${routes.length} routes`);
+  // Create SEO-optimized homepage while keeping SPA functionality
+  const homepageHtml = addRouteSpecificContent(template, '/');
+  fs.writeFileSync(path.join(distPath, 'index.html'), homepageHtml);
+  console.log('✓ Updated homepage with SEO content');
+  
+  console.log(`\n🎉 Successfully pre-rendered ${routes.length} marketing pages`);
+  console.log('💡 Contact form and interactive features remain client-side');
 }
 
 function addRouteSpecificContent(html: string, route: string): string {
@@ -62,7 +71,7 @@ function addRouteSpecificContent(html: string, route: string): string {
   switch (route) {
     case '/':
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>Transform your business with AI-Powered Solutions</h1>
           <p>SWiM helps B2B companies leverage artificial intelligence to automate workflows, optimize marketing strategies, and create cutting-edge SaaS solutions that drive results.</p>
           <div>AI-Powered Marketing, Workflow Automation, B2B SaaS Development, Data Intelligence, AI Strategy Consulting, AI Security & Ethics</div>
@@ -75,7 +84,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'Meet the SWiM Team | AI & Marketing Experts';
       description = 'Meet our team of AI specialists, marketing experts, and technical engineers who transform businesses through technology.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>Meet the SWiM Team</h1>
           <div>Ross Stockdale - Chief Marketing Officer</div>
           <div>Tom Miller - Chief Product Officer</div>
@@ -104,7 +113,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'AI-Powered Marketing Solutions | SWiM';
       description = 'Leverage machine learning algorithms to optimize marketing campaigns, predict customer behavior, and increase ROI.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>AI-Powered Marketing</h1>
           <p>Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.</p>
           <div>Lead Generation, Customer Segmentation, Content Optimization</div>
@@ -115,7 +124,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'Workflow Automation Solutions | SWiM';
       description = 'Streamline operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>Workflow Automation</h1>
           <p>Streamline your operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.</p>
           <div>Process Optimization, Task Automation, Efficiency Analysis</div>
@@ -126,7 +135,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'B2B SaaS Development | Custom AI Solutions | SWiM';
       description = 'Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>B2B SaaS Development</h1>
           <p>Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.</p>
           <div>Custom Software, API Integration, Scalable Solutions</div>
@@ -137,7 +146,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'Data Intelligence & Analytics | SWiM';
       description = 'Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>Data Intelligence</h1>
           <p>Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.</p>
           <div>Business Intelligence, Data Visualization, Predictive Models</div>
@@ -148,7 +157,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'AI Strategy Consulting | Implementation Planning | SWiM';
       description = 'Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>AI Strategy Consulting</h1>
           <p>Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.</p>
           <div>Technology Assessment, Implementation Planning, ROI Analysis</div>
@@ -159,7 +168,7 @@ function addRouteSpecificContent(html: string, route: string): string {
       title = 'AI Security & Ethics | Compliance Solutions | SWiM';
       description = 'Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.';
       additionalContent = `
-        <div style="display: none;">
+        <div style="display: none;" id="seo-content">
           <h1>AI Security & Ethics</h1>
           <p>Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.</p>
           <div>Risk Assessment, Compliance, Ethical AI</div>
