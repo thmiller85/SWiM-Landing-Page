@@ -1,7 +1,7 @@
 # SWiM Agency - Complete Site Content for LLM Analysis
 
 ## Site Overview
-**Company Name:** SWiM Agency  
+**Company Name:** SWiM AI  
 **Tagline:** Transform your business with AI-Powered Solutions  
 **Primary Focus:** AI-powered marketing, workflow automation, and custom B2B SaaS development  
 **Target Audience:** B2B companies seeking AI integration  
