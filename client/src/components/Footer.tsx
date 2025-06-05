@@ -68,10 +68,6 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <h4 className="text-lg font-space font-bold mb-6">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Documentation</a></li>
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Knowledge Base</a></li>
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">API Reference</a></li>
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Support Center</a></li>
               <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Privacy Policy</a></li>
               <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Terms of Service</a></li>
             </ul>
