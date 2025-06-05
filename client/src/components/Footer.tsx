@@ -59,7 +59,6 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
               <li><button onClick={() => handleNavClick(aboutRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">About Us</button></li>
               <li><button onClick={() => handleNavClick(aboutRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Case Studies</button></li>
               <li><Link href="/team" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Team</Link></li>
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Careers</a></li>
               <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Blog</a></li>
               <li><button onClick={() => handleNavClick(contactRef)} className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Contact</button></li>
             </ul>
