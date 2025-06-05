@@ -1,4 +1,5 @@
 import React, { forwardRef, useRef } from "react";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
@@ -74,12 +75,14 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
               </div>
             </div>
             
-            <Button 
-              variant="outline"
-              className="mt-10 bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
-            >
-              Explore All AI Solutions
-            </Button>
+            <Link href="/ai-solutions">
+              <Button 
+                variant="outline"
+                className="mt-10 bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+              >
+                Explore All AI Solutions
+              </Button>
+            </Link>
           </motion.div>
           
           <motion.div

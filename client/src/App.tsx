@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
 import ServicePage from "./pages/ServicePage";
+import AISolutionsPage from "./pages/AISolutionsPage";
 import NotFound from "./pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -65,6 +66,7 @@ function App() {
       <TooltipProvider>
         <Switch>
           <Route path="/" component={HomePage} />
+          <Route path="/ai-solutions" component={AISolutionsPage} />
           <Route path="/team" component={Team} />
           <Route path="/team/:id" component={TeamMember} />
           <Route path="/services/:id">
