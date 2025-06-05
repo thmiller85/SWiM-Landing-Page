@@ -2,7 +2,7 @@ import React, { forwardRef, useRef } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, TrendingUp, Users, Award } from "lucide-react";
+import { Check, Brain, Heart, Shield } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn } from "@/lib/animations";
 
@@ -59,7 +59,7 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               </div>
             </div>
             
-            {/* Company achievements */}
+            {/* Core Values */}
             <motion.div 
               className="mt-8 glass rounded-xl p-6"
               initial={{ opacity: 0, y: 20 }}
@@ -69,24 +69,24 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               <div className="grid grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
-                    <TrendingUp className="text-accent text-lg" />
+                    <Brain className="text-accent text-lg" />
                   </div>
-                  <h4 className="text-2xl font-space font-bold text-accent mb-1">95%</h4>
-                  <p className="text-white/70 font-inter text-xs">Success Rate</p>
+                  <h4 className="text-sm font-space font-bold text-accent mb-1">Innovation</h4>
+                  <p className="text-white/70 font-inter text-xs">Cutting-edge AI solutions</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center mx-auto mb-3">
-                    <Users className="text-highlight text-lg" />
+                    <Heart className="text-highlight text-lg" />
                   </div>
-                  <h4 className="text-2xl font-space font-bold text-highlight mb-1">50+</h4>
-                  <p className="text-white/70 font-inter text-xs">Clients Served</p>
+                  <h4 className="text-sm font-space font-bold text-highlight mb-1">Human-Centered</h4>
+                  <p className="text-white/70 font-inter text-xs">AI that enhances people</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
-                    <Award className="text-accent text-lg" />
+                    <Shield className="text-accent text-lg" />
                   </div>
-                  <h4 className="text-2xl font-space font-bold text-accent mb-1">5+</h4>
-                  <p className="text-white/70 font-inter text-xs">Years Experience</p>
+                  <h4 className="text-sm font-space font-bold text-accent mb-1">Ethical</h4>
+                  <p className="text-white/70 font-inter text-xs">Responsible AI practices</p>
                 </div>
               </div>
             </motion.div>
