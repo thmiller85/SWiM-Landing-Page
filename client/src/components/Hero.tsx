@@ -11,6 +11,10 @@ import {
   pulseAnimation,
 } from "@/lib/animations";
 import n8nAgentImage from "@assets/n8n_agent.png";
+import rossAvatar from "@assets/Ross Avatar.png";
+import tomAvatar from "@assets/Tom Avatar.png";
+import steveAvatar from "@assets/Steve Avatar.png";
+import davidAvatar from "@assets/David Avatar.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -70,9 +74,10 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
             </div>
             <div className="mt-12 flex items-center gap-6">
               <div className="flex -space-x-2">
-                <div className="h-8 w-8 rounded-full border-2 border-primary bg-white/20"></div>
-                <div className="h-8 w-8 rounded-full border-2 border-primary bg-white/20"></div>
-                <div className="h-8 w-8 rounded-full border-2 border-primary bg-white/20"></div>
+                <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
               </div>
               <div className="text-white/80 font-inter text-sm">
                 <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
