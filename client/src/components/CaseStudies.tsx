@@ -16,34 +16,34 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
   const caseStudies = [
     {
       image: "e-commerce",
-      title: "Self-Storage Revenue Boost",
-      description: "Developed competitor research and unit price recommendation engines to identify gaps in unit pricing structure, delivering real-time recommendations that increased revenue by 23% while maintaining 92% occupancy rates.",
+      title: "Self-Storage Revenue Optimization",
+      description: "Our approach: Develop competitor research and unit price recommendation engines to identify gaps in pricing structure, delivering real-time recommendations that could potentially increase revenue by 15-25% while maintaining high occupancy rates.",
       categories: ["Real Estate", "SaaS", "Data Analytics"],
-      results: "+23% Revenue",
+      results: "Potential: 15-25% Revenue Increase",
       delay: 0
     },
     {
       image: "finance",
       title: "Retail Content Automation",
-      description: "Automated SEO-optimized content generation for website blogs and social media postings to drive internet traffic and increase organic sales.",
+      description: "Our solution: Automate SEO-optimized content generation for website blogs and social media postings to drive internet traffic and increase organic sales, potentially reducing content creation time by 80-95%.",
       categories: ["Retail", "E-commerce", "Automation"],
-      results: "93% Time Savings",
+      results: "Potential: 80-95% Time Savings",
       delay: 0.2
     },
     {
       image: "healthcare",
-      title: "MedTech Patient Analytics",
-      description: "Developed predictive analytics platform that improved patient scheduling efficiency and reduced no-show rates.",
+      title: "Healthcare Patient Analytics",
+      description: "Our capability: Develop predictive analytics platforms that could improve patient scheduling efficiency and reduce no-show rates, with potential for significant operational cost savings.",
       categories: ["Healthcare", "SaaS Solution"],
-      results: "$2.4M Annual Savings",
+      results: "Potential: Major Cost Savings",
       delay: 0.4
     },
     {
       image: "manufacturing",
-      title: "IndusTech Predictive Maintenance",
-      description: "Implemented machine learning system to predict equipment failures before they occur, minimizing downtime.",
+      title: "Manufacturing Predictive Maintenance",
+      description: "Our expertise: Implement machine learning systems to predict equipment failures before they occur, with potential to minimize downtime by 50-70% based on industry benchmarks.",
       categories: ["Manufacturing", "Predictive AI"],
-      results: "64% Less Downtime",
+      results: "Potential: 50-70% Less Downtime",
       delay: 0.6
     }
   ];
@@ -121,14 +121,14 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
-              Success Stories
+              Proof of Concept Scenarios
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              Real Results for Real Businesses
+              Potential Impact Scenarios
             </h2>
             <p className="text-white/70 max-w-2xl mx-auto font-inter text-lg">
-              See how our AI solutions have transformed operations and driven growth
-              for companies across diverse industries.
+              Based on our team's expertise and industry research, here are illustrative examples 
+              of what our AI solutions can achieve across diverse sectors.
             </p>
           </motion.div>
         </div>
@@ -199,6 +199,20 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
           </div>
         </div>
         
+        {/* Disclaimer */}
+        <motion.div 
+          className="mt-12 text-center"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <p className="text-white/50 font-inter text-sm max-w-3xl mx-auto">
+            <em>The scenarios above are illustrative examples based on our team's expertise and industry research. 
+            Results may vary based on specific business contexts and implementation factors.</em>
+          </p>
+        </motion.div>
+
         {/* CTA */}
         <motion.div 
           className="mt-16 text-center"
@@ -208,7 +222,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <p className="mb-6 text-white/70 font-inter">
-            Ready to see what AI can do for your business?
+            Ready to explore what AI can do for your business?
           </p>
           <Button 
             className="bg-accent hover:bg-accent/90 text-black font-inter font-semibold text-lg px-8 py-6 shadow-glow transition-all"
@@ -217,7 +231,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
               boxShadow: "0 0 20px rgba(0,240,255,0.5)"
             }}
           >
-            Schedule a Strategy Session
+            Discuss Your Potential
           </Button>
         </motion.div>
       </div>
