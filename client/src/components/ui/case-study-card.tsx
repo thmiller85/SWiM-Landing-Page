@@ -31,8 +31,8 @@ const CaseStudyCard = ({
         return 'bg-emerald-900/30';
       case 'marketing':
         return 'bg-gradient-to-br from-rose-900/40 to-pink-800/30';
-      case 'manufacturing':
-        return 'bg-amber-900/30';
+      case 'advertising':
+        return 'bg-gradient-to-br from-indigo-900/40 to-purple-800/30';
       default:
         return 'bg-gray-900/30';
     }
@@ -47,8 +47,8 @@ const CaseStudyCard = ({
         return 'emerald-400';
       case 'marketing':
         return 'rose-400';
-      case 'manufacturing':
-        return 'amber-400';
+      case 'advertising':
+        return 'indigo-400';
       default:
         return 'accent';
     }
@@ -229,71 +229,48 @@ const CaseStudyCard = ({
               </div>
             )}
             
-            {image === 'manufacturing' && (
+            {image === 'advertising' && (
               <div className="flex flex-col items-center">
                 <motion.div 
-                  className="flex items-end space-x-1 h-16 mb-3"
-                  animate={{ rotate: [0, 1, 0, -1, 0] }}
-                  transition={{ 
-                    duration: 5, 
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
+                  className="w-16 h-16 bg-indigo-400/20 flex items-center justify-center mx-auto mb-3 rounded-md"
+                  variants={pulseAnimation}
+                  initial="hidden"
+                  animate="visible"
                 >
                   <motion.div 
-                    className="w-4 h-10 bg-amber-400/80 rounded-t-sm"
-                    animate={{ 
-                      height: [10, 14, 10],
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity,
-                      repeatType: "mirror"
-                    }}
-                  />
-                  <motion.div 
-                    className="w-4 h-12 bg-amber-400/60 rounded-t-sm"
-                    animate={{ 
-                      height: [12, 8, 12],
-                    }}
-                    transition={{ 
-                      duration: 2.5, 
-                      repeat: Infinity,
-                      repeatType: "mirror",
-                      delay: 0.3
-                    }}
-                  />
-                  <motion.div 
-                    className="w-4 h-8 bg-amber-400/90 rounded-t-sm"
-                    animate={{ 
-                      height: [8, 16, 8],
-                    }}
-                    transition={{ 
-                      duration: 3, 
-                      repeat: Infinity,
-                      repeatType: "mirror",
-                      delay: 0.6
-                    }}
-                  />
-                  <motion.div 
-                    className="w-4 h-14 bg-amber-400/70 rounded-t-sm"
-                    animate={{ 
-                      height: [14, 10, 14],
-                    }}
-                    transition={{ 
-                      duration: 2.3, 
-                      repeat: Infinity,
-                      repeatType: "mirror",
-                      delay: 0.9
-                    }}
-                  />
+                    className="w-12 h-12 bg-indigo-400/30 flex items-center justify-center"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    {/* Advertising/Analytics icon */}
+                    <motion.svg 
+                      className="w-8 h-8 text-indigo-400" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      animate={{ 
+                        y: [0, -2, 0],
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 3,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <path d="M3 3V21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M9 9L12 6L16 10L20 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M7 13H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M7 17H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
+                  </motion.div>
                 </motion.div>
                 <motion.p 
                   className="text-white/90 font-space font-medium mt-2"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Predictive Maintenance
+                  Ad Optimization
                 </motion.p>
               </div>
             )}

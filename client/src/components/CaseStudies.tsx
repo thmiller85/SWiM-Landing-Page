@@ -39,11 +39,11 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
       delay: 0.4
     },
     {
-      image: "manufacturing",
-      title: "Manufacturing Predictive Maintenance",
-      description: "Our expertise: Implement machine learning systems to predict equipment failures before they occur, with potential to minimize downtime by 50-70% based on industry benchmarks.",
-      categories: ["Manufacturing", "Predictive AI"],
-      results: "Potential: 50-70% Less Downtime",
+      image: "advertising",
+      title: "Digital Ad Spend Optimization",
+      description: "Our solution: Build AI-driven campaign optimization platforms that analyze performance data across channels, automatically adjust bidding strategies, and reallocate budgets to maximize ROI with potential to reduce ad waste by 40-60%.",
+      categories: ["Digital Marketing", "AI Optimization", "PPC"],
+      results: "Potential: 40-60% Less Ad Waste",
       delay: 0.6
     }
   ];
