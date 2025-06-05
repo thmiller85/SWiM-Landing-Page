@@ -47,22 +47,49 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
       } catch (healthError) {
         console.log('API health check failed, this might be a deployment issue');
         // In deployment, the API might be at a different path or not available
-        // For now, we'll still try the original endpoint
         apiBaseUrl = '';
       }
       
       // Send data to our proxy endpoint
-      const response = await fetch(`${apiBaseUrl}/api/contact-form`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formValues),
-      });
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-      console.log('Response URL:', response.url);
+      let response;
+      try {
+        response = await fetch(`${apiBaseUrl}/api/contact-form`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formValues),
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        console.log('Response URL:', response.url);
+        
+        // If we get a 404, it means the API route isn't available in deployment
+        if (response.status === 404) {
+          console.log('API endpoint not found, falling back to direct webhook submission');
+          throw new Error('API_NOT_FOUND');
+        }
+      } catch (error) {
+        console.log('Primary API call failed:', error);
+        
+        // Fallback: Submit directly to the webhook if API is not available
+        if (error.message === 'API_NOT_FOUND' || error.message.includes('Failed to fetch')) {
+          console.log('Attempting direct webhook submission as fallback');
+          
+          response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formValues),
+          });
+          
+          console.log('Direct webhook response status:', response.status);
+        } else {
+          throw error;
+        }
+      }
       
       if (response.ok) {
         const responseData = await response.json();
