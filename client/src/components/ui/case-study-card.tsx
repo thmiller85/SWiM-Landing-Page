@@ -79,7 +79,7 @@ const CaseStudyCard = ({
           transition={{ duration: 3, ease: "linear" }}
         />
         
-        <div className={`w-full h-[200px] ${getBgColor()} flex items-center justify-center relative overflow-hidden z-10`}>
+        <div className={`w-full h-[220px] ${getBgColor()} flex items-center justify-center relative overflow-hidden z-10`}>
           <motion.div 
             className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"
             animate={{ 
@@ -130,7 +130,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
+                  className="text-white/90 font-space font-medium mt-1 text-center px-2 leading-tight text-sm"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -174,7 +174,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
+                  className="text-white/90 font-space font-medium mt-1 text-center px-2 leading-tight text-sm"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -220,7 +220,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
+                  className="text-white/90 font-space font-medium mt-1 text-center px-2 leading-tight text-sm"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -266,7 +266,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
+                  className="text-white/90 font-space font-medium mt-1 text-center px-2 leading-tight text-sm"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -305,7 +305,7 @@ const CaseStudyCard = ({
           </motion.div>
         </div>
         
-        <div className="p-5 sm:p-6 relative z-10 flex flex-col h-[390px]">
+        <div className="p-5 sm:p-6 relative z-10 flex flex-col h-[370px]">
           <motion.div 
             className="flex items-center gap-2 mb-4 flex-wrap"
             variants={fadeIn}
