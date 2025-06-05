@@ -326,7 +326,7 @@ const CaseStudyCard = ({
           </motion.div>
           
           <motion.h3 
-            className="text-xl md:text-2xl font-space font-bold mb-3 line-clamp-2"
+            className="text-xl md:text-2xl font-space font-bold mb-3 line-clamp-3 leading-tight"
             variants={scaleIn}
             custom={delay + 0.3}
           >
