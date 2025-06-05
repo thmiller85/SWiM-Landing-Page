@@ -14,9 +14,10 @@ import n8nAgentImage from "@assets/n8n_agent.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
+  onContactClick: () => void;
 }
 
-const Hero = ({ onDiscoverClick }: HeroProps) => {
+const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useIntersectionObserver(ref, {
     once: false,
@@ -58,13 +59,14 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
               >
                 Discover Our Solutions
               </Button>
-              {/* <Button
+              <Button
+                onClick={onContactClick}
                 variant="outline"
                 className="bg-transparent border border-white/20 text-white font-inter font-medium hover:border-accent hover:text-white hover:bg-accent/10 transition-all"
                 size="lg"
               >
-                <Play size={18} className="mr-2" /> Watch Our Process
-              </Button> */}
+                Get Started Today
+              </Button>
             </div>
             <div className="mt-12 flex items-center gap-6">
               <div className="flex -space-x-2">
