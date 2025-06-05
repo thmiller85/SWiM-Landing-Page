@@ -81,6 +81,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
     }
   };
   
+  // Commented out until email, phone, and calendar integration is setup
+  /*
   const contactMethods = [
     {
       icon: <Mail className="text-accent" />,
@@ -104,6 +106,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
       href: "#"
     }
   ];
+  */
 
   return (
     <section ref={ref} id="contact" className="py-24 relative overflow-hidden bg-secondary/30">
@@ -223,28 +226,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
           </motion.form>
         </div>
         
-        {/* Alternative contact methods */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          {contactMethods.map((method, index) => (
-            <motion.div 
-              key={index}
-              className="glass rounded-xl p-6 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 + index * 0.1, duration: 0.6 }}
-            >
-              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-                {method.icon}
-              </div>
-              <h3 className="text-lg font-space font-bold mb-2">{method.title}</h3>
-              <p className="text-white/70 font-inter text-sm mb-4">
-                {method.description}
-              </p>
-              <a href={method.href} className="text-accent font-medium">{method.contact}</a>
-            </motion.div>
-          ))}
-        </div>
+        {/* Alternative contact methods removed until email, phone, and calendar integration is setup */}
       </div>
     </section>
   );
