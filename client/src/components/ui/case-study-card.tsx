@@ -130,7 +130,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2"
+                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -174,7 +174,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2"
+                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -220,7 +220,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2"
+                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
@@ -266,7 +266,7 @@ const CaseStudyCard = ({
                   </motion.div>
                 </motion.div>
                 <motion.p 
-                  className="text-white/90 font-space font-medium mt-2"
+                  className="text-white/90 font-space font-medium mt-2 text-center px-2 leading-tight"
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
