@@ -15,6 +15,11 @@ import rossAvatar from "@assets/Ross Avatar.png";
 import tomAvatar from "@assets/Tom Avatar.png";
 import steveAvatar from "@assets/Steve Avatar.png";
 import davidAvatar from "@assets/David Avatar.png";
+import openaiLogo from "@assets/OpenAI-white-monoblossom_1749125463906.png";
+import anthropicLogo from "@assets/Anthropic Logo_1749125655517.png";
+import pythonLogo from "@assets/Python Logo White_1749127141265.png";
+import dockerLogo from "@assets/docker-logo-white_1749127182963.png";
+import n8nLogo from "@assets/n8n Logo White Text_1749127191325.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -161,20 +166,40 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
             Built with
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-            <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">OpenAI</p>
+            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+              <img 
+                src={openaiLogo} 
+                alt="OpenAI - Advanced AI language models for natural language processing" 
+                className="h-8 w-auto"
+              />
             </div>
-            <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">React</p>
+            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+              <img 
+                src={anthropicLogo} 
+                alt="Anthropic - Claude AI for advanced conversational AI solutions" 
+                className="h-8 w-auto"
+              />
             </div>
-            <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">Node.js</p>
+            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+              <img 
+                src={pythonLogo} 
+                alt="Python - High-level programming language for AI and data science" 
+                className="h-8 w-auto"
+              />
             </div>
-            <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">Python</p>
+            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+              <img 
+                src={dockerLogo} 
+                alt="Docker - Containerization platform for scalable application deployment" 
+                className="h-8 w-auto"
+              />
             </div>
-            <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">n8n</p>
+            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+              <img 
+                src={n8nLogo} 
+                alt="n8n - Workflow automation platform for business process optimization" 
+                className="h-8 w-auto"
+              />
             </div>
           </div>
         </motion.div>
