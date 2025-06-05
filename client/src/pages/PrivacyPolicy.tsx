@@ -19,7 +19,11 @@ const PrivacyPolicy = () => {
           <div className="flex items-center justify-between mb-12">
             <Logo />
             <Link href="/">
-              <Button variant="outline" size="sm" className="bg-transparent border-accent text-accent hover:bg-accent hover:text-primary">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-accent text-accent hover:bg-accent hover:text-primary"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
@@ -31,7 +35,7 @@ const PrivacyPolicy = () => {
             <h1 className="text-4xl md:text-5xl font-space font-bold mb-8 text-white">
               Privacy Policy
             </h1>
-            
+
             <div className="prose prose-lg prose-invert max-w-none">
               <p className="text-white/80 font-inter text-lg mb-8">
                 Last updated: {new Date().toLocaleDateString()}
@@ -43,7 +47,10 @@ const PrivacyPolicy = () => {
                     Introduction
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    SWiM Agency ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
+                    SWiM AI, LLC ("we," "our," or "us") is committed to
+                    protecting your privacy. This Privacy Policy explains how we
+                    collect, use, disclose, and safeguard your information when
+                    you visit our website or use our services.
                   </p>
                 </section>
 
@@ -57,7 +64,8 @@ const PrivacyPolicy = () => {
                         Personal Information
                       </h3>
                       <p className="text-white/70 font-inter leading-relaxed">
-                        We may collect personal information that you voluntarily provide, including:
+                        We may collect personal information that you voluntarily
+                        provide, including:
                       </p>
                       <ul className="list-disc list-inside text-white/70 font-inter mt-2 space-y-1">
                         <li>Name and contact information</li>
@@ -66,13 +74,14 @@ const PrivacyPolicy = () => {
                         <li>Project requirements and specifications</li>
                       </ul>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xl font-space font-semibold text-accent mb-2">
                         Automatically Collected Information
                       </h3>
                       <p className="text-white/70 font-inter leading-relaxed">
-                        We automatically collect certain information when you visit our website:
+                        We automatically collect certain information when you
+                        visit our website:
                       </p>
                       <ul className="list-disc list-inside text-white/70 font-inter mt-2 space-y-1">
                         <li>IP address and browser information</li>
@@ -92,12 +101,22 @@ const PrivacyPolicy = () => {
                     We use the information we collect to:
                   </p>
                   <ul className="list-disc list-inside text-white/70 font-inter space-y-2">
-                    <li>Provide and improve our AI marketing and automation services</li>
+                    <li>
+                      Provide and improve our AI marketing and automation
+                      services
+                    </li>
                     <li>Respond to your inquiries and communicate with you</li>
-                    <li>Customize and enhance your experience with our services</li>
+                    <li>
+                      Customize and enhance your experience with our services
+                    </li>
                     <li>Analyze website usage and optimize our platform</li>
-                    <li>Send relevant updates and marketing communications (with consent)</li>
-                    <li>Comply with legal obligations and protect our rights</li>
+                    <li>
+                      Send relevant updates and marketing communications (with
+                      consent)
+                    </li>
+                    <li>
+                      Comply with legal obligations and protect our rights
+                    </li>
                   </ul>
                 </section>
 
@@ -106,12 +125,18 @@ const PrivacyPolicy = () => {
                     Information Sharing and Disclosure
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed mb-4">
-                    We do not sell, trade, or rent your personal information. We may share information in the following circumstances:
+                    We do not sell, trade, or rent your personal information. We
+                    may share information in the following circumstances:
                   </p>
                   <ul className="list-disc list-inside text-white/70 font-inter space-y-2">
-                    <li>With trusted service providers who assist in our operations</li>
+                    <li>
+                      With trusted service providers who assist in our
+                      operations
+                    </li>
                     <li>When required by law or to protect our legal rights</li>
-                    <li>In connection with a business transfer or acquisition</li>
+                    <li>
+                      In connection with a business transfer or acquisition
+                    </li>
                     <li>With your explicit consent for specific purposes</li>
                   </ul>
                 </section>
@@ -121,7 +146,11 @@ const PrivacyPolicy = () => {
                     Data Security
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no internet transmission is completely secure, and we cannot guarantee absolute security.
+                    We implement appropriate technical and organizational
+                    measures to protect your personal information against
+                    unauthorized access, alteration, disclosure, or destruction.
+                    However, no internet transmission is completely secure, and
+                    we cannot guarantee absolute security.
                   </p>
                 </section>
 
@@ -130,7 +159,8 @@ const PrivacyPolicy = () => {
                     Your Rights and Choices
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed mb-4">
-                    Depending on your location, you may have the following rights:
+                    Depending on your location, you may have the following
+                    rights:
                   </p>
                   <ul className="list-disc list-inside text-white/70 font-inter space-y-2">
                     <li>Access and review your personal information</li>
@@ -146,7 +176,10 @@ const PrivacyPolicy = () => {
                     Cookies and Tracking Technologies
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    We use cookies and similar technologies to enhance your browsing experience, analyze site usage, and assist in our marketing efforts. You can control cookie preferences through your browser settings.
+                    We use cookies and similar technologies to enhance your
+                    browsing experience, analyze site usage, and assist in our
+                    marketing efforts. You can control cookie preferences
+                    through your browser settings.
                   </p>
                 </section>
 
@@ -155,7 +188,10 @@ const PrivacyPolicy = () => {
                     Updates to This Policy
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    We may update this Privacy Policy periodically to reflect changes in our practices or legal requirements. We will notify you of significant changes by posting the updated policy on our website.
+                    We may update this Privacy Policy periodically to reflect
+                    changes in our practices or legal requirements. We will
+                    notify you of significant changes by posting the updated
+                    policy on our website.
                   </p>
                 </section>
 
@@ -164,13 +200,16 @@ const PrivacyPolicy = () => {
                     Contact Us
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    If you have questions about this Privacy Policy or our data practices, please contact us:
+                    If you have questions about this Privacy Policy or our data
+                    practices, please contact us:
                   </p>
                   <div className="mt-4 p-4 bg-primary/20 rounded-lg">
                     <p className="text-white font-inter">
-                      <strong>SWiM Agency</strong><br />
-                      Email: privacy@swimagency.com<br />
-                      Website: www.swimagency.com
+                      <strong>SWiM AI, LLC</strong>
+                      <br />
+                      Email: privacy@swimsolutions.ai
+                      <br />
+                      Website: www.swimsolutions.ai
                     </p>
                   </div>
                 </section>

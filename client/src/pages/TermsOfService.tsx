@@ -43,7 +43,7 @@ const TermsOfService = () => {
                     Agreement to Terms
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    By accessing and using SWiM Agency's services, you accept and agree to be bound by the terms and provision of this agreement. These Terms of Service govern your use of our website, AI marketing solutions, workflow automation services, and related offerings.
+                    By accessing and using SWiM AI, LLC's services, you accept and agree to be bound by the terms and provision of this agreement. These Terms of Service govern your use of our website, AI marketing solutions, workflow automation services, and related offerings.
                   </p>
                 </section>
 
@@ -52,7 +52,7 @@ const TermsOfService = () => {
                     Services Description
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed mb-4">
-                    SWiM Agency provides AI-powered marketing solutions, including but not limited to:
+                    SWiM AI, LLC provides AI-powered marketing solutions, including but not limited to:
                   </p>
                   <ul className="list-disc list-inside text-white/70 font-inter space-y-2">
                     <li>AI-powered marketing automation and optimization</li>
@@ -100,7 +100,7 @@ const TermsOfService = () => {
                         Our IP Rights
                       </h3>
                       <p className="text-white/70 font-inter leading-relaxed">
-                        All proprietary technologies, methodologies, and intellectual property developed by SWiM Agency remain our exclusive property. This includes AI models, automation frameworks, and custom software solutions.
+                        All proprietary technologies, methodologies, and intellectual property developed by SWiM AI, LLC remain our exclusive property. This includes AI models, automation frameworks, and custom software solutions.
                       </p>
                     </div>
                     
@@ -146,7 +146,7 @@ const TermsOfService = () => {
                     Limitation of Liability
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    To the maximum extent permitted by law, SWiM Agency shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or business opportunities. Our total liability shall not exceed the amount paid by you for the specific service giving rise to the claim.
+                    To the maximum extent permitted by law, SWiM AI, LLC shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or business opportunities. Our total liability shall not exceed the amount paid by you for the specific service giving rise to the claim.
                   </p>
                 </section>
 
@@ -173,7 +173,7 @@ const TermsOfService = () => {
                     Governing Law and Disputes
                   </h2>
                   <p className="text-white/70 font-inter leading-relaxed">
-                    These terms shall be governed by the laws of the jurisdiction where SWiM Agency is incorporated. Any disputes will be resolved through binding arbitration or in the appropriate courts of that jurisdiction.
+                    These terms shall be governed by the laws of the jurisdiction where SWiM AI, LLC is incorporated. Any disputes will be resolved through binding arbitration or in the appropriate courts of that jurisdiction.
                   </p>
                 </section>
 
@@ -195,9 +195,9 @@ const TermsOfService = () => {
                   </p>
                   <div className="mt-4 p-4 bg-primary/20 rounded-lg">
                     <p className="text-white font-inter">
-                      <strong>SWiM Agency</strong><br />
-                      Email: legal@swimagency.com<br />
-                      Website: www.swimagency.com
+                      <strong>SWiM AI, LLC</strong><br />
+                      Email: legal@swimsolutions.ai<br />
+                      Website: www.swimsolutions.ai
                     </p>
                   </div>
                 </section>
