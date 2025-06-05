@@ -2,7 +2,7 @@ import React, { forwardRef, useRef } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, Play } from "lucide-react";
+import { Check, TrendingUp, Users, Award } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn } from "@/lib/animations";
 
@@ -59,23 +59,34 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               </div>
             </div>
             
-            {/* Video preview */}
+            {/* Company achievements */}
             <motion.div 
               className="mt-8 glass rounded-xl p-6"
               initial={{ opacity: 0, y: 20 }}
               animate={isContentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div className="flex items-center gap-4">
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center">
-                    <Play className="text-accent" />
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
+                    <TrendingUp className="text-accent text-lg" />
                   </div>
-                  <div className="absolute inset-0 rounded-full border-2 border-accent/50 animate-pulse"></div>
+                  <h4 className="text-2xl font-space font-bold text-accent mb-1">95%</h4>
+                  <p className="text-white/70 font-inter text-xs">Success Rate</p>
                 </div>
-                <div>
-                  <h4 className="text-lg font-space font-medium mb-1">Watch our approach</h4>
-                  <p className="text-white/70 font-inter text-sm">See how we implement AI solutions for our clients</p>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center mx-auto mb-3">
+                    <Users className="text-highlight text-lg" />
+                  </div>
+                  <h4 className="text-2xl font-space font-bold text-highlight mb-1">50+</h4>
+                  <p className="text-white/70 font-inter text-xs">Clients Served</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
+                    <Award className="text-accent text-lg" />
+                  </div>
+                  <h4 className="text-2xl font-space font-bold text-accent mb-1">5+</h4>
+                  <p className="text-white/70 font-inter text-xs">Years Experience</p>
                 </div>
               </div>
             </motion.div>
