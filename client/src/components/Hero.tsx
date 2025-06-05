@@ -158,23 +158,23 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <p className="text-center text-white/60 font-inter text-sm uppercase tracking-widest mb-8">
-            Trusted by industry leaders
+            Built with
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
             <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">ACME Corp</p>
+              <p className="font-space font-bold text-lg">OpenAI</p>
             </div>
             <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">TechGiant</p>
+              <p className="font-space font-bold text-lg">React</p>
             </div>
             <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">FutureSoft</p>
+              <p className="font-space font-bold text-lg">Node.js</p>
             </div>
             <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">InnovateX</p>
+              <p className="font-space font-bold text-lg">Python</p>
             </div>
             <div className="text-white/40 hover:text-white/80 transition-all">
-              <p className="font-space font-bold text-lg">DataFlow</p>
+              <p className="font-space font-bold text-lg">n8n</p>
             </div>
           </div>
         </motion.div>
