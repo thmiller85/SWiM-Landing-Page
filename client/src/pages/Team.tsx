@@ -311,10 +311,19 @@ const Team: React.FC = () => {
               <p className="text-white/70 font-inter mb-6">
                 We're always looking for talented individuals who are passionate about AI and marketing technology.
               </p>
-              <Link href="/contact">
+              <Link href="/#contact">
                 <Button 
                   variant="outline"
                   className="bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+                  onClick={() => {
+                    // Navigate to home page and scroll to contact section
+                    setTimeout(() => {
+                      const contactSection = document.getElementById('contact');
+                      if (contactSection) {
+                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
                 >
                   Get in Touch
                 </Button>

@@ -399,10 +399,19 @@ const TeamMemberProfile: React.FC = () => {
                     <p className="text-white/70 mb-6">
                       Interested in discussing how {member.name} and the SWiM team can help your business?
                     </p>
-                    <Link href="/contact">
+                    <Link href="/#contact">
                       <Button 
                         variant="outline"
                         className="bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+                        onClick={() => {
+                          // Navigate to home page and scroll to contact section
+                          setTimeout(() => {
+                            const contactSection = document.getElementById('contact');
+                            if (contactSection) {
+                              contactSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }, 100);
+                        }}
                       >
                         Get in Touch
                       </Button>
