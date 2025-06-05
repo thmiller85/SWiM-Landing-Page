@@ -165,36 +165,36 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           <p className="text-center text-white/60 font-inter text-sm uppercase tracking-widest mb-8">
             Built with
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+            <div className="hover:scale-110 transition-transform duration-300">
               <img 
                 src={openaiLogo} 
                 alt="OpenAI - Advanced AI language models for natural language processing" 
-                className="h-8 w-auto"
+                className="h-10 w-auto"
               />
             </div>
-            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+            <div className="hover:scale-110 transition-transform duration-300">
               <img 
                 src={anthropicLogo} 
                 alt="Anthropic - Claude AI for advanced conversational AI solutions" 
-                className="h-8 w-auto"
+                className="h-6 w-auto"
               />
             </div>
-            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+            <div className="hover:scale-110 transition-transform duration-300">
               <img 
                 src={pythonLogo} 
                 alt="Python - High-level programming language for AI and data science" 
-                className="h-8 w-auto"
+                className="h-10 w-auto"
               />
             </div>
-            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+            <div className="hover:scale-110 transition-transform duration-300">
               <img 
                 src={dockerLogo} 
                 alt="Docker - Containerization platform for scalable application deployment" 
-                className="h-8 w-auto"
+                className="h-6 w-auto"
               />
             </div>
-            <div className="opacity-60 hover:opacity-100 transition-all duration-300">
+            <div className="hover:scale-110 transition-transform duration-300">
               <img 
                 src={n8nLogo} 
                 alt="n8n - Workflow automation platform for business process optimization" 
