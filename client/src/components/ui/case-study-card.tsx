@@ -29,8 +29,8 @@ const CaseStudyCard = ({
         return 'bg-gradient-to-br from-cyan-900/40 to-blue-800/30';
       case 'finance':
         return 'bg-emerald-900/30';
-      case 'healthcare':
-        return 'bg-purple-900/30';
+      case 'marketing':
+        return 'bg-gradient-to-br from-rose-900/40 to-pink-800/30';
       case 'manufacturing':
         return 'bg-amber-900/30';
       default:
@@ -45,8 +45,8 @@ const CaseStudyCard = ({
         return 'accent';
       case 'finance':
         return 'emerald-400';
-      case 'healthcare':
-        return 'purple-400';
+      case 'marketing':
+        return 'rose-400';
       case 'manufacturing':
         return 'amber-400';
       default:
@@ -183,48 +183,40 @@ const CaseStudyCard = ({
               </div>
             )}
             
-            {image === 'healthcare' && (
+            {image === 'marketing' && (
               <div className="flex flex-col items-center">
                 <motion.div 
-                  className="relative h-12 w-24 mb-3"
-                  animate={{ opacity: [0.6, 1, 0.6] }}
-                  transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
+                  className="w-16 h-16 bg-rose-400/20 flex items-center justify-center mx-auto mb-3 rounded-md"
+                  variants={pulseAnimation}
+                  initial="hidden"
+                  animate="visible"
                 >
                   <motion.div 
-                    className="absolute bg-purple-400/80 h-8 w-full rounded-md"
-                    animate={{ 
-                      y: [0, 2, 0],
-                      opacity: [0.6, 1, 0.6]
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      repeatType: "mirror"
-                    }}
-                  />
-                  <motion.div 
-                    className="absolute top-4 left-0 right-0"
-                    animate={{
-                      opacity: [0.5, 1, 0.5]
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity
-                    }}
+                    className="w-12 h-12 bg-rose-400/30 flex items-center justify-center"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    <svg height="20" width="100%" className="text-purple-200">
-                      <path 
-                        d="M0,10 Q5,5 10,10 T20,10 T30,10 T40,10 T50,10 T60,10 T70,10 T80,10 T90,10 T100,10" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2"
-                      />
-                    </svg>
+                    {/* Email/Marketing icon */}
+                    <motion.svg 
+                      className="w-8 h-8 text-rose-400" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      animate={{ 
+                        y: [0, -2, 0],
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 3,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" 
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="L22 6L12 13L2 6" 
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
                   </motion.div>
                 </motion.div>
                 <motion.p 
@@ -232,7 +224,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Patient Analytics
+                  Lead Generation
                 </motion.p>
               </div>
             )}

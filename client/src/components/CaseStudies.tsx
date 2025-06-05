@@ -31,11 +31,11 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
       delay: 0.2
     },
     {
-      image: "healthcare",
-      title: "Healthcare Patient Analytics",
-      description: "Our capability: Develop predictive analytics platforms that could improve patient scheduling efficiency and reduce no-show rates, with potential for significant operational cost savings.",
-      categories: ["Healthcare", "SaaS Solution"],
-      results: "Potential: Major Cost Savings",
+      image: "marketing",
+      title: "AI-Powered Lead Generation",
+      description: "Our expertise: Develop intelligent cold email outreach systems that personalize messages at scale, identify high-quality prospects, and optimize send times to potentially increase response rates by 60-85%.",
+      categories: ["Sales", "Marketing Automation", "AI"],
+      results: "Potential: 60-85% Higher Response Rates",
       delay: 0.4
     },
     {
