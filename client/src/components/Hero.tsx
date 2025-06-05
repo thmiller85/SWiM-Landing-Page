@@ -75,7 +75,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 <div className="h-8 w-8 rounded-full border-2 border-primary bg-white/20"></div>
               </div>
               <div className="text-white/80 font-inter text-sm">
-                <span className="text-white font-medium">Founder-Led,</span> Expert-Driven AI Solutions
+                <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
               </div>
               <div className="h-8 w-px bg-white/20"></div>
               <div className="text-white/80 font-inter text-sm">
