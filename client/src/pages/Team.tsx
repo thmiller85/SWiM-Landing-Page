@@ -316,13 +316,15 @@ const Team: React.FC = () => {
                   variant="outline"
                   className="bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
                   onClick={() => {
-                    // Navigate to home page and scroll to contact section
+                    // Navigate to home page and scroll to contact section with proper offset
                     setTimeout(() => {
                       const contactSection = document.getElementById('contact');
                       if (contactSection) {
-                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                        const yOffset = -80; // Same offset as navigation context
+                        const y = contactSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
                       }
-                    }, 100);
+                    }, 500); // Longer timeout to ensure DOM is loaded
                   }}
                 >
                   Get in Touch
