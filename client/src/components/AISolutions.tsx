@@ -1,5 +1,6 @@
 import React, { forwardRef, useRef } from "react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { 
   Sparkles, 
   Brain, 
@@ -8,7 +9,11 @@ import {
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn } from "@/lib/animations";
 
-const AISolutions = forwardRef<HTMLElement>((props, ref) => {
+interface AISolutionsProps {
+  onContactClick: () => void;
+}
+
+const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick }, ref) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const isContentInView = useIntersectionObserver(contentRef, { once: false, threshold: 0.1 });
   
@@ -72,6 +77,14 @@ const AISolutions = forwardRef<HTMLElement>((props, ref) => {
                 </div>
               </div>
             </div>
+            
+            <Button 
+              variant="outline"
+              className="mt-10 bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
+              onClick={onContactClick}
+            >
+              Get Started with AI Solutions
+            </Button>
           </motion.div>
           
           <motion.div
