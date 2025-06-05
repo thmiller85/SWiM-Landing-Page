@@ -616,7 +616,22 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                     className={`${
                       service.color === "accent" ? "bg-accent hover:bg-accent/90" : "bg-highlight hover:bg-highlight/90"
                     } text-white`}
-                    onClick={() => scrollToSection("contact")}
+                    onClick={() => {
+                      setLocation("/");
+                      // Small delay to ensure navigation completes before scrolling
+                      setTimeout(() => {
+                        const contactSection = document.getElementById("contact");
+                        if (contactSection) {
+                          const headerOffset = 120;
+                          const elementPosition = contactSection.getBoundingClientRect().top;
+                          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                          window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                          });
+                        }
+                      }, 100);
+                    }}
                   >
                     {service.cta.buttonText}
                   </Button>
@@ -810,7 +825,22 @@ const ServicePage: React.FC<ServicePageProps> = ({ id }) => {
                 className={`${
                   service.color === "accent" ? "bg-accent hover:bg-accent/90" : "bg-highlight hover:bg-highlight/90"
                 } text-white`}
-                onClick={() => setLocation("/contact")}
+                onClick={() => {
+                  setLocation("/");
+                  // Small delay to ensure navigation completes before scrolling
+                  setTimeout(() => {
+                    const contactSection = document.getElementById("contact");
+                    if (contactSection) {
+                      const headerOffset = 120;
+                      const elementPosition = contactSection.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                      });
+                    }
+                  }, 100);
+                }}
               >
                 {service.cta.buttonText}
                 <ArrowRight className="ml-2 h-4 w-4" />
