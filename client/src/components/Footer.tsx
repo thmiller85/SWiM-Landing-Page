@@ -68,8 +68,8 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <h4 className="text-lg font-space font-bold mb-6">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Privacy Policy</a></li>
-              <li><a href="#" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Terms of Service</a></li>
+              <li><Link href="/privacy-policy" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -79,8 +79,8 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
             © {new Date().getFullYear()} SWiM Agency. All rights reserved.
           </p>
           <div className="flex space-x-6">
-            <a href="#" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Privacy Policy</a>
-            <a href="#" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Terms of Service</a>
+            <Link href="/privacy-policy" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Terms of Service</Link>
             <a href="#" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Cookies</a>
           </div>
         </div>

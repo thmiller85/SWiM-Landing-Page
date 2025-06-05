@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
 import ServicePage from "./pages/ServicePage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -70,6 +72,8 @@ function App() {
           <Route path="/services/:id">
             {params => <ServicePage id={params.id} />}
           </Route>
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms-of-service" component={TermsOfService} />
           <Route component={NotFound} />
         </Switch>
         <Toaster />
