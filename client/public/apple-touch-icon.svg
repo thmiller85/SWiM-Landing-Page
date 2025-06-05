@@ -1,0 +1,24 @@
+<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4BCBF2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1A8CB7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0A3A5A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="180" height="180" rx="40" fill="#002348"/>
+  
+  <!-- Main wave design -->
+  <path d="M20 70 Q45 40, 70 70 T130 70 Q155 40, 180 70 L180 120 Q155 90, 130 120 T70 120 Q45 90, 20 120 Z" 
+        fill="url(#waveGradient)" opacity="0.9"/>
+  
+  <!-- Secondary wave -->
+  <path d="M10 90 Q35 60, 60 90 T110 90 Q135 60, 160 90 Q135 120, 110 90 T60 90 Q35 120, 10 90" 
+        fill="#4BCBF2" opacity="0.6"/>
+  
+  <!-- Accent wave -->
+  <path d="M30 50 Q55 30, 80 50 T130 50 Q155 30, 170 50" 
+        stroke="#4BCBF2" stroke-width="3" fill="none" opacity="0.8"/>
+</svg>
