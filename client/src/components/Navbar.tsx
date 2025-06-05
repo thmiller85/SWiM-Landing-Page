@@ -111,7 +111,7 @@ const Navbar = ({
       </div>
       
       {/* Mobile menu */}
-      <div className={`md:hidden absolute w-full left-0 top-full glass ${mobileMenuOpen ? "block" : "hidden"}`}>
+      <div className={`md:hidden absolute w-full left-0 top-full bg-primary/95 backdrop-blur-md border-b border-accent/20 ${mobileMenuOpen ? "block" : "hidden"}`}>
         <div className="container mx-auto px-6 py-8 flex flex-col space-y-5">
           <button 
             onClick={() => handleNavClick(servicesRef)}
