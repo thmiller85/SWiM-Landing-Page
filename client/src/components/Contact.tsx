@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,15 +17,19 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
   
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
+  const [selectedService, setSelectedService] = useState<string>("");
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formRef.current) return;
     
-    // Get form data
+    // Get form data and add the selected service
     const formData = new FormData(formRef.current);
     const formValues = Object.fromEntries(formData.entries());
+    
+    // Add the selected service from state
+    formValues.service = selectedService;
     
     try {
       console.log('Submitting form data:', formValues);
@@ -51,8 +55,9 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
           description: "We'll be in touch shortly!",
         });
         
-        // Reset form
+        // Reset form and selected service
         formRef.current.reset();
+        setSelectedService("");
       } else {
         const errorText = await response.text();
         console.error('Server error response:', errorText);
@@ -181,7 +186,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
             </div>
             <div>
               <Label htmlFor="service" className="block mb-2 text-white/80 font-inter text-sm">Service of Interest</Label>
-              <Select name="service">
+              <Select value={selectedService} onValueChange={setSelectedService}>
                 <SelectTrigger className="w-full bg-secondary/50 border border-white/10 rounded-lg p-3 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent">
                   <SelectValue placeholder="Select a service" />
                 </SelectTrigger>
