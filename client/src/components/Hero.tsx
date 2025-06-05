@@ -198,7 +198,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
               <img 
                 src={n8nLogo} 
                 alt="n8n - Workflow automation platform for business process optimization" 
-                className="h-16 w-auto"
+                className="h-24 w-auto"
               />
             </div>
           </div>
