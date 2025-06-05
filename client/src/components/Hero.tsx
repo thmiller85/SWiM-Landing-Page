@@ -20,6 +20,7 @@ import anthropicLogo from "@assets/Anthropic Logo_1749125655517.png";
 import pythonLogo from "@assets/Python Logo White_1749127141265.png";
 import dockerLogo from "@assets/docker-logo-white_1749127182963.png";
 import n8nLogo from "@assets/n8n Logo White Text_1749127191325.png";
+import cursorLogo from "@assets/Cursor Logo (1)_1749128455053.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -199,6 +200,13 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 src={n8nLogo} 
                 alt="n8n - Workflow automation platform for business process optimization" 
                 className="h-24 w-auto"
+              />
+            </div>
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={cursorLogo} 
+                alt="Cursor - AI-powered code editor for enhanced development productivity" 
+                className="h-10 w-auto"
               />
             </div>
           </div>
