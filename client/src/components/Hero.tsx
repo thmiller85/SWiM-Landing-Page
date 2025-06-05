@@ -78,8 +78,27 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 Get Started Today
               </Button>
             </div>
-            <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-              <div className="flex items-center gap-4">
+            <div className="mt-12">
+              {/* Mobile layout */}
+              <div className="flex sm:hidden flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2">
+                    <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                    <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                    <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                    <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
+                  </div>
+                  <div className="text-white/80 font-inter text-sm">
+                    <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
+                  </div>
+                </div>
+                <div className="text-white/80 font-inter text-sm text-center">
+                  <span className="text-accent font-medium">Ready to Build</span> Your Success Story
+                </div>
+              </div>
+              
+              {/* Desktop layout */}
+              <div className="hidden sm:flex items-center gap-6">
                 <div className="flex -space-x-2">
                   <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                   <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
@@ -89,10 +108,10 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 <div className="text-white/80 font-inter text-sm">
                   <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
                 </div>
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-white/20"></div>
-              <div className="text-white/80 font-inter text-sm">
-                <span className="text-accent font-medium">Ready to Build</span> Your Success Story
+                <div className="h-8 w-px bg-white/20"></div>
+                <div className="text-white/80 font-inter text-sm">
+                  <span className="text-accent font-medium">Ready to Build</span> Your Success Story
+                </div>
               </div>
             </div>
           </motion.div>
