@@ -34,8 +34,25 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
     try {
       console.log('Submitting form data:', formValues);
       
+      // First, test if API is available
+      let apiBaseUrl = '';
+      try {
+        const healthCheck = await fetch('/api/health');
+        if (healthCheck.ok) {
+          console.log('API health check passed, using relative URL');
+          apiBaseUrl = '';
+        } else {
+          throw new Error('Health check failed');
+        }
+      } catch (healthError) {
+        console.log('API health check failed, this might be a deployment issue');
+        // In deployment, the API might be at a different path or not available
+        // For now, we'll still try the original endpoint
+        apiBaseUrl = '';
+      }
+      
       // Send data to our proxy endpoint
-      const response = await fetch('/api/contact-form', {
+      const response = await fetch(`${apiBaseUrl}/api/contact-form`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,6 +62,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
       
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
+      console.log('Response URL:', response.url);
       
       if (response.ok) {
         const responseData = await response.json();

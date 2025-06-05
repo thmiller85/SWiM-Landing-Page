@@ -5,6 +5,14 @@ import path from "path";
 import fetch from "node-fetch";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  console.log('Registering routes...');
+  
+  // Debug endpoint to test if API routes are working
+  app.get('/api/health', (req, res) => {
+    console.log('Health check endpoint hit');
+    res.json({ status: 'ok', timestamp: new Date().toISOString(), environment: process.env.NODE_ENV });
+  });
+  
   // Serve sitemap.xml
   app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'client/public/sitemap.xml'));
@@ -12,6 +20,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Proxy endpoint for form submissions
   app.post('/api/contact-form', async (req, res) => {
+    console.log('Contact form endpoint hit!');
     try {
       console.log('Sending form data to n8n webhook:', req.body);
       
