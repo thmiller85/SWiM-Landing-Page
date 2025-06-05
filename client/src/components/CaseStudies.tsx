@@ -6,7 +6,11 @@ import CaseStudyCard from "./ui/case-study-card";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 
-const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
+interface CaseStudiesProps {
+  onContactClick: () => void;
+}
+
+const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick }, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const isTitleInView = useIntersectionObserver(titleRef, { once: false, threshold: 0.1 });
   
@@ -230,6 +234,7 @@ const CaseStudies = forwardRef<HTMLElement>((props, ref) => {
               textShadow: "0 0 5px rgba(0,240,255,0.3)",
               boxShadow: "0 0 20px rgba(0,240,255,0.5)"
             }}
+            onClick={onContactClick}
           >
             Discuss Your Potential
           </Button>

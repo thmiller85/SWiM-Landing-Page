@@ -48,7 +48,7 @@ const HomePage = () => {
         <Services ref={servicesRef} />
         <AISolutions ref={aiSolutionsRef} onContactClick={() => scrollToSection(contactRef)} />
         <Workflow ref={workflowRef} />
-        <CaseStudies ref={caseStudiesRef} />
+        <CaseStudies ref={caseStudiesRef} onContactClick={() => scrollToSection(contactRef)} />
         <About ref={aboutRef} />
         <Contact ref={contactRef} />
         <Footer 
