@@ -58,13 +58,13 @@ const Hero = ({ onDiscoverClick }: HeroProps) => {
               >
                 Discover Our Solutions
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="bg-transparent border border-white/20 text-white font-inter font-medium hover:border-accent hover:text-white hover:bg-accent/10 transition-all"
                 size="lg"
               >
                 <Play size={18} className="mr-2" /> Watch Our Process
-              </Button>
+              </Button> */}
             </div>
             <div className="mt-12 flex items-center gap-6">
               <div className="flex -space-x-2">
