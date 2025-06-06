@@ -75,8 +75,8 @@ function addRouteSpecificContent(html: string, route: string): string {
           <h1>Transform your business with AI-Powered Solutions</h1>
           <p>SWiM helps B2B companies leverage artificial intelligence to automate workflows, optimize marketing strategies, and create cutting-edge SaaS solutions that drive results.</p>
           <div>AI-Powered Marketing, Workflow Automation, B2B SaaS Development, Data Intelligence, AI Strategy Consulting, AI Security & Ethics</div>
-          <div>500+ satisfied clients, 4.9/5 average rating</div>
-          <div>ACME Corp, TechGiant, FutureSoft, InnovateX, DataFlow</div>
+          <div>24+ AI Experts, 12+ Years Experience, 200+ Projects, 98% Client Retention</div>
+          <div>Founder-Led Delivery, Lean By Design, U.S.-Based Team, Cross-Industry Experience</div>
         </div>
       `;
       break;
