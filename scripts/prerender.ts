@@ -65,7 +65,7 @@ async function prerenderRoutes() {
 
 function addRouteSpecificContent(html: string, route: string): string {
   let title = 'SWiM | AI-Powered Marketing & Business Solutions';
-  let description = 'Transform your business with AI-powered marketing, workflow automation, and custom SaaS solutions. Founder-led, expert-driven AI solutions with transparent, results-driven approach.';
+  let description = 'Transform your business with AI-powered marketing, workflow automation, and custom SaaS solutions. Founder-led team of AI specialists delivering transparent, results-driven implementations for B2B companies. Expert AI integration, data intelligence, and ethical AI consulting.';
   let additionalContent = '';
 
   switch (route) {
