@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
 import ServicePage from "./pages/ServicePage";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/not-found";
@@ -67,6 +69,8 @@ function App() {
       <TooltipProvider>
         <Switch>
           <Route path="/" component={HomePage} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/team" component={Team} />
           <Route path="/team/:id" component={TeamMember} />
           <Route path="/services/:id">

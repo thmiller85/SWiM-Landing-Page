@@ -375,7 +375,7 @@ Ready to explore custom SaaS development for your business?`,
   async incrementBlogPostViews(id: number): Promise<void> {
     const post = this.blogPosts.get(id);
     if (post) {
-      post.views++;
+      post.views = (post.views || 0) + 1;
       this.blogPosts.set(id, post);
     }
   }
@@ -383,7 +383,7 @@ Ready to explore custom SaaS development for your business?`,
   async incrementBlogPostLeads(id: number): Promise<void> {
     const post = this.blogPosts.get(id);
     if (post) {
-      post.leads++;
+      post.leads = (post.leads || 0) + 1;
       this.blogPosts.set(id, post);
     }
   }
@@ -391,7 +391,7 @@ Ready to explore custom SaaS development for your business?`,
   async incrementBlogPostShares(id: number): Promise<void> {
     const post = this.blogPosts.get(id);
     if (post) {
-      post.shares++;
+      post.shares = (post.shares || 0) + 1;
       this.blogPosts.set(id, post);
     }
   }
@@ -399,7 +399,7 @@ Ready to explore custom SaaS development for your business?`,
   async getPopularPosts(limit = 5): Promise<BlogPost[]> {
     const posts = Array.from(this.blogPosts.values())
       .filter(post => post.status === 'published')
-      .sort((a, b) => b.views - a.views)
+      .sort((a, b) => (b.views || 0) - (a.views || 0))
       .slice(0, limit);
     return posts;
   }

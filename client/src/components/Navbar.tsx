@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import Logo from "./ui/logo";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -84,6 +84,14 @@ const Navbar = ({
             >
               Case Studies
             </button>
+            <Link href="/blog">
+              <button 
+                onClick={closeMobileMenu}
+                className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
+              >
+                Blog
+              </button>
+            </Link>
             <button 
               onClick={() => handleNavClick(aboutRef)} 
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
