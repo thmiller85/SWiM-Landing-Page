@@ -187,11 +187,11 @@ function addRouteSpecificContent(html: string, route: string): string {
     "@type": "WebPage",
     "name": title,
     "description": description,
-    "url": `https://your-domain.com${route}`,
+    "url": `https://swimsolutions.ai${route}`,
     "isPartOf": {
       "@type": "WebSite",
       "name": "SWiM Agency",
-      "url": "https://your-domain.com"
+      "url": "https://swimsolutions.ai"
     }
   };
   

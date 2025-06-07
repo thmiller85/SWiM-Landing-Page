@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const baseUrl = 'https://your-domain.com'; // Replace with your actual domain
+const baseUrl = 'https://swimsolutions.ai';
 const routes = [
   '/',
   '/team',
