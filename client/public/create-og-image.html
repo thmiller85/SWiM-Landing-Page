@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        .og-container {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #002348 0%, #0A3A5A 50%, #1A8CB7 100%);
+            position: relative;
+            color: white;
+            overflow: hidden;
+        }
+        .logo {
+            position: absolute;
+            top: 60px;
+            left: 80px;
+            width: 180px;
+            height: 90px;
+        }
+        .main-title {
+            position: absolute;
+            top: 180px;
+            left: 80px;
+            font-size: 64px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+        .subtitle {
+            position: absolute;
+            top: 340px;
+            left: 80px;
+            font-size: 28px;
+            color: #4BCBF2;
+        }
+        .services {
+            position: absolute;
+            top: 390px;
+            left: 80px;
+            display: flex;
+            gap: 150px;
+            align-items: center;
+        }
+        .service {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+        }
+        .bullet {
+            width: 8px;
+            height: 8px;
+            background: #4BCBF2;
+            border-radius: 50%;
+        }
+        .wave-bg {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle at 50% 50%, rgba(75, 203, 242, 0.1) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body>
+    <div class="og-container">
+        <div class="wave-bg"></div>
+        <img src="swim-logo-proper.png" alt="SWiM Logo" class="logo">
+        <div class="main-title">AI-Powered Marketing<br>& Business Solutions</div>
+        <div class="subtitle">Transform your business with cutting-edge AI technology</div>
+        <div class="services">
+            <div class="service">
+                <div class="bullet"></div>
+                <span>Workflow Automation</span>
+            </div>
+            <div class="service">
+                <div class="bullet"></div>
+                <span>AI Strategy</span>
+            </div>
+            <div class="service">
+                <div class="bullet"></div>
+                <span>SaaS Development</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

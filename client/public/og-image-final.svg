@@ -1,0 +1,57 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#002348;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0A3A5A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A8CB7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4BCBF2;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#1A8CB7;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#0A3A5A;stop-opacity:0.4" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Background wave pattern -->
+  <path d="M0 400 Q300 350, 600 400 T1200 400 L1200 630 L0 630 Z" fill="url(#waveGradient)" opacity="0.3"/>
+  <path d="M0 450 Q400 400, 800 450 T1200 450 L1200 630 L0 630 Z" fill="url(#waveGradient)" opacity="0.2"/>
+  
+  <!-- Embed the actual SWiM logo -->
+  <image x="80" y="60" width="200" height="100" href="swim-logo-proper.png" preserveAspectRatio="xMidYMid meet"/>
+  
+  <!-- Main headline -->
+  <text x="80" y="220" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">
+    AI-Powered Marketing
+  </text>
+  <text x="80" y="290" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">
+    &amp; Business Solutions
+  </text>
+  
+  <!-- Subheadline -->
+  <text x="80" y="340" font-family="Arial, sans-serif" font-size="28" fill="#4BCBF2">
+    Transform your business with cutting-edge AI technology
+  </text>
+  
+  <!-- Service bullets with proper spacing -->
+  <g transform="translate(80, 390)">
+    <!-- Bullet 1 -->
+    <circle cx="8" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="25" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">Workflow Automation</text>
+    
+    <!-- Bullet 2 with much better spacing -->
+    <circle cx="350" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="367" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">AI Strategy</text>
+    
+    <!-- Bullet 3 with much better spacing -->
+    <circle cx="600" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="617" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">SaaS Development</text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="1000" cy="150" r="60" fill="#4BCBF2" opacity="0.1"/>
+  <circle cx="1100" cy="300" r="40" fill="#1A8CB7" opacity="0.15"/>
+  <circle cx="950" cy="450" r="80" fill="#4BCBF2" opacity="0.08"/>
+</svg>
