@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, Clock } from "lucide-react";
@@ -18,11 +19,26 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const [selectedService, setSelectedService] = useState<string>("");
+  const [privacyAccepted, setPrivacyAccepted] = useState<boolean>(false);
+  
+  const handlePrivacyChange = (checked: CheckedState) => {
+    setPrivacyAccepted(checked === true);
+  };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formRef.current) return;
+    
+    // Check if privacy policy is accepted
+    if (!privacyAccepted) {
+      toast({
+        title: "Privacy Policy Required",
+        description: "Please accept the privacy policy to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     // Get form data and add the selected service
     const formData = new FormData(formRef.current);
@@ -74,7 +90,8 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         console.log('Primary API call failed:', error);
         
         // Fallback: Submit directly to the webhook if API is not available
-        if (error.message === 'API_NOT_FOUND' || error.message.includes('Failed to fetch')) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        if (errorMessage === 'API_NOT_FOUND' || errorMessage.includes('Failed to fetch')) {
           console.log('Attempting direct webhook submission as fallback');
           
           response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
@@ -103,6 +120,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         // Reset form and selected service
         formRef.current.reset();
         setSelectedService("");
+        setPrivacyAccepted(false);
       } else {
         const errorText = await response.text();
         console.error('Server error response:', errorText);
@@ -257,9 +275,15 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
             </div>
             <div className="md:col-span-2 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="flex items-center gap-2">
-                <Checkbox id="privacy" name="privacy" className="rounded bg-secondary/50 border-white/10 text-accent focus:ring-accent" />
+                <Checkbox 
+                  id="privacy" 
+                  name="privacy" 
+                  checked={privacyAccepted}
+                  onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                  className="rounded bg-secondary/50 border-white/10 text-accent focus:ring-accent" 
+                />
                 <Label htmlFor="privacy" className="text-white/70 font-inter text-sm">
-                  I agree to the <a href="#" className="text-accent">Privacy Policy</a>
+                  I agree to the <a href="/privacy-policy" className="text-accent hover:text-accent/80 underline">Privacy Policy</a>*
                 </Label>
               </div>
               <Button 
