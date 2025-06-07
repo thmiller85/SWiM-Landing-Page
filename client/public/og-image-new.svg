@@ -1,0 +1,68 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#002348;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0A3A5A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A8CB7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4BCBF2;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#1A8CB7;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#0A3A5A;stop-opacity:0.4" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Background wave pattern -->
+  <path d="M0 400 Q300 350, 600 400 T1200 400 L1200 630 L0 630 Z" fill="url(#waveGradient)" opacity="0.3"/>
+  <path d="M0 450 Q400 400, 800 450 T1200 450 L1200 630 L0 630 Z" fill="url(#waveGradient)" opacity="0.2"/>
+  
+  <!-- SWiM Logo (recreated wave design) -->
+  <g transform="translate(80, 80)">
+    <!-- Wave symbol -->
+    <path d="M0 40 Q20 20, 40 40 Q60 60, 80 40 Q100 20, 120 40 Q140 60, 160 40" 
+          stroke="#4BCBF2" stroke-width="8" fill="none" opacity="0.9"/>
+    <path d="M0 55 Q25 35, 50 55 Q75 75, 100 55 Q125 35, 150 55" 
+          stroke="#1A8CB7" stroke-width="6" fill="none" opacity="0.7"/>
+    <path d="M0 25 Q30 5, 60 25 Q90 45, 120 25 Q150 5, 180 25" 
+          stroke="#4BCBF2" stroke-width="4" fill="none" opacity="0.5"/>
+    
+    <!-- SWiM text -->
+    <text x="200" y="65" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white">SWiM</text>
+  </g>
+  
+  <!-- Main headline -->
+  <text x="80" y="220" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">
+    AI-Powered Marketing
+  </text>
+  <text x="80" y="290" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">
+    &amp; Business Solutions
+  </text>
+  
+  <!-- Subheadline -->
+  <text x="80" y="340" font-family="Arial, sans-serif" font-size="28" fill="#4BCBF2">
+    Transform your business with cutting-edge AI technology
+  </text>
+  
+  <!-- Service bullets with better spacing -->
+  <g transform="translate(80, 390)">
+    <!-- Bullet 1 -->
+    <circle cx="8" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="25" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">Workflow Automation</text>
+    
+    <!-- Bullet 2 with better spacing -->
+    <circle cx="280" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="297" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">AI Strategy</text>
+    
+    <!-- Bullet 3 with better spacing -->
+    <circle cx="480" cy="8" r="4" fill="#4BCBF2"/>
+    <text x="497" y="15" font-family="Arial, sans-serif" font-size="24" fill="white">SaaS Development</text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="1000" cy="150" r="60" fill="#4BCBF2" opacity="0.1"/>
+  <circle cx="1100" cy="300" r="40" fill="#1A8CB7" opacity="0.15"/>
+  <circle cx="950" cy="450" r="80" fill="#4BCBF2" opacity="0.08"/>
+</svg>
