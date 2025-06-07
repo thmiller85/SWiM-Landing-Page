@@ -279,7 +279,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                   id="privacy" 
                   name="privacy" 
                   checked={privacyAccepted}
-                  onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                  onCheckedChange={handlePrivacyChange}
                   className="rounded bg-secondary/50 border-white/10 text-accent focus:ring-accent" 
                 />
                 <Label htmlFor="privacy" className="text-white/70 font-inter text-sm">
