@@ -1,38 +1,74 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://your-domain.repl.co/</loc>
+    <loc>https://swimsolutions.ai/</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#services</loc>
+    <loc>https://swimsolutions.ai/team</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#ai-solutions</loc>
+    <loc>https://swimsolutions.ai/team/ross-stockdale</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#workflow</loc>
+    <loc>https://swimsolutions.ai/team/tom-miller</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#case-studies</loc>
+    <loc>https://swimsolutions.ai/team/steve-wurster</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#about</loc>
+    <loc>https://swimsolutions.ai/team/david-stockdale</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.repl.co/#contact</loc>
+    <loc>https://swimsolutions.ai/services/ai-powered-marketing</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swimsolutions.ai/services/workflow-automation</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swimsolutions.ai/services/b2b-saas-development</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swimsolutions.ai/services/data-intelligence</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swimsolutions.ai/services/ai-strategy-consulting</loc>
+    <lastmod>2025-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swimsolutions.ai/services/ai-security-ethics</loc>
+    <lastmod>2025-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
