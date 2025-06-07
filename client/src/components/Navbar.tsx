@@ -145,6 +145,14 @@ const Navbar = ({
           >
             Case Studies
           </button>
+          <Link href="/blog">
+            <button 
+              onClick={closeMobileMenu}
+              className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
+            >
+              Blog
+            </button>
+          </Link>
           <button 
             onClick={() => handleNavClick(aboutRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
