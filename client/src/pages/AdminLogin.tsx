@@ -18,7 +18,7 @@ const AdminLogin = () => {
 
   const loginMutation = useMutation({
     mutationFn: (password: string) => apiRequest('/api/admin/login', 'POST', { password }),
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       localStorage.setItem('adminToken', data.token);
       toast({
         title: "Login successful",

@@ -32,6 +32,7 @@ import { fadeIn } from '@/lib/animations';
 const blogPostSchema = insertBlogPostSchema.extend({
   tags: z.array(z.string()).optional(),
   targetKeywords: z.array(z.string()).optional(),
+  publishedAt: z.string().optional(),
 });
 
 type BlogPostForm = z.infer<typeof blogPostSchema>;
@@ -98,7 +99,7 @@ const AdminBlogEditor = () => {
         ...post,
         tags: post.tags || [],
         targetKeywords: post.targetKeywords || [],
-        publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString().split('T')[0] : undefined
+        publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString().split('T')[0] : ''
       });
     }
   }, [post, isEditing, form]);
@@ -392,7 +393,7 @@ const AdminBlogEditor = () => {
                   <div>
                     <Label className="text-white">Call-to-Action</Label>
                     <Select
-                      value={form.watch('ctaType')}
+                      value={form.watch('ctaType') || 'consultation'}
                       onValueChange={(value) => form.setValue('ctaType', value as any)}
                     >
                       <SelectTrigger className="bg-white/10 border-white/20 text-white">
