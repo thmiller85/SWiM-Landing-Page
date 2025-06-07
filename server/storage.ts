@@ -1,5 +1,11 @@
 import { users, blogPosts, type User, type InsertUser, type BlogPost, type InsertBlogPost, type UpdateBlogPost } from "@shared/schema";
 
+// Replace MemStorage with DatabaseStorage for production use
+export class DatabaseStorage implements IStorage {
+  // For now, we'll use the existing MemStorage but this shows the interface
+  // that would be used with the actual database
+}
+
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;

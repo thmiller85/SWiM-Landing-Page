@@ -178,6 +178,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Admin authentication middleware
+  const requireAuth = (req: Request, res: Response, next: any) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || authHeader !== 'Bearer admin123') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+  };
+
+  // Admin login endpoint
+  app.post('/api/admin/login', (req, res) => {
+    const { password } = req.body;
+    if (password === 'swimai2024') {
+      res.json({ token: 'admin123', success: true });
+    } else {
+      res.status(401).json({ error: 'Invalid password' });
+    }
+  });
+
+  // Admin blog post routes (protected)
+  app.get('/api/admin/blog-posts', requireAuth, async (req, res) => {
+    try {
+      const posts = await storage.getBlogPosts({ status: 'all', limit: 100 });
+      res.json(posts);
+    } catch (error) {
+      console.error('Error fetching admin blog posts:', error);
+      res.status(500).json({ error: 'Failed to fetch blog posts' });
+    }
+  });
+
   // Proxy endpoint for form submissions
   app.post('/api/contact-form', async (req, res) => {
     console.log('Contact form endpoint hit!');
