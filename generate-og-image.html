@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
+        .og-canvas {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #002348 0%, #0A3A5A 50%, #1A8CB7 100%);
+            position: relative;
+            color: white;
+            overflow: hidden;
+        }
+        .logo {
+            position: absolute;
+            top: 50px;
+            left: 70px;
+            width: 220px;
+            height: 110px;
+        }
+        .main-text {
+            position: absolute;
+            top: 200px;
+            left: 70px;
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: white;
+        }
+        .subtitle {
+            position: absolute;
+            top: 320px;
+            left: 70px;
+            font-size: 26px;
+            color: #4BCBF2;
+            font-weight: 400;
+        }
+        .services {
+            position: absolute;
+            top: 380px;
+            left: 70px;
+            display: flex;
+            gap: 120px;
+        }
+        .service {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        .bullet {
+            width: 8px;
+            height: 8px;
+            background: #4BCBF2;
+            border-radius: 50%;
+        }
+        .decoration {
+            position: absolute;
+            bottom: 50px;
+            right: 100px;
+            width: 200px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(75, 203, 242, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="og-canvas">
+        <div class="decoration"></div>
+        <img src="swim-logo-proper.png" alt="SWiM" class="logo">
+        <div class="main-text">
+            AI-Powered Marketing<br>
+            & Business Solutions
+        </div>
+        <div class="subtitle">Transform your business with cutting-edge AI</div>
+        <div class="services">
+            <div class="service">
+                <div class="bullet"></div>
+                <span>Workflow Automation</span>
+            </div>
+            <div class="service">
+                <div class="bullet"></div>
+                <span>AI Strategy</span>
+            </div>
+            <div class="service">
+                <div class="bullet"></div>
+                <span>SaaS Development</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
