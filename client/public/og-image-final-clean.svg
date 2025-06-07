@@ -1,0 +1,31 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#002348;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0A3A5A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A8CB7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Main Title -->
+  <text x="70" y="220" font-family="Arial, sans-serif" font-size="52" font-weight="bold" fill="white">AI-Powered Marketing</text>
+  <text x="70" y="280" font-family="Arial, sans-serif" font-size="52" font-weight="bold" fill="white">&amp; Business Solutions</text>
+  
+  <!-- Subtitle -->
+  <text x="70" y="330" font-family="Arial, sans-serif" font-size="26" fill="#4BCBF2">Transform your business with cutting-edge AI</text>
+  
+  <!-- Service Points -->
+  <g transform="translate(70, 390)">
+    <circle cx="8" cy="0" r="6" fill="#4BCBF2"/>
+    <text x="25" y="6" font-family="Arial, sans-serif" font-size="20" font-weight="500" fill="white">Workflow Automation</text>
+    
+    <circle cx="280" cy="0" r="6" fill="#4BCBF2"/>
+    <text x="297" y="6" font-family="Arial, sans-serif" font-size="20" font-weight="500" fill="white">AI Strategy</text>
+    
+    <circle cx="470" cy="0" r="6" fill="#4BCBF2"/>
+    <text x="487" y="6" font-family="Arial, sans-serif" font-size="20" font-weight="500" fill="white">SaaS Development</text>
+  </g>
+</svg>
