@@ -255,6 +255,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SPA fallback route - must be last to catch all non-API routes
+  app.get('*', (req, res, next) => {
+    // Skip API routes and let them 404 properly
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    
+    // For all other routes (including /admin/login), serve the React app
+    // This will be handled by the Vite middleware in development
+    // or by the static file server in production
+    next();
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
