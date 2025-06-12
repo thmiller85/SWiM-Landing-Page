@@ -44,16 +44,41 @@ const AdminDashboard = () => {
 
   const { data: posts = [], isLoading } = useQuery<BlogPost[]>({
     queryKey: ['/api/admin/blog-posts'],
-    queryFn: () => {
-      const token = localStorage.getItem('adminToken');
-      return fetch('/api/admin/blog-posts', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+    queryFn: async () => {
+      // Client-side data management for static deployment
+      const storedPosts = localStorage.getItem('adminBlogPosts');
+      if (storedPosts) {
+        return JSON.parse(storedPosts);
+      }
+      
+      // Initialize with sample blog posts for admin management
+      const samplePosts: BlogPost[] = [
+        {
+          id: 1,
+          title: "AI-Powered Marketing Automation: The Future is Here",
+          slug: "ai-powered-marketing-automation-future",
+          excerpt: "Discover how AI is revolutionizing marketing automation and helping businesses achieve unprecedented growth.",
+          content: "AI-powered marketing automation is transforming how businesses engage with customers...",
+          category: "AI Marketing",
+          author: "Ross Stockdale",
+          status: "published" as const,
+          ctaType: "consultation" as const,
+          featuredImage: "",
+          seoTitle: "AI-Powered Marketing Automation: Transform Your Business",
+          metaDescription: "Learn how AI marketing automation can boost your ROI by 300%. Expert insights on implementation strategies.",
+          downloadableResource: "",
+          tags: ["AI", "Marketing", "Automation"],
+          targetKeywords: ["AI marketing", "marketing automation", "business growth"],
+          createdAt: new Date("2024-01-15"),
+          updatedAt: new Date("2024-01-15"),
+          views: 1250,
+          leads: 45,
+          shares: 23
         }
-      }).then(res => {
-        if (!res.ok) throw new Error('Failed to fetch posts');
-        return res.json();
-      });
+      ];
+      
+      localStorage.setItem('adminBlogPosts', JSON.stringify(samplePosts));
+      return samplePosts;
     }
   });
 

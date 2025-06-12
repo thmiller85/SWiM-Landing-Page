@@ -17,7 +17,14 @@ const AdminLogin = () => {
   const { toast } = useToast();
 
   const loginMutation = useMutation({
-    mutationFn: (password: string) => apiRequest('/api/admin/login', 'POST', { password }),
+    mutationFn: async (password: string) => {
+      // Client-side authentication for static deployment
+      if (password === 'swimai2024') {
+        return { token: 'admin123', success: true };
+      } else {
+        throw new Error('Invalid password');
+      }
+    },
     onSuccess: (data: any) => {
       localStorage.setItem('adminToken', data.token);
       toast({
