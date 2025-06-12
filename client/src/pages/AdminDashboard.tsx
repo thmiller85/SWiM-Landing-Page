@@ -478,7 +478,7 @@ const AdminDashboard = () => {
                     </tbody>
                   </table>
                 </div>
-                </>
+                </div>
               )}
             </motion.div>
           </div>
