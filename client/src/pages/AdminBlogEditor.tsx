@@ -382,10 +382,10 @@ const AdminBlogEditor = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Ross Stockdale">Ross Stockdale</SelectItem>
-                        <SelectItem value="Tom Mitchell">Tom Mitchell</SelectItem>
-                        <SelectItem value="Steve Williams">Steve Williams</SelectItem>
-                        <SelectItem value="David Chen">David Chen</SelectItem>
+                        <SelectItem value="Tom Miller">Tom Miller, Chief Product Officer</SelectItem>
+                        <SelectItem value="Ross Stockdale">Ross Stockdale, Chief Marketing Officer</SelectItem>
+                        <SelectItem value="Steve Wurster">Steve Wurster, Chief Growth Officer</SelectItem>
+                        <SelectItem value="David Stockdale">David Stockdale, Chief Technology Officer</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
