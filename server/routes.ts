@@ -215,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('Sending form data to n8n webhook:', req.body);
       
       // Forward the request to the webhook using POST
-      const webhookUrl = 'https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit';
+      const webhookUrl = 'https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit';
       console.log('Sending POST request to webhook URL:', webhookUrl);
       
       const response = await fetch(webhookUrl, {

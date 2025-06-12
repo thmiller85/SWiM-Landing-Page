@@ -94,7 +94,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         if (errorMessage === 'API_NOT_FOUND' || errorMessage.includes('Failed to fetch')) {
           console.log('Attempting direct webhook submission as fallback');
           
-          response = await fetch('https://thmiller85.app.n8n.cloud/webhook/onSwimFormSubmit', {
+          response = await fetch('https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
