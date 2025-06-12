@@ -209,44 +209,55 @@ const AdminBlogEditor = () => {
       <div className="gradient-bg">
         {/* Header */}
         <header className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+          <div className="container mx-auto px-4 sm:px-6 py-4">
+            <div className="flex flex-col gap-4">
+              {/* Top row: Back button and title */}
+              <div className="flex items-start gap-3">
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() => navigate('/admin/dashboard')}
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-white/10 flex-shrink-0 mt-1"
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Dashboard
+                  <ArrowLeft className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Back to Dashboard</span>
                 </Button>
-                <div>
-                  <h1 className="text-2xl font-bold text-white">
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-lg sm:text-2xl font-bold text-white leading-tight">
                     {isEditing ? 'Edit Post' : 'Create New Post'}
                   </h1>
-                  <p className="text-white/70">
+                  <p className="text-white/70 text-sm sm:text-base mt-1">
                     {isEditing ? 'Update your blog post' : 'Write and publish a new blog post'}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              
+              {/* Bottom row: Action buttons */}
+              <div className="flex items-center gap-2 sm:gap-4 justify-end">
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  size="sm"
+                  className="border-white/20 text-white hover:bg-white/10 flex-shrink-0"
                   onClick={() => form.setValue('status', 'draft')}
                 >
-                  <FileText className="h-4 w-4 mr-2" />
-                  Save Draft
+                  <FileText className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Save Draft</span>
                 </Button>
                 <Button
                   type="submit"
                   form="blog-post-form"
-                  className="bg-accent hover:bg-accent/90"
+                  size="sm"
+                  className="bg-accent hover:bg-accent/90 flex-shrink-0"
                   disabled={saveMutation.isPending}
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  {saveMutation.isPending ? 'Saving...' : isEditing ? 'Update' : 'Publish'}
+                  <Save className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">
+                    {saveMutation.isPending ? 'Saving...' : isEditing ? 'Update' : 'Publish'}
+                  </span>
+                  <span className="sm:hidden">
+                    {saveMutation.isPending ? '...' : isEditing ? 'Update' : 'Publish'}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -254,7 +265,7 @@ const AdminBlogEditor = () => {
         </header>
 
         {/* Content */}
-        <div className="container mx-auto px-6 py-8">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <motion.div
             variants={fadeIn}
             initial="hidden"

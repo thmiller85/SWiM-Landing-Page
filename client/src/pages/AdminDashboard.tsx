@@ -159,26 +159,31 @@ const AdminDashboard = () => {
       <div className="gradient-bg">
         {/* Header */}
         <header className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-white">Content Management</h1>
-                <p className="text-white/70">Manage your blog posts and content</p>
+          <div className="container mx-auto px-4 sm:px-6 py-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-white truncate">Content Management</h1>
+                <p className="text-white/70 text-sm sm:text-base">Manage your blog posts and content</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
                 <Link href="/blog">
-                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Blog
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-white/20 text-white hover:bg-white/10 flex-shrink-0"
+                  >
+                    <Eye className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">View Blog</span>
                   </Button>
                 </Link>
                 <Button 
                   onClick={handleLogout}
                   variant="outline" 
-                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                  size="sm"
+                  className="border-red-500/30 text-red-400 hover:bg-red-500/10 flex-shrink-0"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             </div>
@@ -186,23 +191,23 @@ const AdminDashboard = () => {
         </header>
 
         {/* Stats */}
-        <section className="py-8">
-          <div className="container mx-auto px-6">
+        <section className="py-6 sm:py-8">
+          <div className="container mx-auto px-4 sm:px-6">
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 mb-6 sm:mb-8"
             >
               <motion.div variants={fadeIn}>
                 <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/70 text-sm">Total Posts</p>
-                        <p className="text-2xl font-bold text-white">{stats.total}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm truncate">Total Posts</p>
+                        <p className="text-xl sm:text-2xl font-bold text-white">{stats.total}</p>
                       </div>
-                      <FileText className="h-8 w-8 text-accent" />
+                      <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-accent flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -210,13 +215,13 @@ const AdminDashboard = () => {
 
               <motion.div variants={fadeIn}>
                 <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/70 text-sm">Published</p>
-                        <p className="text-2xl font-bold text-green-400">{stats.published}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm truncate">Published</p>
+                        <p className="text-xl sm:text-2xl font-bold text-green-400">{stats.published}</p>
                       </div>
-                      <TrendingUp className="h-8 w-8 text-green-400" />
+                      <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-green-400 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -224,13 +229,13 @@ const AdminDashboard = () => {
 
               <motion.div variants={fadeIn}>
                 <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/70 text-sm">Drafts</p>
-                        <p className="text-2xl font-bold text-yellow-400">{stats.draft}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm truncate">Drafts</p>
+                        <p className="text-xl sm:text-2xl font-bold text-yellow-400">{stats.draft}</p>
                       </div>
-                      <Edit className="h-8 w-8 text-yellow-400" />
+                      <Edit className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -238,13 +243,13 @@ const AdminDashboard = () => {
 
               <motion.div variants={fadeIn}>
                 <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/70 text-sm">Total Views</p>
-                        <p className="text-2xl font-bold text-blue-400">{stats.totalViews}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm truncate">Total Views</p>
+                        <p className="text-xl sm:text-2xl font-bold text-blue-400">{stats.totalViews}</p>
                       </div>
-                      <BarChart3 className="h-8 w-8 text-blue-400" />
+                      <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -252,13 +257,13 @@ const AdminDashboard = () => {
 
               <motion.div variants={fadeIn}>
                 <Card className="bg-white/5 backdrop-blur-sm border-white/10">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/70 text-sm">Total Leads</p>
-                        <p className="text-2xl font-bold text-highlight">{stats.totalLeads}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm truncate">Total Leads</p>
+                        <p className="text-xl sm:text-2xl font-bold text-highlight">{stats.totalLeads}</p>
                       </div>
-                      <Users className="h-8 w-8 text-highlight" />
+                      <Users className="h-6 w-6 sm:h-8 sm:w-8 text-highlight flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -270,11 +275,11 @@ const AdminDashboard = () => {
               variants={fadeIn}
               initial="hidden"
               animate="visible"
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8"
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8"
             >
-              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                  <div className="relative">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
                     <Input
                       placeholder="Search posts..."
@@ -285,7 +290,7 @@ const AdminDashboard = () => {
                   </div>
                   
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white w-full sm:w-auto sm:min-w-[140px]">
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -297,12 +302,14 @@ const AdminDashboard = () => {
                   </Select>
                 </div>
 
-                <Link href="/admin/blog-posts/new">
-                  <Button className="bg-accent hover:bg-accent/90">
-                    <Plus className="h-4 w-4 mr-2" />
-                    New Post
-                  </Button>
-                </Link>
+                <div className="flex justify-end">
+                  <Link href="/admin/blog-posts/new">
+                    <Button className="bg-accent hover:bg-accent/90 w-full sm:w-auto">
+                      <Plus className="h-4 w-4 mr-2" />
+                      New Post
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </motion.div>
 
@@ -336,56 +343,113 @@ const AdminDashboard = () => {
                   </Link>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div>
+                {/* Mobile-optimized table */}
+                <div className="block sm:hidden">
+                  {filteredPosts.map((post) => (
+                    <div key={post.id} className="bg-white/5 rounded-lg p-4 mb-3 border border-white/10">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-white font-medium text-sm line-clamp-2 mb-1">{post.title}</h3>
+                          <p className="text-white/60 text-xs line-clamp-1 mb-2">{post.excerpt}</p>
+                          <div className="flex items-center gap-3 text-xs text-white/70">
+                            <span className="flex items-center">
+                              <Eye className="h-3 w-3 mr-1" />
+                              {post.views || 0}
+                            </span>
+                            <span className="flex items-center">
+                              <Users className="h-3 w-3 mr-1" />
+                              {post.leads || 0}
+                            </span>
+                          </div>
+                        </div>
+                        <Badge className={`${getStatusColor(post.status)} text-xs ml-2 flex-shrink-0`}>
+                          {post.status}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-white/60">
+                          {formatDate(post.publishedAt || post.createdAt)}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {post.status === 'published' && (
+                            <Link href={`/blog/${post.slug}`}>
+                              <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                            </Link>
+                          )}
+                          <Link href={`/admin/blog-posts/edit/${post.id}`}>
+                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                              <Edit className="h-3 w-3" />
+                            </Button>
+                          </Link>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                            onClick={() => handleDelete(post.id, post.title)}
+                            disabled={deleteMutation.isPending}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-white/5 border-b border-white/10">
                       <tr>
-                        <th className="text-left p-4 text-white/80 font-semibold">Title</th>
-                        <th className="text-left p-4 text-white/80 font-semibold">Status</th>
-                        <th className="text-left p-4 text-white/80 font-semibold">Category</th>
-                        <th className="text-left p-4 text-white/80 font-semibold">Views</th>
-                        <th className="text-left p-4 text-white/80 font-semibold">Leads</th>
-                        <th className="text-left p-4 text-white/80 font-semibold">Date</th>
-                        <th className="text-right p-4 text-white/80 font-semibold">Actions</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm">Title</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm">Status</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm hidden lg:table-cell">Category</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm">Views</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm hidden md:table-cell">Leads</th>
+                        <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-sm hidden lg:table-cell">Date</th>
+                        <th className="text-right p-3 sm:p-4 text-white/80 font-semibold text-sm">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredPosts.map((post) => (
                         <tr key={post.id} className="border-b border-white/5 hover:bg-white/5">
-                          <td className="p-4">
+                          <td className="p-3 sm:p-4">
                             <div>
-                              <h3 className="text-white font-medium line-clamp-1">{post.title}</h3>
-                              <p className="text-white/60 text-sm line-clamp-1">{post.excerpt}</p>
+                              <h3 className="text-white font-medium line-clamp-1 text-sm">{post.title}</h3>
+                              <p className="text-white/60 text-xs line-clamp-1">{post.excerpt}</p>
                             </div>
                           </td>
-                          <td className="p-4">
-                            <Badge className={getStatusColor(post.status)}>
+                          <td className="p-3 sm:p-4">
+                            <Badge className={`${getStatusColor(post.status)} text-xs`}>
                               {post.status}
                             </Badge>
                           </td>
-                          <td className="p-4">
-                            <span className="text-white/70">{post.category}</span>
+                          <td className="p-3 sm:p-4 hidden lg:table-cell">
+                            <span className="text-white/70 text-sm">{post.category}</span>
                           </td>
-                          <td className="p-4">
-                            <div className="flex items-center text-white/70">
+                          <td className="p-3 sm:p-4">
+                            <div className="flex items-center text-white/70 text-sm">
                               <Eye className="h-4 w-4 mr-1" />
                               {post.views || 0}
                             </div>
                           </td>
-                          <td className="p-4">
-                            <div className="flex items-center text-white/70">
+                          <td className="p-3 sm:p-4 hidden md:table-cell">
+                            <div className="flex items-center text-white/70 text-sm">
                               <Users className="h-4 w-4 mr-1" />
                               {post.leads || 0}
                             </div>
                           </td>
-                          <td className="p-4">
-                            <div className="flex items-center text-white/70">
+                          <td className="p-3 sm:p-4 hidden lg:table-cell">
+                            <div className="flex items-center text-white/70 text-sm">
                               <Calendar className="h-4 w-4 mr-1" />
                               {formatDate(post.publishedAt || post.createdAt)}
                             </div>
                           </td>
-                          <td className="p-4">
-                            <div className="flex items-center justify-end gap-2">
+                          <td className="p-3 sm:p-4">
+                            <div className="flex items-center justify-end gap-1 sm:gap-2">
                               {post.status === 'published' && (
                                 <Link href={`/blog/${post.slug}`}>
                                   <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
@@ -414,6 +478,7 @@ const AdminDashboard = () => {
                     </tbody>
                   </table>
                 </div>
+                </>
               )}
             </motion.div>
           </div>
