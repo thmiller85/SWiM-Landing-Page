@@ -59,7 +59,24 @@ async function prerenderRoutes() {
   fs.writeFileSync(path.join(distPath, 'index.html'), homepageHtml);
   console.log('✓ Updated homepage with SEO content');
   
+  // Create admin route fallbacks to the SPA
+  const adminRoutes = ['/admin', '/admin/login', '/admin/dashboard', '/admin/blog-posts'];
+  
+  for (const adminRoute of adminRoutes) {
+    const adminPath = path.join(distPath, adminRoute, 'index.html');
+    const adminDir = path.dirname(adminPath);
+    
+    if (!fs.existsSync(adminDir)) {
+      fs.mkdirSync(adminDir, { recursive: true });
+    }
+    
+    // Copy the main SPA template for admin routes
+    fs.writeFileSync(adminPath, template);
+    console.log(`✓ Created SPA fallback: ${adminRoute}`);
+  }
+  
   console.log(`\n🎉 Successfully pre-rendered ${routes.length} marketing pages`);
+  console.log(`✓ Created ${adminRoutes.length} admin route fallbacks`);
   console.log('💡 Contact form and interactive features remain client-side');
 }
 
