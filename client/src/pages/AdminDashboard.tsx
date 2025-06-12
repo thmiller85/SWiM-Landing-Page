@@ -63,14 +63,15 @@ const AdminDashboard = () => {
           author: "Ross Stockdale",
           status: "published" as const,
           ctaType: "consultation" as const,
-          featuredImage: "",
+          featuredImage: null,
           seoTitle: "AI-Powered Marketing Automation: Transform Your Business",
           metaDescription: "Learn how AI marketing automation can boost your ROI by 300%. Expert insights on implementation strategies.",
-          downloadableResource: "",
+          downloadableResource: null,
           tags: ["AI", "Marketing", "Automation"],
           targetKeywords: ["AI marketing", "marketing automation", "business growth"],
           createdAt: new Date("2024-01-15"),
           updatedAt: new Date("2024-01-15"),
+          publishedAt: new Date("2024-01-15"),
           views: 1250,
           leads: 45,
           shares: 23
@@ -83,14 +84,15 @@ const AdminDashboard = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => {
-      const token = localStorage.getItem('adminToken');
-      return fetch(`/api/blog-posts/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+    mutationFn: async (id: number) => {
+      // Client-side delete for static deployment
+      const storedPosts = localStorage.getItem('adminBlogPosts');
+      if (storedPosts) {
+        const posts = JSON.parse(storedPosts);
+        const updatedPosts = posts.filter((post: BlogPost) => post.id !== id);
+        localStorage.setItem('adminBlogPosts', JSON.stringify(updatedPosts));
+      }
+      return { success: true };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/blog-posts'] });
