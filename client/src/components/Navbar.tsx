@@ -145,10 +145,10 @@ const Navbar = ({
           >
             Case Studies
           </button>
-          <Link href="/blog">
+          <Link href="/blog" className="block w-full text-center">
             <button 
               onClick={closeMobileMenu}
-              className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
+              className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2 w-full"
             >
               Blog
             </button>
