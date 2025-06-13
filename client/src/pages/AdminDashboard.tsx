@@ -42,23 +42,37 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  const { data: posts = [], isLoading } = useQuery<BlogPost[]>({
+  const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
     queryKey: ['/api/admin/blog-posts'],
     queryFn: async () => {
       const token = localStorage.getItem('adminToken');
+      console.log('Fetching posts with token:', token);
+      
       const response = await fetch('/api/admin/blog-posts', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch posts');
+        const errorText = await response.text();
+        console.error('API Error:', errorText);
+        throw new Error(`Failed to fetch posts: ${response.status} - ${errorText}`);
       }
       
-      return response.json();
+      const data = await response.json();
+      console.log('Fetched posts:', data);
+      return data;
     }
   });
+
+  // Debug logging
+  console.log('Posts data:', posts);
+  console.log('Is loading:', isLoading);
+  console.log('Error:', error);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
