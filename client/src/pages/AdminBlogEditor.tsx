@@ -295,8 +295,11 @@ const AdminBlogEditor = () => {
                         {...form.register('title')}
                         onChange={(e) => handleTitleChange(e.target.value)}
                         className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        placeholder="Enter post title..."
+                        placeholder="Enter post title (plain text, no # symbols)..."
                       />
+                      <p className="text-white/60 text-xs mt-1">
+                        Enter plain text only. The title will automatically be formatted as the page heading.
+                      </p>
                       {form.formState.errors.title && (
                         <p className="text-red-400 text-sm mt-1">{form.formState.errors.title.message}</p>
                       )}
@@ -335,9 +338,13 @@ const AdminBlogEditor = () => {
                         id="content"
                         {...form.register('content')}
                         className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        placeholder="Write your blog post content here..."
+                        placeholder="Start with your introduction paragraph. Use ## for sections, ### for subsections. See formatting guide for details..."
                         rows={20}
                       />
+                      <p className="text-white/60 text-xs mt-1">
+                        Use markdown formatting: ## for sections, **bold text**, *italic text*, [links](url), `code`, and ```code blocks```. 
+                        <span className="text-accent">See BLOG_FORMATTING_GUIDE.md for SEO best practices.</span>
+                      </p>
                       {form.formState.errors.content && (
                         <p className="text-red-400 text-sm mt-1">{form.formState.errors.content.message}</p>
                       )}
