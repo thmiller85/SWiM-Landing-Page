@@ -116,7 +116,7 @@ The future of marketing is intelligent, automated, and incredibly powerful. By e
   async getBlogPosts(filters?: { category?: string; tag?: string; status?: string; limit?: number; offset?: number }): Promise<BlogPost[]> {
     let query = db.select().from(blogPosts);
 
-    if (filters?.status) {
+    if (filters?.status && filters.status !== 'all') {
       query = query.where(eq(blogPosts.status, filters.status as any));
     }
 

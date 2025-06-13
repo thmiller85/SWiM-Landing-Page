@@ -45,53 +45,35 @@ const AdminDashboard = () => {
   const { data: posts = [], isLoading } = useQuery<BlogPost[]>({
     queryKey: ['/api/admin/blog-posts'],
     queryFn: async () => {
-      // Client-side data management for static deployment
-      const storedPosts = localStorage.getItem('adminBlogPosts');
-      if (storedPosts) {
-        return JSON.parse(storedPosts);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch('/api/admin/blog-posts', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
       }
       
-      // Initialize with sample blog posts for admin management
-      const samplePosts: BlogPost[] = [
-        {
-          id: 1,
-          title: "AI-Powered Marketing Automation: The Future is Here",
-          slug: "ai-powered-marketing-automation-future",
-          excerpt: "Discover how AI is revolutionizing marketing automation and helping businesses achieve unprecedented growth.",
-          content: "AI-powered marketing automation is transforming how businesses engage with customers...",
-          category: "AI Marketing",
-          author: "Ross Stockdale",
-          status: "published" as const,
-          ctaType: "consultation" as const,
-          featuredImage: null,
-          seoTitle: "AI-Powered Marketing Automation: Transform Your Business",
-          metaDescription: "Learn how AI marketing automation can boost your ROI by 300%. Expert insights on implementation strategies.",
-          downloadableResource: null,
-          tags: ["AI", "Marketing", "Automation"],
-          targetKeywords: ["AI marketing", "marketing automation", "business growth"],
-          createdAt: new Date("2024-01-15"),
-          updatedAt: new Date("2024-01-15"),
-          publishedAt: new Date("2024-01-15"),
-          views: 1250,
-          leads: 45,
-          shares: 23
-        }
-      ];
-      
-      localStorage.setItem('adminBlogPosts', JSON.stringify(samplePosts));
-      return samplePosts;
+      return response.json();
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      // Client-side delete for static deployment
-      const storedPosts = localStorage.getItem('adminBlogPosts');
-      if (storedPosts) {
-        const posts = JSON.parse(storedPosts);
-        const updatedPosts = posts.filter((post: BlogPost) => post.id !== id);
-        localStorage.setItem('adminBlogPosts', JSON.stringify(updatedPosts));
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`/api/blog-posts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
       }
+      
       return { success: true };
     },
     onSuccess: () => {
