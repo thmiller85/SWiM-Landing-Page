@@ -46,7 +46,6 @@ const AdminDashboard = () => {
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
       const token = localStorage.getItem('adminToken');
-      console.log('Fetching posts with token:', token);
       
       const response = await fetch('/api/admin/blog-posts', {
         headers: {
@@ -55,9 +54,6 @@ const AdminDashboard = () => {
         }
       });
       
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-      
       if (!response.ok) {
         const errorText = await response.text();
         console.error('API Error:', errorText);
@@ -65,16 +61,15 @@ const AdminDashboard = () => {
       }
       
       const data = await response.json();
-      console.log('Fetched posts:', data);
       return data;
     },
-    enabled: !!localStorage.getItem('adminToken')
+    enabled: !!localStorage.getItem('adminToken'),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
-  // Debug logging
-  console.log('Posts data:', posts);
-  console.log('Is loading:', isLoading);
-  console.log('Error:', error);
+
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
