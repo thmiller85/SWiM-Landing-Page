@@ -43,14 +43,15 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
-    queryKey: ['/api/admin/blog-posts'],
+    queryKey: ['admin-blog-posts'],
     queryFn: async () => {
       const token = localStorage.getItem('adminToken');
       console.log('Fetching posts with token:', token);
       
       const response = await fetch('/api/admin/blog-posts', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -66,7 +67,8 @@ const AdminDashboard = () => {
       const data = await response.json();
       console.log('Fetched posts:', data);
       return data;
-    }
+    },
+    enabled: !!localStorage.getItem('adminToken')
   });
 
   // Debug logging
@@ -91,7 +93,7 @@ const AdminDashboard = () => {
       return { success: true };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/blog-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] });
       toast({
         title: "Post deleted",
         description: "The blog post has been successfully deleted.",
