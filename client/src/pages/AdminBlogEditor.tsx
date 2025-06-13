@@ -239,10 +239,17 @@ const AdminBlogEditor = () => {
                   variant="outline"
                   size="sm"
                   className="border-white/20 text-white hover:bg-white/10 flex-shrink-0"
-                  onClick={() => form.setValue('status', 'draft')}
+                  onClick={() => {
+                    form.setValue('status', 'draft');
+                    const formData = form.getValues();
+                    saveMutation.mutate({ ...formData, status: 'draft' });
+                  }}
+                  disabled={saveMutation.isPending}
                 >
                   <FileText className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Save Draft</span>
+                  <span className="hidden sm:inline">
+                    {saveMutation.isPending ? 'Saving...' : 'Save Draft'}
+                  </span>
                 </Button>
                 <Button
                   type="submit"
@@ -250,6 +257,7 @@ const AdminBlogEditor = () => {
                   size="sm"
                   className="bg-accent hover:bg-accent/90 flex-shrink-0"
                   disabled={saveMutation.isPending}
+                  onClick={() => form.setValue('status', 'published')}
                 >
                   <Save className="h-4 w-4 sm:mr-2" />
                   <span className="hidden sm:inline">
