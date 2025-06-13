@@ -36,7 +36,7 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 - **Automatic URL Converter**: Built-in Google Drive sharing URL to direct URL converter in CMS
 - **Enhanced Image Management**: Seamless integration with Google Drive for blog featured images
 - **User-Friendly Interface**: One-click conversion from sharing URLs to usable direct links
-- **Comprehensive Documentation**: Created GOOGLE_DRIVE_INTEGRATION.md with setup guides and best practices
+- **Consolidated Documentation**: Added comprehensive Google Drive integration guide to BLOG_FORMATTING_GUIDE.md
 - **Improved CMS UX**: Clear instructions and helper text for image URL management
 
 ### June 13, 2025 - Markdown Rendering & SEO Optimization Complete

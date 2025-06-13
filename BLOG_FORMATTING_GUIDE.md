@@ -90,6 +90,63 @@ According to [McKinsey's latest research](https://mckinsey.com/link), AI adoptio
 ![Alt text with keywords: AI workflow automation dashboard](image-url)
 ```
 
+## Google Drive Image Integration
+
+### Using Google Drive for Blog Images
+
+Your CMS includes built-in Google Drive integration for seamless image management:
+
+#### Setup Process
+1. Upload image to Google Drive
+2. Right-click → "Get link" → Set to "Anyone with the link can view"
+3. Copy the sharing URL
+4. Use the automatic converter in your CMS
+
+#### CMS URL Converter
+In the blog editor, find the "Google Drive URL Converter" section:
+1. Paste your Google Drive sharing URL
+2. Click "Convert"
+3. The direct image URL automatically populates the Featured Image field
+
+#### URL Format Conversion
+**Google Drive Sharing URL:**
+```
+https://drive.google.com/file/d/1ABC123xyz789/view?usp=sharing
+```
+
+**Direct Image URL (Auto-converted):**
+```
+https://drive.google.com/uc?export=view&id=1ABC123xyz789
+```
+
+#### Using Images in Content
+For images within blog content, use markdown syntax with converted URLs:
+```markdown
+![Alt text with keywords](https://drive.google.com/uc?export=view&id=YOUR_FILE_ID)
+```
+
+#### Image Best Practices
+- **Featured Images**: Use 1200x630px for optimal social sharing
+- **File Size**: Keep under 2MB for fast loading
+- **Naming**: Use descriptive filenames before uploading
+- **Alt Text**: Include relevant keywords naturally
+- **Organization**: Create dedicated "Blog Images" folder in Drive
+
+#### SEO-Optimized Image Examples
+```markdown
+# Featured image (auto-populated via CMS converter)
+![AI workflow automation reduces manual tasks by 80%](converted-drive-url)
+
+# Content images with keyword-rich alt text
+![Custom AI dashboard showing real-time workflow metrics](drive-image-url)
+![Step-by-step automation setup interface screenshot](drive-image-url)
+```
+
+#### Troubleshooting Images
+- **Not displaying**: Verify Google Drive permissions are set to public
+- **Slow loading**: Compress images before uploading to Drive
+- **Broken links**: Re-generate sharing link if file was moved
+
 ### Content Types That Perform Well
 
 #### 1. How-To Guides
