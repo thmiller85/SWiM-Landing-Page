@@ -42,6 +42,7 @@ const AdminBlogEditor = () => {
   const [, navigate] = useLocation();
   const [tagInput, setTagInput] = useState('');
   const [keywordInput, setKeywordInput] = useState('');
+  const [driveUrlInput, setDriveUrlInput] = useState('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -187,6 +188,27 @@ const AdminBlogEditor = () => {
   const removeKeyword = (keywordToRemove: string) => {
     const currentKeywords = form.getValues('targetKeywords') || [];
     form.setValue('targetKeywords', currentKeywords.filter(keyword => keyword !== keywordToRemove));
+  };
+
+  const convertGoogleDriveUrl = (url: string): string => {
+    // Extract file ID from Google Drive sharing URL
+    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
+    return url; // Return original if not a Google Drive URL
+  };
+
+  const handleDriveUrlConvert = () => {
+    if (driveUrlInput.trim()) {
+      const convertedUrl = convertGoogleDriveUrl(driveUrlInput.trim());
+      form.setValue('featuredImage', convertedUrl);
+      setDriveUrlInput('');
+      toast({
+        title: "URL Converted",
+        description: "Google Drive URL has been converted and applied to the featured image field.",
+      });
+    }
   };
 
   const onSubmit = (data: BlogPostForm) => {
@@ -473,12 +495,37 @@ const AdminBlogEditor = () => {
                   </div>
 
                   <div>
+                    <Label className="text-white">Google Drive URL Converter</Label>
+                    <div className="flex gap-2 mb-3">
+                      <Input
+                        value={driveUrlInput}
+                        onChange={(e) => setDriveUrlInput(e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                        placeholder="Paste Google Drive sharing URL here..."
+                      />
+                      <Button 
+                        type="button" 
+                        onClick={handleDriveUrlConvert}
+                        size="sm"
+                        className="bg-accent hover:bg-accent/90 text-white"
+                        disabled={!driveUrlInput.trim()}
+                      >
+                        Convert
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
                     <Label className="text-white">Featured Image URL</Label>
                     <Input
                       {...form.register('featuredImage')}
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                      placeholder="https://example.com/image.jpg"
+                      placeholder="https://drive.google.com/uc?export=view&id=YOUR_FILE_ID"
                     />
+                    <div className="text-white/60 text-xs mt-2 space-y-1">
+                      <p><strong>Tip:</strong> Use the converter above for Google Drive images</p>
+                      <p>Or paste any direct image URL (Google Drive, Imgur, etc.)</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
