@@ -149,6 +149,86 @@
   }
 }
 
+/* Syntax Highlighting Styles for Code Blocks */
+.hljs {
+  background: hsl(var(--secondary)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: hsl(var(--muted-foreground)) !important;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+  color: hsl(var(--accent)) !important;
+  font-weight: 500;
+}
+
+.hljs-name,
+.hljs-attribute {
+  color: hsl(var(--sky-blue)) !important;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: hsl(var(--foreground)) !important;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #98d982 !important;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: hsl(var(--sky-blue)) !important;
+  font-weight: 600;
+}
+
+.hljs-subst {
+  color: hsl(var(--foreground)) !important;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: hsl(var(--accent)) !important;
+  font-weight: 500;
+}
+
+.hljs-tag,
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-meta {
+  color: #ff9070 !important;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: hsl(var(--sky-blue)) !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.hljs-addition {
+  background: rgba(0, 255, 0, 0.1);
+}
+
 @keyframes float-gentle {
   0%, 100% {
     transform: translateY(-5px);

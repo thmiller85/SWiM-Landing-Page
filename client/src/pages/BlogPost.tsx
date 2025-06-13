@@ -251,11 +251,10 @@ const BlogPost = ({ slug }: BlogPostProps) => {
               >
                 <div className="prose prose-lg prose-invert max-w-none">
                   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-                    <div className="text-white/90 leading-relaxed">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeHighlight]}
-                        components={{
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeHighlight]}
+                      components={{
                         h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-6 mt-8">{children}</h1>,
                         h2: ({ children }) => <h2 className="text-2xl font-bold text-white mb-4 mt-6">{children}</h2>,
                         h3: ({ children }) => <h3 className="text-xl font-semibold text-white mb-3 mt-4">{children}</h3>,
@@ -306,7 +305,6 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                     >
                       {post.content}
                     </ReactMarkdown>
-                    </div>
                   </div>
                 </div>
 

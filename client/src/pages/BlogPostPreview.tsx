@@ -236,10 +236,60 @@ const BlogPostPreview = ({ id }: BlogPostPreviewProps) => {
             variants={slideUp} 
             className="prose prose-lg prose-invert max-w-none"
           >
-            <div 
-              className="text-white/90 leading-relaxed space-y-6"
-              dangerouslySetInnerHTML={{ __html: (post.content || '').replace(/\n/g, '<br />') }}
-            />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight]}
+              components={{
+                h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-6 mt-8">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-2xl font-bold text-white mb-4 mt-6">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-semibold text-white mb-3 mt-4">{children}</h3>,
+                h4: ({ children }) => <h4 className="text-lg font-semibold text-white mb-2 mt-3">{children}</h4>,
+                p: ({ children }) => <p className="text-white/90 mb-4 leading-relaxed">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside text-white/90 mb-4 space-y-2">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside text-white/90 mb-4 space-y-2">{children}</ol>,
+                li: ({ children }) => <li className="text-white/90">{children}</li>,
+                a: ({ children, href }) => (
+                  <a 
+                    href={href} 
+                    className="text-accent hover:text-highlight transition-colors underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {children}
+                  </a>
+                ),
+                blockquote: ({ children }) => (
+                  <blockquote className="border-l-4 border-accent pl-6 py-2 my-6 bg-white/5 rounded-r-lg">
+                    <div className="text-white/80 italic">{children}</div>
+                  </blockquote>
+                ),
+                code: ({ children, className }) => {
+                  const isInline = !className;
+                  if (isInline) {
+                    return (
+                      <code className="bg-white/10 text-accent px-2 py-1 rounded text-sm font-mono">
+                        {children}
+                      </code>
+                    );
+                  }
+                  return (
+                    <code className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+                pre: ({ children }) => (
+                  <pre className="bg-secondary/50 border border-white/10 rounded-lg p-4 overflow-x-auto mb-6">
+                    {children}
+                  </pre>
+                ),
+                strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-white/90">{children}</em>,
+                hr: () => <hr className="border-white/20 my-8" />,
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
           </motion.div>
 
           {/* Tags */}
