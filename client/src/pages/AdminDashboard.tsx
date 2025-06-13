@@ -354,15 +354,13 @@ const AdminDashboard = () => {
                           {formatDate(post.publishedAt || post.createdAt)}
                         </div>
                         <div className="flex items-center gap-2">
-                          {post.status === 'published' && (
-                            <Link href={`/blog/${post.slug}`}>
-                              <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                                <Eye className="h-3 w-3" />
-                              </Button>
-                            </Link>
-                          )}
+                          <Link href={`/admin/blog-posts/preview/${post.id}`}>
+                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10" title="Preview">
+                              <Eye className="h-3 w-3" />
+                            </Button>
+                          </Link>
                           <Link href={`/admin/blog-posts/edit/${post.id}`}>
-                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10" title="Edit">
                               <Edit className="h-3 w-3" />
                             </Button>
                           </Link>
@@ -432,15 +430,13 @@ const AdminDashboard = () => {
                           </td>
                           <td className="p-3 sm:p-4">
                             <div className="flex items-center justify-end gap-1 sm:gap-2">
-                              {post.status === 'published' && (
-                                <Link href={`/blog/${post.slug}`}>
-                                  <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                                    <Eye className="h-4 w-4" />
-                                  </Button>
-                                </Link>
-                              )}
+                              <Link href={`/admin/blog-posts/preview/${post.id}`}>
+                                <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10" title="Preview">
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                              </Link>
                               <Link href={`/admin/blog-posts/edit/${post.id}`}>
-                                <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                                <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10" title="Edit">
                                   <Edit className="h-4 w-4" />
                                 </Button>
                               </Link>

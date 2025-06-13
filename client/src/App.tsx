@@ -16,6 +16,7 @@ import BlogPost from "./pages/BlogPost";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminBlogEditor from "./pages/AdminBlogEditor";
+import BlogPostPreview from "./pages/BlogPostPreview";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/not-found";
@@ -78,6 +79,7 @@ function App() {
           <Route path="/admin/dashboard" component={AdminDashboard} />
           <Route path="/admin/blog-posts/new" component={AdminBlogEditor} />
           <Route path="/admin/blog-posts/edit/:id" component={AdminBlogEditor} />
+          <Route path="/admin/blog-posts/preview/:id" component={BlogPostPreview} />
           <Route path="/team" component={Team} />
           <Route path="/team/:id" component={TeamMember} />
           <Route path="/services/:id">
