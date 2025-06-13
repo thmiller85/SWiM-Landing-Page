@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useLocation, Link } from 'wouter';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
 import { 
   Calendar, 
   Clock, 
