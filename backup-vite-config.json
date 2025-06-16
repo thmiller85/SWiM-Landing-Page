@@ -1,0 +1,29 @@
+{
+  "backup_date": "2025-06-16",
+  "current_structure": {
+    "client_dir": "client/",
+    "server_dir": "server/",
+    "shared_dir": "shared/",
+    "build_output": "dist/",
+    "deployment_config": "replit.toml"
+  },
+  "key_files": [
+    "package.json",
+    "vite.config.ts",
+    "server/index.ts",
+    "server/routes.ts",
+    "server/storage.ts",
+    "replit.toml"
+  ],
+  "rollback_commands": [
+    "Remove app/ directory",
+    "Restore original package.json scripts",
+    "Use original replit.toml configuration"
+  ],
+  "working_endpoints": [
+    "/api/admin/blog-posts",
+    "/api/blog-posts",
+    "/api/contact-form",
+    "/api/health"
+  ]
+}
