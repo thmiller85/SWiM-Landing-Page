@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
+import SEOHead from '@/components/SEOHead';
 
 interface BlogPostProps {
   slug: string;
@@ -160,6 +161,11 @@ const BlogPost = ({ slug }: BlogPostProps) => {
 
   return (
     <div className="min-h-screen bg-primary">
+      <SEOHead 
+        post={post} 
+        type="article"
+        url={`${window.location.origin}/blog/${slug}`}
+      />
       <div className="gradient-bg">
         {/* Header */}
         <header className="pt-24 pb-12">
