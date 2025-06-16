@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
-import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost } from '@/lib/wordpress';
+import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost, ConvertedBlogPost } from '@/lib/wordpress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,7 +37,7 @@ const Blog = () => {
 
 
 
-  const BlogCard = ({ post, index }: { post: any; index: number }) => (
+  const BlogCard = ({ post, index }: { post: ConvertedBlogPost; index: number }) => (
     <motion.article
       variants={fadeIn}
       initial="hidden"
@@ -93,7 +93,7 @@ const Blog = () => {
 
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {post.tags.slice(0, 3).map((tag, i) => (
+              {post.tags.slice(0, 3).map((tag: string, i: number) => (
                 <Badge key={i} variant="outline" className="text-xs border-white/20 text-white/70">
                   #{tag}
                 </Badge>

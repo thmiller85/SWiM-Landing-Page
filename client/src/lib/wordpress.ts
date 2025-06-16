@@ -258,8 +258,32 @@ const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY;
 
 export const wordpressAPI = new WordPressAPI(WORDPRESS_URL, WORDPRESS_API_KEY);
 
+// Define the converted blog post interface
+export interface ConvertedBlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage?: string;
+  seoTitle: string;
+  metaDescription: string;
+  author: string;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  category: string;
+  tags: string[];
+  ctaType: 'consultation' | 'download' | 'newsletter' | 'demo';
+  downloadableResource?: string | null;
+  views: number;
+  leads: number;
+  shares: number;
+}
+
 // Helper functions to convert WordPress data to our expected format
-export const convertWordPressPost = (wpPost: WordPressPost) => ({
+export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost => ({
   id: wpPost.id,
   title: wpPost.title.rendered,
   slug: wpPost.slug,
@@ -275,9 +299,11 @@ export const convertWordPressPost = (wpPost: WordPressPost) => ({
   status: wpPost.status,
   category: wpPost._embedded?.['wp:term']?.[0]?.find(term => term.taxonomy === 'category')?.name || 'Uncategorized',
   tags: wpPost._embedded?.['wp:term']?.[0]?.filter(term => term.taxonomy === 'post_tag')?.map(tag => tag.name) || [],
-  views: 0, // This would come from analytics plugin
-  leads: 0, // This would come from analytics plugin
-  shares: 0, // This would come from analytics plugin
+  ctaType: (wpPost.meta?.cta_type as ConvertedBlogPost['ctaType']) || 'consultation', // Custom field for CTA type
+  downloadableResource: wpPost.meta?.downloadable_resource || null, // Custom field for downloadable resources
+  views: parseInt(wpPost.meta?.views || '0') || 0, // Analytics from plugin
+  leads: parseInt(wpPost.meta?.leads || '0') || 0, // Analytics from plugin
+  shares: parseInt(wpPost.meta?.shares || '0') || 0, // Analytics from plugin
 });
 
 export const getReadingTime = (content: string): number => {

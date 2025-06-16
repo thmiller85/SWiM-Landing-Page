@@ -17,11 +17,10 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { BlogPost as BlogPostType } from '@shared/schema';
+import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost, ConvertedBlogPost } from '@/lib/wordpress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { apiRequest } from '@/lib/queryClient';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
 
 interface BlogPostProps {
@@ -32,46 +31,40 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
 
-  const { data: post, isLoading, error } = useQuery<BlogPostType>({
-    queryKey: ['/api/blog-posts/slug', slug],
-    queryFn: () => fetch(`/api/blog-posts/slug/${slug}`).then(res => {
-      if (!res.ok) throw new Error('Post not found');
-      return res.json();
-    })
+  const { data: wpPost, isLoading, error } = useQuery<WordPressPost>({
+    queryKey: ['wordpress-post', slug],
+    queryFn: () => wordpressAPI.getPost(slug),
   });
 
-  const { data: recentPosts = [] } = useQuery<BlogPostType[]>({
-    queryKey: ['/api/blog-posts/recent/list'],
+  const { data: wpRecentPosts = [] } = useQuery<WordPressPost[]>({
+    queryKey: ['wordpress-recent-posts'],
+    queryFn: () => wordpressAPI.getPosts({ per_page: 5 }),
   });
+
+  // Convert WordPress data to our expected format
+  const post = wpPost ? convertWordPressPost(wpPost) : null;
+  const recentPosts = wpRecentPosts.map(convertWordPressPost);
 
   const shareMutation = useMutation({
-    mutationFn: () => apiRequest(`/api/blog-posts/${post?.id}/share`, 'POST', {}),
+    mutationFn: () => wordpressAPI.trackShare(post?.id || 0),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/blog-posts/slug', slug] });
+      queryClient.invalidateQueries({ queryKey: ['wordpress-post', slug] });
     }
   });
 
   const leadMutation = useMutation({
-    mutationFn: () => apiRequest(`/api/blog-posts/${post?.id}/lead`, 'POST', {}),
+    mutationFn: () => wordpressAPI.trackLead(post?.id || 0),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/blog-posts/slug', slug] });
+      queryClient.invalidateQueries({ queryKey: ['wordpress-post', slug] });
     }
   });
 
-  const formatDate = (date: string | Date | null) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const getReadingTime = (content: string) => {
-    const words = content.split(' ').length;
-    const readingSpeed = 200;
-    return Math.ceil(words / readingSpeed);
-  };
+  // Track view when post loads
+  useEffect(() => {
+    if (post?.id) {
+      wordpressAPI.trackView(post.id);
+    }
+  }, [post?.id]);
 
   const handleShare = async () => {
     shareMutation.mutate();
