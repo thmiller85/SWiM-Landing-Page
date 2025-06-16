@@ -25,7 +25,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { apiGet, apiDelete } from '@/lib/api';
 import { fadeIn, staggerContainer } from '@/lib/animations';
 
 const AdminDashboard = () => {
@@ -43,27 +42,42 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
-    queryKey: ['admin-blog-posts'],
+  const { data: posts = [], isLoading } = useQuery<BlogPost[]>({
+    queryKey: ['/api/admin/blog-posts'],
     queryFn: async () => {
-      const response = await apiGet('/api/admin/blog-posts');
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch('/api/admin/blog-posts', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      
       return response.json();
-    },
-    enabled: !!localStorage.getItem('adminToken'),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: false
+    }
   });
-
-
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiDelete(`/api/blog-posts/${id}`);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`/api/blog-posts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
+      }
+      
       return { success: true };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/blog-posts'] });
       toast({
         title: "Post deleted",
         description: "The blog post has been successfully deleted.",
@@ -91,12 +105,10 @@ const AdminDashboard = () => {
 
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (post.excerpt || '').toLowerCase().includes(searchQuery.toLowerCase());
+                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
-
-
 
   const stats = {
     total: posts.length,
@@ -314,10 +326,10 @@ const AdminDashboard = () => {
                 </div>
               ) : (
                 <div>
-                  {/* Mobile-optimized table */}
-                  <div className="block sm:hidden">
-                    {filteredPosts.map((post) => (
-                      <div key={post.id} className="bg-white/5 rounded-lg p-4 mb-3 border border-white/10">
+                {/* Mobile-optimized table */}
+                <div className="block sm:hidden">
+                  {filteredPosts.map((post) => (
+                    <div key={post.id} className="bg-white/5 rounded-lg p-4 mb-3 border border-white/10">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="text-white font-medium text-sm line-clamp-2 mb-1">{post.title}</h3>
@@ -443,7 +455,7 @@ const AdminDashboard = () => {
                       ))}
                     </tbody>
                   </table>
-                  </div>
+                </div>
                 </div>
               )}
             </motion.div>

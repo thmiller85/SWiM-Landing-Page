@@ -61,8 +61,7 @@ const AdminBlogEditor = () => {
     queryKey: ['/api/blog-posts', postId],
     queryFn: () => {
       const token = localStorage.getItem('adminToken');
-      const baseUrl = import.meta.env.PROD ? window.location.origin : '';
-      return fetch(`${baseUrl}/api/blog-posts/${postId}`, {
+      return fetch(`/api/blog-posts/${postId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
