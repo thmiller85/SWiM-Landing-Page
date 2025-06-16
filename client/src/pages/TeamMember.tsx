@@ -10,7 +10,6 @@ import Footer from "@/components/Footer";
 import rossAvatarImage from "@/assets/ross-avatar.png";
 import tomAvatarImage from "@/assets/tom-avatar.png";
 import steveAvatarImage from "@/assets/steve-avatar.png";
-import davidAvatarImage from "@/assets/david-avatar.png";
 
 // Extended team member type with detailed bio information
 interface TeamMemberDetailed {
@@ -103,30 +102,7 @@ const teamMembers: TeamMemberDetailed[] = [
       linkedin: "https://linkedin.com/in/",
     }
   },
-  {
-    id: 4,
-    name: "David Stockdale",
-    title: "Chief Technology Officer",
-    shortBio: "Self-taught technician with a decade of experience in network infrastructure, systems integration, and hands-on technical leadership.",
-    detailedBio: [
-      "David Stockdale brings a builder's mindset and a technician's precision to SWiM's technology lane. With nearly a decade of hands-on experience in network infrastructure, low-voltage systems, and systems integration, David's path into tech didn't start in a classroom—it was pulled through walls, wired into racks, and booted up one machine at a time.",
-      "From laying 250,000+ feet of cabling for a multi-floor healthcare facility to designing full-scale commercial network systems, David has been architecting complex environments long before stepping into his official CTO role. His time as a technician for a digital gambling company sharpened his ability to combine hardware, software, and scalable connectivity—skills he now brings to bear on SWiM's rapidly evolving product architecture.",
-      "Self-taught in networking and computing, and currently pursuing a Developer Certificate, David leads from the trenches. Whether designing the next-gen infrastructure that powers SWiM's automations or debugging a line of rogue code, he believes in doing the work alongside the team, not above it. His leadership is rooted in clarity, accountability, and velocity—qualities forged during his years as an Eagle Scout and youth leader, where solving problems under pressure became second nature.",
-      "When he's not streamlining digital systems, you'll find David deep in the wilderness, tending to his personal horticulture studies or simply reconnecting with the wild. For him, building with purpose—whether in the woods or in the codebase—is what keeps things flowing."
-    ],
-    expertise: [
-      "Network Infrastructure",
-      "Systems Integration",
-      "Technical Architecture",
-      "Hands-on Leadership",
-      "Problem-Solving"
-    ],
-    photo: "gradient-avatar",
-    social: {
-      linkedin: "https://linkedin.com/in/",
-      github: "https://github.com/"
-    }
-  }
+
 ];
 
 // Team member avatar component with size options
@@ -193,22 +169,6 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, size: "large" | 
       >
         <img 
           src={steveAvatarImage} 
-          alt={name}
-          className="w-full h-full object-contain p-4"
-        />
-      </div>
-    );
-  }
-  
-  // David Stockdale (id: 4) gets custom image
-  if (memberId === 4) {
-    return (
-      <div 
-        className={`flex items-center justify-center overflow-hidden relative ${sizeClasses}`}
-        style={{ background: backgrounds[index % backgrounds.length] }}
-      >
-        <img 
-          src={davidAvatarImage} 
           alt={name}
           className="w-full h-full object-contain p-4"
         />

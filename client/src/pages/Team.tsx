@@ -10,7 +10,6 @@ import Footer from "@/components/Footer";
 import rossAvatarImage from "@/assets/ross-avatar.png";
 import tomAvatarImage from "@/assets/tom-avatar.png";
 import steveAvatarImage from "@/assets/steve-avatar.png";
-import davidAvatarImage from "@/assets/david-avatar.png";
 
 // Define the team member type
 interface TeamMember {
@@ -59,17 +58,7 @@ const teamMembers: TeamMember[] = [
       linkedin: "https://linkedin.com/in/",
     }
   },
-  {
-    id: 4,
-    name: "David Stockdale",
-    title: "Chief Technology Officer",
-    shortBio: "Self-taught technician with a decade of experience in network infrastructure, systems integration, and hands-on technical leadership.",
-    photo: "gradient-avatar",
-    social: {
-      linkedin: "https://linkedin.com/in/",
-      github: "https://github.com/"
-    }
-  }
+
 ];
 
 // Team member avatar component
@@ -130,22 +119,6 @@ const TeamMemberAvatar: React.FC<{ index: number, name: string, memberId: number
       >
         <img 
           src={steveAvatarImage} 
-          alt={name}
-          className="w-full h-full object-contain p-2"
-        />
-      </div>
-    );
-  }
-  
-  // David Stockdale gets his custom image
-  if (memberId === 4) {
-    return (
-      <div 
-        className="w-full aspect-square rounded-2xl mb-4 flex items-center justify-center overflow-hidden relative"
-        style={{ background: backgrounds[index % backgrounds.length] }}
-      >
-        <img 
-          src={davidAvatarImage} 
           alt={name}
           className="w-full h-full object-contain p-2"
         />
