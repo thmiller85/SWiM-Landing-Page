@@ -263,14 +263,18 @@ const Team: React.FC = () => {
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto"
             >
               {teamMembers.map((member, index) => (
-                <TeamMemberCard 
-                  key={member.id} 
-                  member={member} 
-                  index={index}
-                />
+                <div 
+                  key={member.id}
+                  className="w-full sm:w-80 md:w-72 lg:w-80"
+                >
+                  <TeamMemberCard 
+                    member={member} 
+                    index={index}
+                  />
+                </div>
               ))}
             </motion.div>
             
