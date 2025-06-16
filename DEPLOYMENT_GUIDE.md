@@ -1,78 +1,117 @@
 # SWiM AI Deployment Guide
 
-## Overview
-This application requires a **server deployment** (not static) to support the admin dashboard API endpoints. The admin CMS needs server-side routes for blog management, authentication, and database operations.
+## Current Production Setup
+
+### Architecture: Vite + Express (Server Deployment)
+The application uses a hybrid architecture:
+- **Frontend**: Vite-built React application with static site generation
+- **Backend**: Express server with PostgreSQL database
+- **Deployment**: CloudRun server deployment (not static site)
+
+### Working Endpoints
+- **Public Site**: `/` (landing page, blog, contact)
+- **Admin Dashboard**: `/admin/login` → `/admin/dashboard`
+- **API Endpoints**: `/api/health`, `/api/admin/blog-posts`, `/api/admin/login`
+- **Admin Credentials**: `admin` / `swimai2024`
 
 ## Deployment Configuration
 
-### Current Setup
-- **Deployment Type**: Server deployment using CloudRun
-- **Build Command**: `npm run build` (includes client build + server compilation)
-- **Start Command**: `npm run start` (runs production server)
-- **Port**: 5000 (configured for 0.0.0.0 binding)
+### Current replit.toml (Working)
+```toml
+run = ["npm", "run", "start"]
+build = ["npm", "run", "build"]
 
-### Required Environment Variables
-- `DATABASE_URL`: PostgreSQL connection string (automatically provided by Replit)
-- `NODE_ENV`: Set to "production" in deployment
+[deployment]
+deploymentTarget = "cloudrun"
+```
 
-## Key Files
-- `replit.toml`: Deployment configuration
-- `server/index.ts`: Main server entry point
-- `dist/`: Build output directory containing both client assets and server bundle
+### Key Technical Decisions
+1. **Server Deployment**: Required for admin API endpoints
+2. **Database**: PostgreSQL with persistent storage
+3. **Authentication**: Simple admin login system
+4. **SEO**: Static site generation for marketing pages
 
-## API Endpoints
-The following endpoints are essential for admin functionality:
-- `GET /api/admin/blog-posts` - Fetch all blog posts for admin dashboard
-- `POST /api/admin/login` - Admin authentication
-- `POST /api/blog-posts` - Create new blog posts
-- `PATCH /api/blog-posts/:id` - Update blog posts
-- `DELETE /api/blog-posts/:id` - Delete blog posts
+## Next.js Migration Option
 
-## Static vs Server Deployment
+### Status: Partial Foundation Complete
+- Next.js App Router structure created
+- Critical API routes migrated
+- Complete rollback capability maintained
 
-### Static Deployment (NOT SUPPORTED for Admin)
-- ❌ No API endpoints available
-- ❌ Admin dashboard will show "No posts found"
-- ❌ Contact forms won't work
-- ✅ Marketing pages load quickly
-- ✅ Good for SEO
+### Benefits of Next.js Migration
+- Simplified deployment (automatic SSR/SSG handling)
+- Built-in API routes (no configuration complexity)
+- Industry standard full-stack architecture
+- Better performance optimizations
 
-### Server Deployment (REQUIRED for Full Functionality)
-- ✅ All API endpoints available
-- ✅ Admin dashboard fully functional
-- ✅ Contact forms work via webhook proxy
-- ✅ Database operations supported
-- ✅ Marketing pages still work with SEO optimization
+### Migration Decision
+- **Current State**: Vite + Express is fully functional
+- **Next.js Foundation**: Available for future migration
+- **Recommendation**: Current setup meets all requirements
 
-## Build Process
-1. **Client Build**: Vite builds React app to `dist/public/`
-2. **Server Build**: esbuild compiles server to `dist/index.js`
-3. **Static Generation**: Pre-renders marketing pages for SEO
-4. **File Organization**: Static assets copied to `dist/` for server serving
+## Admin Dashboard Access
+
+### Production URL Structure
+- Landing Page: `https://[deployment-url].replit.app/`
+- Admin Login: `https://[deployment-url].replit.app/admin/login`
+- Admin Dashboard: `https://[deployment-url].replit.app/admin/dashboard`
+
+### Authentication Flow
+1. Navigate to `/admin/login`
+2. Enter credentials: `admin` / `swimai2024`
+3. Access admin dashboard with full blog management
+4. Create, edit, publish blog posts with analytics tracking
+
+## Database Operations
+
+### Blog Management
+- Full CRUD operations through admin interface
+- Real-time analytics tracking (views, leads, shares)
+- SEO optimization tools (meta titles, descriptions)
+- Google Drive image integration
+
+### Backup & Migrations
+- Database schema managed through Drizzle ORM
+- Use `npm run db:push` for schema changes
+- PostgreSQL handles data persistence across deployments
 
 ## Troubleshooting
 
-### Admin Dashboard Shows "No Posts Found"
-**Cause**: Deployment configured as static site instead of server
-**Solution**: Ensure `replit.toml` has `deploymentTarget = "cloudrun"` and `run = ["npm", "run", "start"]`
+### Common Issues
+1. **Admin Dashboard 404**: Ensure server deployment (not static)
+2. **API Endpoints Failing**: Check CloudRun deployment target
+3. **Database Connection**: Verify DATABASE_URL environment variable
+4. **Admin Login Issues**: Confirm credentials and session handling
 
-### API Endpoints Return 404
-**Cause**: Server not running in deployment
-**Solution**: Verify deployment is using server mode, not static hosting
+### Health Checks
+- API Health: `GET /api/health`
+- Database: Admin dashboard should load blog posts
+- Authentication: Admin login should redirect to dashboard
 
-### Database Connection Issues
-**Cause**: Missing DATABASE_URL or network connectivity
-**Solution**: Check environment variables and database status
+## Performance Optimization
 
-## Verification Steps
-1. Deploy with server configuration
-2. Access `/api/health` endpoint - should return status
-3. Login to admin at `/admin/login` (password: swimai2024)
-4. Verify blog posts load in admin dashboard
-5. Test creating/editing blog posts
+### Current Optimizations
+- Static site generation for marketing pages
+- Database query optimization with Drizzle
+- Image optimization through Google Drive integration
+- Responsive design with mobile-first approach
 
-## Performance Considerations
-- Static pages are pre-rendered for SEO
-- Dynamic admin functionality requires server
-- Database queries are optimized with proper indexing
-- Client-side routing handles navigation efficiently
+### SEO Features
+- Automatic sitemap generation
+- Meta tag optimization
+- Structured data for blog posts
+- Social sharing integration
+
+## Security Considerations
+
+### Current Implementation
+- Admin authentication with session management
+- Protected API routes with authorization checks
+- Environment variable protection for sensitive data
+- CORS configuration for cross-origin requests
+
+### Production Security
+- Admin credentials should be changed from default
+- Database access restricted to application
+- HTTPS enforced through Replit deployment
+- Session security with proper cookie settings
