@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
-import { BlogPost } from '@shared/schema';
+import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost } from '@/lib/wordpress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,34 +15,29 @@ const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
 
-  const { data: posts = [], isLoading } = useQuery<BlogPost[]>({
-    queryKey: ['/api/blog-posts', { 
-      category: selectedCategory === 'all' ? undefined : selectedCategory,
-      tag: selectedTag === 'all' ? undefined : selectedTag,
-      search: searchQuery || undefined,
-      limit: 20 
+  const { data: wordPressPosts = [], isLoading } = useQuery<WordPressPost[]>({
+    queryKey: ['wordpress-posts', { 
+      category: selectedCategory,
+      tag: selectedTag,
+      search: searchQuery,
     }],
+    queryFn: async () => {
+      if (searchQuery) {
+        return wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
+      }
+      return wordpressAPI.getPosts({ per_page: 20 });
+    },
   });
+
+  // Convert WordPress posts to our expected format
+  const posts = wordPressPosts.map(convertWordPressPost);
 
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
   const tags = ['all', 'workflow', 'automation', 'ai', 'b2b', 'saas', 'productivity', 'strategy'];
 
-  const formatDate = (date: string | Date | null) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
-  const getReadingTime = (content: string) => {
-    const words = content.split(' ').length;
-    const readingSpeed = 200; // words per minute
-    return Math.ceil(words / readingSpeed);
-  };
 
-  const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => (
+  const BlogCard = ({ post, index }: { post: any; index: number }) => (
     <motion.article
       variants={fadeIn}
       initial="hidden"
