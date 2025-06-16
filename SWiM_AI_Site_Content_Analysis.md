@@ -265,12 +265,7 @@ The About section emphasizes SWiM AI's human-centered approach to AI implementat
    - **Social Links:** LinkedIn
    - **Page URL:** `/team/3`
 
-4. **David Stockdale - Chief Technology Officer**
-   - **ID:** 4
-   - **Bio:** Self-taught technician with a decade of experience in network infrastructure, systems integration, and hands-on technical leadership.
-   - **Photo:** Custom avatar image (David Avatar.png)
-   - **Social Links:** LinkedIn, GitHub
-   - **Page URL:** `/team/4`
+
 
 ### Team Page Features
 - Responsive grid layout

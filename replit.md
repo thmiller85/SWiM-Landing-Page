@@ -28,6 +28,12 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 16, 2025 - Team Update: David Stockdale Removal
+- **Personnel Change**: Removed David Stockdale (former CTO) from all team pages and documentation
+- **Updated Team Structure**: Team now consists of Ross Stockdale (CMO), Tom Miller (CPO), and Steve Wurster (CGO)
+- **Code Cleanup**: Removed David's profile, avatar references, and biographical content from both Team and TeamMember pages
+- **Documentation Update**: Updated content analysis files to reflect current team composition
+
 ### June 16, 2025 - WordPress CMS Migration Complete
 - **CMS Architecture**: Migrated from custom PostgreSQL CMS to WordPress backend
 - **Static Deployment Ready**: Eliminated server-side database requirements for true SPA deployment
