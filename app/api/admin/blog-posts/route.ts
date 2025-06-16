@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { storage } from '../../../../../server/storage'
+import { storage } from '../../../../lib/storage'
 
 // Admin authentication middleware
 function requireAuth(request: NextRequest) {

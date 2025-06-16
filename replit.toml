@@ -1,7 +1,7 @@
 [deployment]
-run = ["npm", "run", "start"]
+run = ["npm", "run", "start:nextjs"]
 deploymentTarget = "cloudrun"
-build = ["npm", "run", "build"]
+build = ["npm", "run", "build:nextjs"]
 
 [nix]
 channel = "stable-24_05"
