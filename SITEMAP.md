@@ -29,36 +29,23 @@
 - **/privacy-policy** - Privacy Policy
 - **/terms-of-service** - Terms of Service
 
-## Admin Pages (CMS)
+## Content Management
 
-### Authentication
-- **/admin/login** - Admin login page
-
-### Content Management (Protected)
-- **/admin/dashboard** - Admin dashboard with analytics
-- **/admin/blog-posts/new** - Create new blog post
-- **/admin/blog-posts/edit/:id** - Edit existing blog post
-- **/admin/blog-posts/preview/:id** - Preview blog post
+### WordPress CMS
+- **External WordPress Site** - Full content management via WordPress admin dashboard
+- **WordPress REST API** - Blog posts fetched directly from WordPress
+- **SEO Integration** - Yoast SEO plugin handles meta tags and optimization
 
 ## API Endpoints
 
 ### Public APIs
 - **/api/health** - Health check endpoint
-- **/api/blog-posts** - Get all blog posts (with filters)
-- **/api/blog-posts/slug/:slug** - Get blog post by slug
-- **/api/blog-posts/:id** - Get blog post by ID
-- **/api/blog-posts/popular/list** - Get popular posts
-- **/api/blog-posts/recent/list** - Get recent posts
-- **/api/blog-posts/:id/lead** - Increment lead count
-- **/api/blog-posts/:id/share** - Increment share count
 - **/api/contact-form** - Contact form submission
 
-### Admin APIs (Protected)
-- **/api/admin/login** - Admin authentication
-- **/api/admin/blog-posts** - Admin blog post management
-- **/api/blog-posts** (POST) - Create blog post
-- **/api/blog-posts/:id** (PATCH) - Update blog post
-- **/api/blog-posts/:id** (DELETE) - Delete blog post
+### WordPress Integration
+- **External WordPress REST API** - All blog content managed through WordPress
+- **Automatic Content Sync** - Frontend fetches posts directly from WordPress REST API
+- **No Custom CMS** - Eliminated internal blog management system
 
 ## Static Assets
 
