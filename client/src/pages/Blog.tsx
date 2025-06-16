@@ -108,6 +108,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-primary">
+      <SEOHead 
+        title="AI & Automation Insights | SWiM AI Blog"
+        description="Expert insights on AI implementation, workflow automation, and business intelligence. Learn how to transform your business with cutting-edge AI solutions."
+        url={`${window.location.origin}/blog`}
+      />
       <div className="gradient-bg">
         {/* Hero Section */}
         <section className="pt-24 pb-16">
