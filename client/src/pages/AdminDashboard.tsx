@@ -343,10 +343,10 @@ const AdminDashboard = () => {
                 </div>
               ) : (
                 <div>
-                {/* Mobile-optimized table */}
-                <div className="block sm:hidden">
-                  {filteredPosts.map((post) => (
-                    <div key={post.id} className="bg-white/5 rounded-lg p-4 mb-3 border border-white/10">
+                  {/* Mobile-optimized table */}
+                  <div className="block sm:hidden">
+                    {filteredPosts.map((post) => (
+                      <div key={post.id} className="bg-white/5 rounded-lg p-4 mb-3 border border-white/10">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="text-white font-medium text-sm line-clamp-2 mb-1">{post.title}</h3>
@@ -472,7 +472,7 @@ const AdminDashboard = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                  </div>
                 </div>
               )}
             </motion.div>
