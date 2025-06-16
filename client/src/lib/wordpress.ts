@@ -283,28 +283,48 @@ export interface ConvertedBlogPost {
 }
 
 // Helper functions to convert WordPress data to our expected format
-export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost => ({
-  id: wpPost.id,
-  title: wpPost.title.rendered,
-  slug: wpPost.slug,
-  excerpt: wpPost.excerpt.rendered.replace(/<[^>]*>/g, ''), // Strip HTML tags
-  content: wpPost.content.rendered,
-  featuredImage: wpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url,
-  seoTitle: wpPost.yoast_head_json?.title || wpPost.title.rendered,
-  metaDescription: wpPost.yoast_head_json?.description || wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),
-  author: wpPost._embedded?.author?.[0]?.name || 'Admin',
-  publishedAt: wpPost.date,
-  createdAt: wpPost.date,
-  updatedAt: wpPost.modified,
-  status: wpPost.status,
-  category: wpPost._embedded?.['wp:term']?.[0]?.find(term => term.taxonomy === 'category')?.name || 'Uncategorized',
-  tags: wpPost._embedded?.['wp:term']?.[0]?.filter(term => term.taxonomy === 'post_tag')?.map(tag => tag.name) || [],
-  ctaType: (wpPost.meta?.cta_type as ConvertedBlogPost['ctaType']) || 'consultation', // Custom field for CTA type
-  downloadableResource: wpPost.meta?.downloadable_resource || null, // Custom field for downloadable resources
-  views: parseInt(wpPost.meta?.views || '0') || 0, // Analytics from plugin
-  leads: parseInt(wpPost.meta?.leads || '0') || 0, // Analytics from plugin
-  shares: parseInt(wpPost.meta?.shares || '0') || 0, // Analytics from plugin
-});
+export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost => {
+  // Extract category and tags from embedded terms
+  const terms = wpPost._embedded?.['wp:term'] || [];
+  const categories = terms.flat().filter(term => term.taxonomy === 'category');
+  const tags = terms.flat().filter(term => term.taxonomy === 'post_tag');
+  
+  // Determine CTA type based on categories/content (since custom fields may not be available)
+  let ctaType: ConvertedBlogPost['ctaType'] = 'consultation';
+  const content = wpPost.content.rendered.toLowerCase();
+  const categoryNames = categories.map(cat => cat.name.toLowerCase());
+  
+  if (content.includes('download') || categoryNames.includes('resources')) {
+    ctaType = 'download';
+  } else if (content.includes('newsletter') || content.includes('subscribe')) {
+    ctaType = 'newsletter';
+  } else if (content.includes('demo') || categoryNames.includes('demo')) {
+    ctaType = 'demo';
+  }
+
+  return {
+    id: wpPost.id,
+    title: wpPost.title.rendered,
+    slug: wpPost.slug,
+    excerpt: wpPost.excerpt.rendered.replace(/<[^>]*>/g, ''), // Strip HTML tags
+    content: wpPost.content.rendered,
+    featuredImage: wpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url,
+    seoTitle: wpPost.yoast_head_json?.title || wpPost.title.rendered,
+    metaDescription: wpPost.yoast_head_json?.description || wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),
+    author: wpPost._embedded?.author?.[0]?.name || 'Admin',
+    publishedAt: wpPost.date,
+    createdAt: wpPost.date,
+    updatedAt: wpPost.modified,
+    status: wpPost.status,
+    category: categories[0]?.name || 'Uncategorized',
+    tags: tags.map(tag => tag.name) || [],
+    ctaType: (wpPost.meta?.cta_type as ConvertedBlogPost['ctaType']) || ctaType, // Use smart detection for WordPress.com
+    downloadableResource: wpPost.meta?.downloadable_resource || null, // May not be available on free plans
+    views: parseInt(wpPost.meta?.views || '0') || 0, // Basic analytics
+    leads: parseInt(wpPost.meta?.leads || '0') || 0, // Basic analytics
+    shares: parseInt(wpPost.meta?.shares || '0') || 0, // Basic analytics
+  };
+};
 
 export const getReadingTime = (content: string): number => {
   const plainText = content.replace(/<[^>]*>/g, '');
