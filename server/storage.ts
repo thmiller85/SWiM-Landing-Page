@@ -114,10 +114,14 @@ The future of marketing is intelligent, automated, and incredibly powerful. By e
 
   // Blog post methods
   async getBlogPosts(filters?: { category?: string; tag?: string; status?: string; limit?: number; offset?: number }): Promise<BlogPost[]> {
+    console.log('getBlogPosts called with filters:', filters);
     let query = db.select().from(blogPosts);
 
     if (filters?.status && filters.status !== 'all') {
+      console.log('Filtering by status:', filters.status);
       query = query.where(eq(blogPosts.status, filters.status as any));
+    } else {
+      console.log('No status filter applied (showing all posts)');
     }
 
     if (filters?.category) {
@@ -138,7 +142,9 @@ The future of marketing is intelligent, automated, and incredibly powerful. By e
       query = query.offset(filters.offset);
     }
 
-    return await query;
+    const result = await query;
+    console.log('getBlogPosts returning', result.length, 'posts');
+    return result;
   }
 
   async getBlogPost(id: number): Promise<BlogPost | undefined> {
