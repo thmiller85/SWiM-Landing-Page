@@ -32,6 +32,13 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 16, 2025 - Server Deployment Configuration Fixed
+- **Deployment Architecture**: Changed from static site to server deployment to support admin API endpoints
+- **API Integration**: Fixed 404 errors on `/api/admin/blog-posts` by configuring proper server deployment
+- **Build Configuration**: Updated replit.toml with CloudRun deployment target and proper build commands
+- **Database Connectivity**: Ensured PostgreSQL integration works in production environment
+- **Admin Dashboard**: Resolved admin dashboard showing "No posts found" in deployed environment
+
 ### June 13, 2025 - Google Drive Image Integration Complete
 - **Automatic URL Converter**: Built-in Google Drive sharing URL to direct URL converter in CMS
 - **Enhanced Image Management**: Seamless integration with Google Drive for blog featured images

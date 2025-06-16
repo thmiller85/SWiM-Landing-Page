@@ -1,6 +1,7 @@
 [deployment]
 run = ["npm", "run", "start"]
 deploymentTarget = "cloudrun"
+build = ["npm", "run", "build"]
 
 [nix]
 channel = "stable-24_05"
