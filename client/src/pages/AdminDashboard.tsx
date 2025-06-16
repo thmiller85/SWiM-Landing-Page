@@ -46,24 +46,8 @@ const AdminDashboard = () => {
   const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
-      const token = localStorage.getItem('adminToken');
-      
-      const baseUrl = import.meta.env.PROD ? window.location.origin : '';
-      const response = await fetch(`${baseUrl}/api/admin/blog-posts`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error:', errorText);
-        throw new Error(`Failed to fetch posts: ${response.status} - ${errorText}`);
-      }
-      
-      const data = await response.json();
-      return data;
+      const response = await apiGet('/api/admin/blog-posts');
+      return response.json();
     },
     enabled: !!localStorage.getItem('adminToken'),
     refetchOnMount: false,
@@ -75,19 +59,7 @@ const AdminDashboard = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const token = localStorage.getItem('adminToken');
-      const baseUrl = import.meta.env.PROD ? window.location.origin : '';
-      const response = await fetch(`${baseUrl}/api/blog-posts/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete post');
-      }
-      
+      await apiDelete(`/api/blog-posts/${id}`);
       return { success: true };
     },
     onSuccess: () => {

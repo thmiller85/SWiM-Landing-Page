@@ -32,6 +32,13 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 16, 2025 - Production API Routing Fix Complete
+- **Production Deployment Fix**: Resolved 404 API errors in deployed applications
+- **Environment-Aware API Calls**: Implemented dynamic base URL handling for development vs production
+- **Comprehensive API Utility**: Created centralized API utility functions for all admin operations
+- **Database Connectivity**: Confirmed PostgreSQL database working correctly with 2 blog posts
+- **Admin Dashboard**: Fixed blog post display issues in CMS across all environments
+
 ### June 13, 2025 - Google Drive Image Integration Complete
 - **Automatic URL Converter**: Built-in Google Drive sharing URL to direct URL converter in CMS
 - **Enhanced Image Management**: Seamless integration with Google Drive for blog featured images
