@@ -116,10 +116,16 @@ const AdminDashboard = () => {
 
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+                         (post.excerpt || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || post.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  // Debug logging
+  console.log('Posts array:', posts);
+  console.log('Search query:', searchQuery);
+  console.log('Status filter:', statusFilter);
+  console.log('Filtered posts:', filteredPosts);
 
   const stats = {
     total: posts.length,
