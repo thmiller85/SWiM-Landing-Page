@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { apiGet, apiDelete } from '@/lib/api';
 import { fadeIn, staggerContainer } from '@/lib/animations';
 
 const AdminDashboard = () => {
@@ -47,7 +48,8 @@ const AdminDashboard = () => {
     queryFn: async () => {
       const token = localStorage.getItem('adminToken');
       
-      const response = await fetch('/api/admin/blog-posts', {
+      const baseUrl = import.meta.env.PROD ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/admin/blog-posts`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -74,7 +76,8 @@ const AdminDashboard = () => {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/blog-posts/${id}`, {
+      const baseUrl = import.meta.env.PROD ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/blog-posts/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -121,11 +124,7 @@ const AdminDashboard = () => {
     return matchesSearch && matchesStatus;
   });
 
-  // Debug logging
-  console.log('Posts array:', posts);
-  console.log('Search query:', searchQuery);
-  console.log('Status filter:', statusFilter);
-  console.log('Filtered posts:', filteredPosts);
+
 
   const stats = {
     total: posts.length,
