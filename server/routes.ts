@@ -487,6 +487,155 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Blog post SEO route - handles server-side rendering of meta tags
+  app.get('/blog/:slug', async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+      const post = await storage.getPostBySlug(slug);
+      
+      if (!post || post.status !== 'published') {
+        // Fall back to regular SPA routing
+        return next();
+      }
+
+      const blogPost = storage.convertToClientFormat(post);
+      const baseUrl = req.protocol + '://' + req.get('host');
+      const postUrl = `${baseUrl}/blog/${slug}`;
+      
+      // Check if in development or production
+      const isDev = process.env.NODE_ENV === 'development';
+      
+      // Escape HTML special characters in meta content
+      const escapeHtml = (str: string) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+      const safeTitle = escapeHtml(blogPost.title);
+      const safeDescription = escapeHtml(blogPost.metaDescription);
+      const safeAuthor = escapeHtml(blogPost.author);
+      const safeCategory = escapeHtml(blogPost.category);
+      
+      // Generate HTML with proper meta tags
+      const html = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    ${isDev ? `
+    <script type="module">
+import { createHotContext } from "/@vite/client";
+const hot = createHotContext("/__dummy__runtime-error-plugin");
+
+function sendError(error) {
+  if (!(error instanceof Error)) {
+    error = new Error("(unknown runtime error)");
+  }
+  const serialized = {
+    message: error.message,
+    stack: error.stack,
+  };
+  hot.send("runtime-error-plugin:error", serialized);
+}
+
+window.addEventListener("error", (evt) => {
+  sendError(evt.error);
+});
+
+window.addEventListener("unhandledrejection", (evt) => {
+  sendError(evt.reason);
+});
+</script>
+
+    <script type="module">
+import RefreshRuntime from "/@react-refresh"
+RefreshRuntime.injectIntoGlobalHook(window)
+window.$RefreshReg$ = () => {}
+window.$RefreshSig$ = () => (type) => type
+window.__vite_plugin_react_preamble_installed__ = true
+</script>
+
+    <script type="module" src="/@vite/client"></script>` : ''}
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>${safeTitle} | SWiM AI Blog</title>
+    <meta name="description" content="${safeDescription}" />
+    <meta name="keywords" content="${blogPost.tags.map(escapeHtml).join(', ')}" />
+    <meta name="author" content="${safeAuthor}" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="${postUrl}" />
+    <meta property="og:title" content="${safeTitle}" />
+    <meta property="og:description" content="${safeDescription}" />
+    <meta property="og:image" content="${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}" />
+    <meta property="og:site_name" content="SWiM AI" />
+    <meta property="article:published_time" content="${blogPost.publishedAt}" />
+    <meta property="article:modified_time" content="${blogPost.updatedAt}" />
+    <meta property="article:author" content="${safeAuthor}" />
+    <meta property="article:section" content="${safeCategory}" />
+    ${blogPost.tags.map(tag => `<meta property="article:tag" content="${escapeHtml(tag)}" />`).join('\n    ')}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="${postUrl}" />
+    <meta property="twitter:title" content="${safeTitle}" />
+    <meta property="twitter:description" content="${safeDescription}" />
+    <meta property="twitter:image" content="${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="${postUrl}" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "${safeTitle}",
+      "description": "${safeDescription}",
+      "image": "${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}",
+      "author": {
+        "@type": "Organization",
+        "name": "${safeAuthor}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SWiM AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "${baseUrl}/favicon-512x512.png"
+        }
+      },
+      "datePublished": "${blogPost.publishedAt}",
+      "dateModified": "${blogPost.updatedAt}",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "${postUrl}"
+      },
+      "articleSection": "${safeCategory}",
+      "keywords": "${blogPost.tags.map(escapeHtml).join(', ')}",
+      "wordCount": ${blogPost.content.replace(/<[^>]*>/g, '').split(/\s+/).length},
+      "timeRequired": "PT${Math.ceil(blogPost.content.replace(/<[^>]*>/g, '').split(/\s+/).length / 200)}M"
+    }
+    </script>
+    
+    ${isDev ? '' : '<link rel="stylesheet" href="/assets/index.css" />'}
+  </head>
+  <body>
+    <div id="root"></div>
+    ${isDev ? '<script type="module" src="/src/main.tsx"></script>' : '<script type="module" crossorigin src="/assets/index.js"></script>'}
+  </body>
+</html>`;
+
+      res.setHeader('Content-Type', 'text/html');
+      res.send(html);
+    } catch (error) {
+      console.error('Error rendering blog post:', error);
+      next();
+    }
+  });
+
   // SPA fallback route - must be last to catch all non-API routes
   app.get('*', (req, res, next) => {
     // Skip API routes and let them 404 properly
@@ -494,7 +643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ error: 'API endpoint not found' });
     }
     
-    // For all other routes (including /admin/login), serve the React app
+    // For all other routes, serve the React app
     // This will be handled by the Vite middleware in development
     // or by the static file server in production
     next();
