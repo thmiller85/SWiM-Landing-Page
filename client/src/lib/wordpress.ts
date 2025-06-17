@@ -176,7 +176,21 @@ export class WordPressAPI {
 
       const response = await this.request<{ posts: any[] }>('/posts', queryParams);
       console.log('WordPress.com API response:', response);
-      return this.convertWordPressComPosts(response.posts || []);
+      console.log('Response type:', typeof response);
+      console.log('Response keys:', Object.keys(response || {}));
+      
+      // Handle the response structure correctly
+      if (response && typeof response === 'object') {
+        if (response.posts && Array.isArray(response.posts)) {
+          return this.convertWordPressComPosts(response.posts);
+        } else if (Array.isArray(response)) {
+          // Sometimes the response is directly an array
+          return this.convertWordPressComPosts(response);
+        }
+      }
+      
+      console.warn('Unexpected WordPress.com API response structure:', response);
+      return [];
     } else {
       // Standard WordPress REST API
       const queryParams: Record<string, any> = {
