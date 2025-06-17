@@ -4,6 +4,7 @@ import path from "path";
 import { blogService } from "./blog";
 import { storage } from "./storage";
 import { insertPostSchema, insertImageSchema, insertUserSchema } from "../shared/schema";
+import z from "zod";
 import multer from "multer";
 import fs from "fs/promises";
 
@@ -172,8 +173,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/cms/posts', async (req, res) => {
     try {
-      const validatedData = insertPostSchema.parse(req.body);
-      const post = await storage.createPost(validatedData);
+      // Create a custom validation schema for the API request
+      const createPostSchema = z.object({
+        title: z.string().min(1),
+        slug: z.string().min(1),
+        content: z.string(),
+        metaTitle: z.string().optional(),
+        metaDescription: z.string().optional(),
+        excerpt: z.string().optional(),
+        featuredImage: z.string().optional(),
+        author: z.string().min(1),
+        status: z.enum(['draft', 'published']).default('draft'),
+        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).default('consultation'),
+        category: z.string().min(1),
+        tags: z.array(z.string()).default([]),
+        targetKeywords: z.array(z.string()).default([]),
+        readingTime: z.number().optional().default(0),
+        publishedAt: z.string().optional(),
+      });
+
+      const validatedData = createPostSchema.parse(req.body);
+      
+      // Convert publishedAt string to Date if provided
+      const postData: any = {
+        ...validatedData,
+        publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null
+      };
+      
+      const post = await storage.createPost(postData);
       res.status(201).json(post);
     } catch (error) {
       console.error('Error creating post:', error);

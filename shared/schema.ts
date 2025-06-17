@@ -53,10 +53,7 @@ export const users = pgTable('users', {
 });
 
 // Insert schemas
-export const insertPostSchema = createInsertSchema(posts, {
-  tags: z.array(z.string()).default([]),
-  targetKeywords: z.array(z.string()).default([]),
-}).omit({
+export const insertPostSchema = createInsertSchema(posts).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
