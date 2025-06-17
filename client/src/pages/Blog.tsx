@@ -42,6 +42,42 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
+      // Try database first, fall back to static
+      try {
+        const response = await fetch('/api/blog/posts/database');
+        if (response.ok) {
+          let dbPosts = await response.json();
+          
+          // Apply filters on client side for database posts
+          if (selectedCategory !== 'all') {
+            dbPosts = dbPosts.filter((post: BlogPost) => 
+              post.category.toLowerCase() === selectedCategory.toLowerCase()
+            );
+          }
+          
+          if (selectedTag !== 'all') {
+            dbPosts = dbPosts.filter((post: BlogPost) => 
+              post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
+            );
+          }
+          
+          if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            dbPosts = dbPosts.filter((post: BlogPost) =>
+              post.title.toLowerCase().includes(query) ||
+              post.content.toLowerCase().includes(query) ||
+              post.excerpt.toLowerCase().includes(query) ||
+              post.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+          }
+          
+          return dbPosts;
+        }
+      } catch (dbError) {
+        console.log('Database not available, trying static content...');
+      }
+      
+      // Fall back to static service
       return staticBlogService.getAllPosts({
         search: searchQuery || undefined,
         category: selectedCategory !== 'all' ? selectedCategory : undefined,

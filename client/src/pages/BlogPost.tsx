@@ -69,6 +69,17 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
     queryFn: async () => {
+      // Try database first, fall back to static
+      try {
+        const response = await fetch(`/api/blog/posts/database/${slug}`);
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (dbError) {
+        console.log('Database not available, trying static content...');
+      }
+      
+      // Fall back to static service
       const result = await staticBlogService.getPostBySlug(slug);
       if (!result) throw new Error('Post not found');
       return result;
