@@ -79,8 +79,17 @@ const Blog = () => {
             {post.title}
           </h2>
 
-          <div className="text-white/80 mb-4 line-clamp-3 prose prose-invert prose-sm">
-            <ReactMarkdown>{post.excerpt}</ReactMarkdown>
+          <div className="text-white/80 mb-4 line-clamp-3">
+            <ReactMarkdown 
+              components={{
+                p: ({ children }) => <>{children}</>,
+                strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-white/90">{children}</em>,
+                a: ({ children, href }) => <a href={href} className="text-accent hover:text-highlight underline transition-colors">{children}</a>
+              }}
+            >
+              {post.excerpt}
+            </ReactMarkdown>
           </div>
 
           <div className="flex items-center justify-between">
