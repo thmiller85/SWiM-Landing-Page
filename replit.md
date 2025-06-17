@@ -28,6 +28,13 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 17, 2025 - Complete CMS with Featured Image Integration
+- **Fixed Featured Image Display**: Resolved issue where uploaded images weren't appearing on published blog posts
+- **Database Integration**: Updated post records to properly link featured images with blog content
+- **Image Serving Route**: Implemented Express static file serving for `/images/blog/` path
+- **End-to-End Workflow**: Complete CMS functionality from post creation to public display with working featured images
+- **Production Ready**: Full database-backed blog system with image upload and display capabilities
+
 ### June 17, 2025 - Migration to Markdown-Based Blog System
 - **Eliminated WordPress Dependency**: Replaced WordPress REST API with direct markdown file-based blog system
 - **Single Source of Truth**: Blog posts now stored as markdown files in `/content/blog/` with frontmatter metadata

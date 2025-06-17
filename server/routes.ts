@@ -60,8 +60,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/images/*', (req, res) => {
     const imagePath = path.join(process.cwd(), 'public', req.path);
     res.sendFile(imagePath, (err) => {
-      if (err) {
-        console.error('Image serving error:', err);
+      if (err && !res.headersSent) {
         res.status(404).json({ error: 'Image not found' });
       }
     });
