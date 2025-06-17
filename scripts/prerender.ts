@@ -80,6 +80,15 @@ async function prerenderRoutes() {
   console.log(`✓ Created ${adminRoutes.length} admin route fallbacks`);
   console.log('💡 Contact form and interactive features remain client-side');
   
+  // Copy frontend files to correct location for server
+  console.log('\n📁 Copying frontend files...');
+  const { execSync } = await import('child_process');
+  try {
+    execSync('node scripts/copy-frontend.js', { stdio: 'inherit' });
+  } catch (error) {
+    console.warn('Frontend files copy skipped (files may already be in correct location)');
+  }
+  
   // Generate sitemap after prerendering
   console.log('\n🗺️ Generating sitemap...');
   await generateSitemap();

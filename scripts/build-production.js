@@ -10,6 +10,23 @@ console.log('Building production application...');
 console.log('Building frontend...');
 execSync('vite build', { stdio: 'inherit' });
 
+// Copy frontend files to correct location for server
+console.log('Copying frontend files to server directory...');
+if (fs.existsSync('dist/public')) {
+  // Copy all files from dist/public to dist (where server expects them)
+  const publicFiles = fs.readdirSync('dist/public');
+  for (const file of publicFiles) {
+    const sourcePath = path.join('dist/public', file);
+    const destPath = path.join('dist', file);
+    if (fs.statSync(sourcePath).isDirectory()) {
+      fs.cpSync(sourcePath, destPath, { recursive: true });
+    } else {
+      fs.copyFileSync(sourcePath, destPath);
+    }
+  }
+  console.log('Frontend files copied successfully');
+}
+
 // Build backend
 console.log('Building backend...');
 execSync('esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist', { stdio: 'inherit' });
