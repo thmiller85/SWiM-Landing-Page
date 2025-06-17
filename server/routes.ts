@@ -189,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         tags: z.array(z.string()).default([]),
         targetKeywords: z.array(z.string()).default([]),
         readingTime: z.number().optional().default(0),
-        publishedAt: z.string().optional(),
+        publishedAt: z.string().nullable().optional(),
       });
 
       const validatedData = createPostSchema.parse(req.body);
@@ -238,6 +238,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Image upload and management
+  app.post('/api/cms/images/upload', upload.single('image'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+
+      const imageData = {
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        url: `/images/blog/${req.file.filename}`,
+        size: req.file.size,
+        mimeType: req.file.mimetype,
+        altText: req.body.altText || '',
+        caption: req.body.caption || '',
+        width: null,
+        height: null,
+      };
+
+      const image = await storage.createImage(imageData);
+      res.status(201).json(image);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ error: 'Failed to upload image' });
+    }
+  });
+
   app.post('/api/cms/images', upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
