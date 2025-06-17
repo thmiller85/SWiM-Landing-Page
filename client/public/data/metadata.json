@@ -1,12 +1,21 @@
 {
-  "totalPosts": 1,
+  "totalPosts": 3,
   "categories": [
+    "AI Marketing",
+    "Testing",
     "AI, Automation, Strategy"
   ],
   "tags": [
     "AI",
+    "Marketing Automation",
+    "B2B",
+    "Efficiency",
+    "2025",
+    "test",
+    "ssr",
+    "blog",
     "Automation",
     "B2B Strategy"
   ],
-  "lastExported": "2025-06-17T17:28:42.421Z"
+  "lastExported": "2025-06-17T22:17:56.424Z"
 }

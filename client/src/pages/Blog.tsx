@@ -42,7 +42,6 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      console.log('Blog query executing with filters:', { selectedCategory, selectedTag, searchQuery });
       // Try static JSON files first (optimized for static deployment)
       try {
         const filteredPosts = await staticBlogService.getAllPosts({
@@ -62,21 +61,18 @@ const Blog = () => {
         const response = await fetch('/api/blog/posts/database/all');
         if (response.ok) {
           let dbPosts = await response.json();
-          console.log('Raw database posts received:', dbPosts.length, dbPosts);
           
           // Apply filters on client side for database posts
           if (selectedCategory !== 'all') {
             dbPosts = dbPosts.filter((post: BlogPost) => 
               post.category.toLowerCase() === selectedCategory.toLowerCase()
             );
-            console.log('After category filter:', dbPosts.length);
           }
           
           if (selectedTag !== 'all') {
             dbPosts = dbPosts.filter((post: BlogPost) => 
               post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
             );
-            console.log('After tag filter:', dbPosts.length);
           }
           
           if (searchQuery) {
@@ -87,10 +83,7 @@ const Blog = () => {
               post.excerpt.toLowerCase().includes(query) ||
               post.tags.some(tag => tag.toLowerCase().includes(query))
             );
-            console.log('After search filter:', dbPosts.length);
           }
-          
-          console.log('Final filtered posts:', dbPosts.length, dbPosts.map((p: BlogPost) => p.title));
           return dbPosts;
         }
       } catch (dbError) {

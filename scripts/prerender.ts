@@ -98,13 +98,24 @@ async function prerenderRoutes() {
     console.log(`✓ Created SPA fallback: ${adminRoute}`);
   }
   
-  // Generate blog post pages
-  console.log('\n📝 Generating blog post pages...');
+  // Generate blog post pages and export data
+  console.log('\n📝 Generating blog post pages and exporting data...');
   let blogPosts: any[] = [];
   
   try {
     blogPosts = await storage.getPublishedPosts();
     console.log(`Found ${blogPosts.length} published blog posts`);
+    
+    // Export posts data for static blog service
+    const dataDir = path.join(distPath, 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    
+    // Convert posts to client format and export
+    const clientFormatPosts = blogPosts.map(post => storage.convertToClientFormat(post));
+    fs.writeFileSync(path.join(dataDir, 'posts.json'), JSON.stringify(clientFormatPosts, null, 2));
+    console.log(`✓ Exported ${clientFormatPosts.length} posts to static data file`);
     
     for (const post of blogPosts) {
       const blogPost = storage.convertToClientFormat(post);
