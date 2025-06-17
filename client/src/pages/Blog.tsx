@@ -21,6 +21,7 @@ const Blog = () => {
       category: selectedCategory,
       tag: selectedTag,
       search: searchQuery,
+      timestamp: Date.now(), // Force cache invalidation
     }],
     queryFn: async () => {
       if (searchQuery) {
@@ -30,14 +31,24 @@ const Blog = () => {
     },
     retry: 1,
     retryDelay: 1000,
+    staleTime: 0, // Force fresh data every time
+    refetchOnMount: true,
   });
 
-  // Convert WordPress posts to our expected format
+  // Convert WordPress posts to our expected format with enhanced HTML cleaning
   const posts = wordPressPosts.map(post => {
     const converted = convertWordPressPost(post);
-    console.log('Original post excerpt:', post.excerpt);
-    console.log('Converted post excerpt:', converted.excerpt);
-    return converted;
+    // Double-check excerpt is clean by stripping any remaining HTML
+    const cleanExcerpt = converted.excerpt
+      .replace(/<[^>]*>/g, '') // Remove any remaining HTML tags
+      .replace(/&[a-zA-Z0-9#]+;/g, ' ') // Remove HTML entities
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+    
+    return {
+      ...converted,
+      excerpt: cleanExcerpt
+    };
   });
 
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
