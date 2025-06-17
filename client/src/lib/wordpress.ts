@@ -262,7 +262,7 @@ export class WordPressAPI {
         type: post.type || 'post',
         link: post.URL,
         title: { rendered: post.title },
-        content: { rendered: post.content, protected: false },
+        content: { rendered: contentText, protected: false },
         excerpt: { rendered: cleanExcerpt, protected: false }, // Use our clean excerpt
         author: post.author?.ID || 1,
         featured_media: post.featured_image ? parseInt(post.featured_image) : 0,
