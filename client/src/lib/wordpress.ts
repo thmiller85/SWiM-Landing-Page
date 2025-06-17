@@ -215,53 +215,60 @@ export class WordPressAPI {
       const cleanHtmlContent = (htmlContent: string): string => {
         if (!htmlContent) return '';
         
-        return htmlContent
-          // First trim leading/trailing whitespace
-          .trim()
-          // Remove WordPress.com specific block wrappers but keep content
-          .replace(/<div[^>]*class="wp-block-jetpack-markdown"[^>]*>/gi, '')
-          .replace(/<div[^>]*class="wp-block-[^"]*"[^>]*>/gi, '')
-          .replace(/<\/div>/gi, '')
-          // Convert headings to markdown-style formatting
-          .replace(/<h([1-6])[^>]*>(.*?)<\/h[1-6]>/gi, (match, level, content) => {
-            const hashes = '#'.repeat(parseInt(level));
-            return `\n\n${hashes} ${content}\n\n`;
-          })
-          // Convert paragraphs to double line breaks
-          .replace(/<p[^>]*>/gi, '\n\n')
-          .replace(/<\/p>/gi, '')
-          // Convert strong/bold tags
-          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
-          .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
-          // Convert emphasis/italic tags
-          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
-          .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
-          // Convert line breaks
-          .replace(/<br[^>]*>/gi, '\n')
-          // Convert lists
-          .replace(/<ul[^>]*>/gi, '\n')
-          .replace(/<\/ul>/gi, '\n')
-          .replace(/<ol[^>]*>/gi, '\n')
-          .replace(/<\/ol>/gi, '\n')
-          .replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n')
-          // Remove remaining HTML tags
-          .replace(/<[^>]*>/g, '')
-          // Replace HTML entities
-          .replace(/&nbsp;/g, ' ')
-          .replace(/&amp;/g, '&')
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&quot;/g, '"')
-          .replace(/&#8217;/g, "'")
-          .replace(/&#8220;/g, '"')
-          .replace(/&#8221;/g, '"')
-          .replace(/&#8211;/g, '–')
-          .replace(/&#8212;/g, '—')
-          // Clean up excessive line breaks but preserve paragraph structure
-          .replace(/\n{3,}/g, '\n\n')
-          .replace(/^\n+/, '')
-          .replace(/\n+$/, '')
-          .trim();
+        let cleaned = htmlContent.trim();
+        
+        // Remove WordPress.com specific block wrappers but keep content
+        cleaned = cleaned.replace(/<div[^>]*class="wp-block-jetpack-markdown"[^>]*>/gi, '');
+        cleaned = cleaned.replace(/<div[^>]*class="wp-block-[^"]*"[^>]*>/gi, '');
+        cleaned = cleaned.replace(/<\/div>/gi, '');
+        
+        // Convert headings with proper spacing
+        cleaned = cleaned.replace(/<h([1-6])[^>]*>([^<]*)<\/h[1-6]>/g, (match, level, content) => {
+          const hashes = '#'.repeat(parseInt(level));
+          return `\n\n${hashes} ${content.trim()}\n\n`;
+        });
+        
+        // Convert lists with proper formatting
+        cleaned = cleaned.replace(/<ul[^>]*>/g, '\n\n');
+        cleaned = cleaned.replace(/<\/ul>/g, '\n\n');
+        cleaned = cleaned.replace(/<ol[^>]*>/g, '\n\n');
+        cleaned = cleaned.replace(/<\/ol>/g, '\n\n');
+        cleaned = cleaned.replace(/<li[^>]*>([^<]*)<\/li>/g, '• $1\n');
+        
+        // Convert paragraphs with proper spacing
+        cleaned = cleaned.replace(/<p[^>]*>/g, '\n\n');
+        cleaned = cleaned.replace(/<\/p>/g, '');
+        
+        // Convert formatting tags
+        cleaned = cleaned.replace(/<strong[^>]*>([^<]*)<\/strong>/g, '**$1**');
+        cleaned = cleaned.replace(/<b[^>]*>([^<]*)<\/b>/g, '**$1**');
+        cleaned = cleaned.replace(/<em[^>]*>([^<]*)<\/em>/g, '*$1*');
+        cleaned = cleaned.replace(/<i[^>]*>([^<]*)<\/i>/g, '*$1*');
+        
+        // Convert line breaks
+        cleaned = cleaned.replace(/<br[^>]*>/gi, '\n');
+        
+        // Remove any remaining HTML tags
+        cleaned = cleaned.replace(/<[^>]*>/g, '');
+        
+        // Replace HTML entities
+        cleaned = cleaned.replace(/&nbsp;/g, ' ');
+        cleaned = cleaned.replace(/&amp;/g, '&');
+        cleaned = cleaned.replace(/&lt;/g, '<');
+        cleaned = cleaned.replace(/&gt;/g, '>');
+        cleaned = cleaned.replace(/&quot;/g, '"');
+        cleaned = cleaned.replace(/&#8217;/g, "'");
+        cleaned = cleaned.replace(/&#8220;/g, '"');
+        cleaned = cleaned.replace(/&#8221;/g, '"');
+        cleaned = cleaned.replace(/&#8211;/g, '–');
+        cleaned = cleaned.replace(/&#8212;/g, '—');
+        
+        // Clean up excessive line breaks but preserve structure
+        cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n');
+        cleaned = cleaned.replace(/^\n+/, '');
+        cleaned = cleaned.replace(/\n+$/, '');
+        
+        return cleaned.trim();
       };
 
       // WordPress.com returns content in the 'content' field, no separate excerpt
