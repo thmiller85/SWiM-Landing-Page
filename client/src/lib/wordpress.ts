@@ -410,28 +410,36 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     ctaType = 'demo';
   }
 
-  // Clean HTML content for excerpt
-  const cleanExcerpt = wpPost.excerpt.rendered
-    .replace(/<[^>]*>/g, '') // Strip HTML tags
-    .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
-    .replace(/&amp;/g, '&') // Replace HTML entities
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .trim();
-
-  // Generate excerpt from content if WordPress excerpt is empty or too short
-  let finalExcerpt = cleanExcerpt;
-  if (!finalExcerpt || finalExcerpt.length < 50) {
-    const contentText = wpPost.content.rendered
+  // Function to clean HTML content and extract plain text
+  const cleanHtmlContent = (htmlContent: string): string => {
+    return htmlContent
+      // Remove all HTML tags including WordPress blocks
       .replace(/<[^>]*>/g, '')
+      // Replace HTML entities
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&quot;/g, '"')
+      .replace(/&#8217;/g, "'")
+      .replace(/&#8220;/g, '"')
+      .replace(/&#8221;/g, '"')
+      .replace(/&#8211;/g, '–')
+      .replace(/&#8212;/g, '—')
+      // Remove extra whitespace and newlines
+      .replace(/\s+/g, ' ')
       .trim();
-    finalExcerpt = contentText.substring(0, 200) + (contentText.length > 200 ? '...' : '');
+  };
+
+  // Clean excerpt from WordPress
+  let finalExcerpt = cleanHtmlContent(wpPost.excerpt.rendered || '');
+  
+  // If excerpt is empty or too short, generate from content
+  if (!finalExcerpt || finalExcerpt.length < 50) {
+    const contentText = cleanHtmlContent(wpPost.content.rendered || '');
+    finalExcerpt = contentText.length > 200 
+      ? contentText.substring(0, 200) + '...' 
+      : contentText;
   }
 
   return {
