@@ -69,20 +69,33 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
     queryFn: async () => {
-      // Try database first, fall back to static
+      // Check if we have preloaded data from static HTML
+      if (typeof window !== 'undefined' && (window as any).__BLOG_POST_DATA__) {
+        const preloadedPost = (window as any).__BLOG_POST_DATA__;
+        if (preloadedPost.slug === slug) {
+          return preloadedPost;
+        }
+      }
+      
+      // Try static JSON files first (for static deployment)
+      try {
+        const result = await staticBlogService.getPostBySlug(slug);
+        if (result) return result;
+      } catch (staticError) {
+        console.log('Static content not available, trying database...');
+      }
+      
+      // Fall back to database API
       try {
         const response = await fetch(`/api/blog/posts/database/${slug}`);
         if (response.ok) {
           return await response.json();
         }
       } catch (dbError) {
-        console.log('Database not available, trying static content...');
+        console.log('Database not available');
       }
       
-      // Fall back to static service
-      const result = await staticBlogService.getPostBySlug(slug);
-      if (!result) throw new Error('Post not found');
-      return result;
+      throw new Error('Post not found');
     },
   }) as { data: BlogPostType | undefined, isLoading: boolean, error: any };
 

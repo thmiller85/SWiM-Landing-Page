@@ -42,7 +42,21 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      // Try database first, fall back to static
+      // Try static JSON files first (optimized for static deployment)
+      try {
+        const filteredPosts = await staticBlogService.getAllPosts({
+          search: searchQuery || undefined,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+          tag: selectedTag !== 'all' ? selectedTag : undefined
+        });
+        if (filteredPosts.length > 0 || searchQuery || selectedCategory !== 'all' || selectedTag !== 'all') {
+          return filteredPosts;
+        }
+      } catch (staticError) {
+        console.log('Static content not available, trying database...');
+      }
+      
+      // Fall back to database API
       try {
         const response = await fetch('/api/blog/posts/database');
         if (response.ok) {
@@ -74,15 +88,10 @@ const Blog = () => {
           return dbPosts;
         }
       } catch (dbError) {
-        console.log('Database not available, trying static content...');
+        console.log('Database not available');
       }
       
-      // Fall back to static service
-      return staticBlogService.getAllPosts({
-        search: searchQuery || undefined,
-        category: selectedCategory !== 'all' ? selectedCategory : undefined,
-        tag: selectedTag !== 'all' ? selectedTag : undefined
-      });
+      return [];
     },
     retry: 1,
     retryDelay: 1000,
