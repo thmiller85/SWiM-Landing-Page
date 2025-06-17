@@ -109,8 +109,8 @@ export class WordPressAPI {
     let url: URL;
     
     if (this.isWordPressCom) {
-      // Use WordPress.com public API with site ID for better reliability
-      url = new URL(`https://public-api.wordpress.com/rest/v1.1/sites/245590138${endpoint}`);
+      // Use WordPress.com WP REST API v2 for full content access
+      url = new URL(`https://public-api.wordpress.com/wp/v2/sites/245590138${endpoint}`);
     } else {
       // Use standard WordPress REST API
       url = new URL(`${this.baseUrl}/wp-json/wp/v2${endpoint}`);
@@ -161,33 +161,22 @@ export class WordPressAPI {
     order?: 'asc' | 'desc';
   } = {}): Promise<WordPressPost[]> {
     if (this.isWordPressCom) {
-      // WordPress.com API parameters
+      // Use standard WordPress REST API v2 format for WordPress.com
       const queryParams: Record<string, any> = {
         status: 'publish',
-        order_by: 'date',
-        order: 'DESC',
-        number: params.per_page || 10,
-        offset: params.page ? (params.page - 1) * (params.per_page || 10) : 0,
-        content: 'html', // Request full HTML content instead of truncated
+        orderby: 'date',
+        order: 'desc',
+        per_page: params.per_page || 10,
+        page: params.page || 1,
+        _embed: true, // Include embedded data
       };
 
       if (params.search) {
         queryParams.search = params.search;
       }
 
-      const response = await this.request<any>('/posts', queryParams);
-      
-      // Handle WordPress.com API response structure
-      if (response && typeof response === 'object') {
-        if (response.posts && Array.isArray(response.posts)) {
-          return this.convertWordPressComPosts(response.posts);
-        }
-        if (Array.isArray(response)) {
-          return this.convertWordPressComPosts(response);
-        }
-      }
-      
-      return [];
+      const response = await this.request<WordPressPost[]>('/posts', queryParams);
+      return Array.isArray(response) ? response : [];
     } else {
       // Standard WordPress REST API
       const queryParams: Record<string, any> = {
@@ -345,38 +334,25 @@ export class WordPressAPI {
   }
 
   async getPost(slug: string): Promise<WordPressPost> {
-    if (this.isWordPressCom) {
-      const response = await this.request<{ posts: any[] }>('/posts', { 
-        slug,
-        status: 'publish',
-        number: 1,
-        content: 'html'
-      });
-      
-      if (!response.posts.length) {
-        throw new Error('Post not found');
-      }
-      
-      const convertedPosts = this.convertWordPressComPosts(response.posts);
-      return convertedPosts[0];
-    } else {
-      const posts = await this.request<WordPressPost[]>('/posts', { 
-        slug,
-        status: 'publish'
-      });
-      
-      if (!posts.length) {
-        throw new Error('Post not found');
-      }
-      
-      return posts[0];
+    const posts = await this.request<WordPressPost[]>('/posts', { 
+      slug,
+      status: 'publish',
+      _embed: true
+    });
+    
+    if (!posts.length) {
+      throw new Error('Post not found');
     }
+    
+    return posts[0];
   }
 
   async getPostById(id: number): Promise<WordPressPost> {
     if (this.isWordPressCom) {
       const response = await this.request<any>(`/posts/${id}`, { 
-        content: 'html'
+        content: 'html',
+        content_width: 9999,
+        fields: 'ID,author,date,modified,title,URL,short_URL,content,status,slug,categories,tags,featured_image,metadata'
       });
       
       const convertedPosts = this.convertWordPressComPosts([response]);
