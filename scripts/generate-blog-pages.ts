@@ -147,19 +147,56 @@ async function generateBlogPages() {
       </div>
       
       <div class="content">
-        ${blogPost.content
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
-          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-          .replace(/^- (.*$)/gm, '<li>$1</li>')
-          .replace(/\n\n/g, '</p><p>')
-          .replace(/^(?!<[h|l|u])/gm, '<p>')
-          .replace(/<p>(<[h|l|u])/g, '$1')
-          .replace(/(<\/[h|l|u][^>]*>)<p>/g, '$1')
-        }
+        ${(() => {
+          let html = blogPost.content;
+          
+          // First pass: Handle markdown formatting
+          html = html
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+          
+          // Split into blocks by double newlines
+          const blocks = html.split(/\n\n+/);
+          
+          return blocks.map(block => {
+            const trimmed = block.trim();
+            if (!trimmed) return '';
+            
+            // Handle headers
+            if (trimmed.startsWith('### ')) {
+              return `<h3>${trimmed.substring(4)}</h3>`;
+            }
+            if (trimmed.startsWith('## ')) {
+              return `<h2>${trimmed.substring(3)}</h2>`;
+            }
+            if (trimmed.startsWith('# ')) {
+              return `<h1>${trimmed.substring(2)}</h1>`;
+            }
+            
+            // Handle horizontal rules
+            if (trimmed === '---') {
+              return '<hr class="my-8 border-gray-300" />';
+            }
+            
+            // Handle lists
+            if (trimmed.includes('\n- ')) {
+              const items = trimmed.split('\n- ').map((item, index) => {
+                const cleanItem = index === 0 ? item.replace(/^- /, '') : item;
+                return cleanItem ? `<li>${cleanItem}</li>` : '';
+              }).filter(Boolean);
+              return `<ul class="list-disc list-inside space-y-2 mb-4">${items.join('')}</ul>`;
+            }
+            
+            // Handle single list items
+            if (trimmed.startsWith('- ')) {
+              return `<ul class="list-disc list-inside space-y-2 mb-4"><li>${trimmed.substring(2)}</li></ul>`;
+            }
+            
+            // Regular paragraphs
+            return `<p class="mb-4">${trimmed}</p>`;
+          }).join('');
+        })()}
       </div>
       
       <div class="footer">
