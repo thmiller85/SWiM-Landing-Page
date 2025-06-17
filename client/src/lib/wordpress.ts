@@ -373,6 +373,11 @@ export class WordPressAPI {
 
   // Analytics tracking methods (these would typically be handled by WordPress plugins)
   async trackView(postId: number): Promise<void> {
+    // Skip analytics tracking for WordPress.com to avoid CORS issues
+    if (this.isWordPressCom) {
+      return;
+    }
+    
     // This would typically be handled by a WordPress analytics plugin
     // For now, we'll make a simple request that can be handled by a custom endpoint
     try {
@@ -388,6 +393,11 @@ export class WordPressAPI {
   }
 
   async trackLead(postId: number): Promise<void> {
+    // Skip analytics tracking for WordPress.com to avoid CORS issues
+    if (this.isWordPressCom) {
+      return;
+    }
+    
     try {
       await fetch(`${this.baseUrl}/wp-json/custom/v1/track-lead/${postId}`, {
         method: 'POST',
@@ -401,6 +411,11 @@ export class WordPressAPI {
   }
 
   async trackShare(postId: number): Promise<void> {
+    // Skip analytics tracking for WordPress.com to avoid CORS issues
+    if (this.isWordPressCom) {
+      return;
+    }
+    
     try {
       await fetch(`${this.baseUrl}/wp-json/custom/v1/track-share/${postId}`, {
         method: 'POST',
