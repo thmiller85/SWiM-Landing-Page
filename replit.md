@@ -28,12 +28,13 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
-### June 17, 2025 - Complete CMS with Featured Image Integration
-- **Fixed Featured Image Display**: Resolved issue where uploaded images weren't appearing on published blog posts
-- **Database Integration**: Updated post records to properly link featured images with blog content
-- **Image Serving Route**: Implemented Express static file serving for `/images/blog/` path
-- **End-to-End Workflow**: Complete CMS functionality from post creation to public display with working featured images
-- **Production Ready**: Full database-backed blog system with image upload and display capabilities
+### June 17, 2025 - Production Deployment Configuration & CMS Enhancements
+- **Fixed Production Deployment**: Updated `vercel.json` for full-stack Node.js deployment with PostgreSQL integration
+- **Deployment Documentation**: Created comprehensive `DEPLOYMENT_GUIDE.md` with environment variables and database setup instructions
+- **Markdown Excerpt Support**: Implemented ReactMarkdown rendering for blog excerpts with proper formatting (bold, italic, links)
+- **Author Management**: Added team member dropdown (Ross Stockdale, Tom Miller, Steve Wurster) replacing generic "admin" author
+- **Featured Image Integration**: Complete end-to-end workflow from image upload to display on published posts
+- **Database-Backed CMS**: Full production-ready content management system with PostgreSQL persistence
 
 ### June 17, 2025 - Migration to Markdown-Based Blog System
 - **Eliminated WordPress Dependency**: Replaced WordPress REST API with direct markdown file-based blog system
