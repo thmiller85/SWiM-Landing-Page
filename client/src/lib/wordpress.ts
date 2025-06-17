@@ -465,41 +465,75 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     ctaType = 'demo';
   }
 
-  // Function to clean HTML content and extract plain text - enhanced for WordPress blocks
+  // Function to clean HTML content and convert to markdown format
   const cleanHtmlContent = (htmlContent: string): string => {
     if (!htmlContent) return '';
     
-    return htmlContent
-      // Remove WordPress block wrappers specifically
-      .replace(/<div class="wp-block-[^"]*">/g, '')
-      .replace(/<\/div>/g, '')
-      // Remove all other HTML tags
-      .replace(/<[^>]*>/g, '')
-      // Replace HTML entities
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#8217;/g, "'")
-      .replace(/&#8220;/g, '"')
-      .replace(/&#8221;/g, '"')
-      .replace(/&#8211;/g, '–')
-      .replace(/&#8212;/g, '—')
-      // Clean up whitespace
-      .replace(/\s+/g, ' ')
-      .trim();
+    let cleaned = htmlContent.trim();
+    
+    // Remove WordPress.com specific block wrappers
+    cleaned = cleaned.replace(/<div[^>]*class="wp-block-jetpack-markdown"[^>]*>/gi, '');
+    cleaned = cleaned.replace(/<div[^>]*class="wp-block-[^"]*"[^>]*>/gi, '');
+    cleaned = cleaned.replace(/<\/div>/gi, '');
+    
+    // Convert headings with proper spacing
+    cleaned = cleaned.replace(/<h([1-6])[^>]*>([^<]*)<\/h[1-6]>/g, (match, level, content) => {
+      const hashes = '#'.repeat(parseInt(level));
+      return `\n\n${hashes} ${content.trim()}\n\n`;
+    });
+    
+    // Convert lists with proper formatting
+    cleaned = cleaned.replace(/<ul[^>]*>/g, '\n\n');
+    cleaned = cleaned.replace(/<\/ul>/g, '\n\n');
+    cleaned = cleaned.replace(/<ol[^>]*>/g, '\n\n');
+    cleaned = cleaned.replace(/<\/ol>/g, '\n\n');
+    cleaned = cleaned.replace(/<li[^>]*>([^<]*)<\/li>/g, '• $1\n');
+    
+    // Convert paragraphs with proper spacing
+    cleaned = cleaned.replace(/<p[^>]*>/g, '\n\n');
+    cleaned = cleaned.replace(/<\/p>/g, '');
+    
+    // Convert formatting tags
+    cleaned = cleaned.replace(/<strong[^>]*>([^<]*)<\/strong>/g, '**$1**');
+    cleaned = cleaned.replace(/<b[^>]*>([^<]*)<\/b>/g, '**$1**');
+    cleaned = cleaned.replace(/<em[^>]*>([^<]*)<\/em>/g, '*$1*');
+    cleaned = cleaned.replace(/<i[^>]*>([^<]*)<\/i>/g, '*$1*');
+    
+    // Convert line breaks
+    cleaned = cleaned.replace(/<br[^>]*>/gi, '\n');
+    
+    // Remove any remaining HTML tags
+    cleaned = cleaned.replace(/<[^>]*>/g, '');
+    
+    // Replace HTML entities
+    cleaned = cleaned.replace(/&nbsp;/g, ' ');
+    cleaned = cleaned.replace(/&amp;/g, '&');
+    cleaned = cleaned.replace(/&lt;/g, '<');
+    cleaned = cleaned.replace(/&gt;/g, '>');
+    cleaned = cleaned.replace(/&quot;/g, '"');
+    cleaned = cleaned.replace(/&#8217;/g, "'");
+    cleaned = cleaned.replace(/&#8220;/g, '"');
+    cleaned = cleaned.replace(/&#8221;/g, '"');
+    cleaned = cleaned.replace(/&#8211;/g, '–');
+    cleaned = cleaned.replace(/&#8212;/g, '—');
+    
+    // Clean up excessive line breaks but preserve structure
+    cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n');
+    cleaned = cleaned.replace(/^\n+/, '');
+    cleaned = cleaned.replace(/\n+$/, '');
+    
+    return cleaned.trim();
   };
 
-  // Clean excerpt from WordPress
+  // Clean content and excerpt from WordPress
+  const cleanedContent = cleanHtmlContent(wpPost.content.rendered || '');
   let finalExcerpt = cleanHtmlContent(wpPost.excerpt.rendered || '');
   
   // If excerpt is empty or too short, generate from content
   if (!finalExcerpt || finalExcerpt.length < 50) {
-    const contentText = cleanHtmlContent(wpPost.content.rendered || '');
-    finalExcerpt = contentText.length > 200 
-      ? contentText.substring(0, 200) + '...' 
-      : contentText;
+    finalExcerpt = cleanedContent.length > 200 
+      ? cleanedContent.substring(0, 200) + '...' 
+      : cleanedContent;
   }
 
   return {
@@ -507,7 +541,7 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     title: wpPost.title.rendered,
     slug: wpPost.slug,
     excerpt: finalExcerpt,
-    content: wpPost.content.rendered,
+    content: cleanedContent,
     featuredImage: wpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url,
     seoTitle: wpPost.yoast_head_json?.title || wpPost.title.rendered,
     metaDescription: wpPost.yoast_head_json?.description || finalExcerpt.substring(0, 160),
