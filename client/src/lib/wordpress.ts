@@ -211,18 +211,40 @@ export class WordPressAPI {
 
   private convertWordPressComPosts(posts: any[]): WordPressPost[] {
     return posts.map(post => {
-      // Enhanced HTML content cleaning specifically for WordPress.com
+      // Enhanced HTML content cleaning that preserves formatting
       const cleanHtmlContent = (htmlContent: string): string => {
         if (!htmlContent) return '';
         
         return htmlContent
           // First trim leading/trailing whitespace
           .trim()
-          // Remove WordPress.com specific block wrappers with any attributes
+          // Remove WordPress.com specific block wrappers but keep content
           .replace(/<div[^>]*class="wp-block-jetpack-markdown"[^>]*>/gi, '')
           .replace(/<div[^>]*class="wp-block-[^"]*"[^>]*>/gi, '')
           .replace(/<\/div>/gi, '')
-          // Remove all HTML tags completely
+          // Convert headings to markdown-style formatting
+          .replace(/<h([1-6])[^>]*>(.*?)<\/h[1-6]>/gi, (match, level, content) => {
+            const hashes = '#'.repeat(parseInt(level));
+            return `\n\n${hashes} ${content}\n\n`;
+          })
+          // Convert paragraphs to double line breaks
+          .replace(/<p[^>]*>/gi, '\n\n')
+          .replace(/<\/p>/gi, '')
+          // Convert strong/bold tags
+          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+          .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+          // Convert emphasis/italic tags
+          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+          .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+          // Convert line breaks
+          .replace(/<br[^>]*>/gi, '\n')
+          // Convert lists
+          .replace(/<ul[^>]*>/gi, '\n')
+          .replace(/<\/ul>/gi, '\n')
+          .replace(/<ol[^>]*>/gi, '\n')
+          .replace(/<\/ol>/gi, '\n')
+          .replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n')
+          // Remove remaining HTML tags
           .replace(/<[^>]*>/g, '')
           // Replace HTML entities
           .replace(/&nbsp;/g, ' ')
@@ -235,9 +257,10 @@ export class WordPressAPI {
           .replace(/&#8221;/g, '"')
           .replace(/&#8211;/g, '–')
           .replace(/&#8212;/g, '—')
-          // Clean up multiple spaces and newlines
-          .replace(/\n+/g, ' ')
-          .replace(/\s+/g, ' ')
+          // Clean up excessive line breaks but preserve paragraph structure
+          .replace(/\n{3,}/g, '\n\n')
+          .replace(/^\n+/, '')
+          .replace(/\n+$/, '')
           .trim();
       };
 
