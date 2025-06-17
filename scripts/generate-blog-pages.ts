@@ -15,10 +15,8 @@ async function generateBlogPages() {
     const posts = await storage.getPublishedPosts();
     console.log(`📝 Found ${posts.length} published posts`);
     
-    // Create blog directory in the correct dist location
-    const distDir = syncFs.existsSync(path.join(process.cwd(), 'dist/public')) 
-      ? path.join(process.cwd(), 'dist/public') 
-      : path.join(process.cwd(), 'client/dist');
+    // Create blog directory in client/dist for deployment
+    const distDir = path.join(process.cwd(), 'client/dist');
     const blogDir = path.join(distDir, 'blog');
     await fs.mkdir(blogDir, { recursive: true });
     
@@ -106,16 +104,77 @@ async function generateBlogPages() {
     }
     </script>
     
-    <link rel="stylesheet" href="/assets/index.css" />
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8fafc; }
+      .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; background: white; min-height: 100vh; }
+      .header { border-bottom: 1px solid #e2e8f0; padding-bottom: 30px; margin-bottom: 40px; }
+      .title { font-size: 2.5rem; font-weight: bold; color: #1a202c; margin-bottom: 15px; line-height: 1.2; }
+      .meta { color: #718096; font-size: 0.95rem; margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap; }
+      .featured-image { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; margin: 25px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      .content { font-size: 1.1rem; line-height: 1.8; color: #2d3748; }
+      .content h1 { font-size: 2rem; font-weight: bold; color: #1a202c; margin: 40px 0 20px 0; }
+      .content h2 { font-size: 1.75rem; font-weight: bold; color: #1a202c; margin: 35px 0 18px 0; }
+      .content h3 { font-size: 1.5rem; font-weight: semibold; color: #1a202c; margin: 30px 0 15px 0; }
+      .content p { margin-bottom: 20px; }
+      .content strong { font-weight: 600; color: #1a202c; }
+      .content em { font-style: italic; }
+      .content a { color: #3182ce; text-decoration: underline; }
+      .content a:hover { color: #2c5282; }
+      .content ul, .content ol { margin: 20px 0; padding-left: 30px; }
+      .content li { margin-bottom: 8px; }
+      .content blockquote { border-left: 4px solid #3182ce; padding-left: 20px; margin: 25px 0; font-style: italic; color: #4a5568; }
+      .footer { margin-top: 50px; padding-top: 30px; border-top: 1px solid #e2e8f0; text-align: center; }
+      .footer a { color: #3182ce; text-decoration: none; margin: 0 15px; }
+      .footer a:hover { text-decoration: underline; }
+      .back-link { display: inline-block; margin-bottom: 20px; color: #3182ce; text-decoration: none; }
+      .back-link:hover { text-decoration: underline; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" crossorigin src="/assets/index.js"></script>
+    <div class="container">
+      <a href="${baseUrl}" class="back-link">← SWiM AI</a>
+      
+      <div class="header">
+        <h1 class="title">${safeTitle}</h1>
+        <div class="meta">
+          <span>By ${safeAuthor}</span>
+          <span>•</span>
+          <span>${new Date(blogPost.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          <span>•</span>
+          <span>${Math.ceil(blogPost.content.replace(/<[^>]*>/g, '').split(/\s+/).length / 200)} min read</span>
+        </div>
+        ${blogPost.featuredImage ? `<img src="${blogPost.featuredImage}" alt="${safeTitle}" class="featured-image" />` : ''}
+      </div>
+      
+      <div class="content">
+        ${blogPost.content
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
+          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+          .replace(/^- (.*$)/gm, '<li>$1</li>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/^(?!<[h|l|u])/gm, '<p>')
+          .replace(/<p>(<[h|l|u])/g, '$1')
+          .replace(/(<\/[h|l|u][^>]*>)<p>/g, '$1')
+        }
+      </div>
+      
+      <div class="footer">
+        <a href="${baseUrl}">SWiM AI Home</a>
+        <a href="${baseUrl}/blog">All Blog Posts</a>
+        <a href="${baseUrl}/#contact">Contact Us</a>
+      </div>
+    </div>
     
-    <!-- Preload blog post data for instant rendering -->
+    <!-- Progressive enhancement: Load React app for interactive features -->
+    <div id="root" style="display: none;"></div>
     <script>
       window.__BLOG_POST_DATA__ = ${JSON.stringify(blogPost)};
     </script>
+    <script type="module" crossorigin src="/assets/index.js"></script>
   </body>
 </html>`;
     };
