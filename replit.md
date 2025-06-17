@@ -31,6 +31,8 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ### June 17, 2025 - Complete Blog System and Deployment Resolution
 - **Blog Loading Fixed**: Resolved static content loading showing all 3 published posts correctly in development
+- **Cache Invalidation Fixed**: Blog post deletions now update frontend immediately through proper cache invalidation
+- **Real-time CMS Updates**: Create, update, and delete operations invalidate both CMS and blog caches for instant updates
 - **Automatic Export System**: Created comprehensive blog data export script that runs during all build processes
 - **Production Build Enhanced**: Updated all build scripts to automatically export current database posts to static files
 - **Deployment Continuity**: Build process now continues even if optional steps (prerender, sitemap) fail

@@ -94,7 +94,7 @@ const Blog = () => {
     },
     retry: 1,
     retryDelay: 1000,
-    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    staleTime: 30 * 1000, // 30 seconds cache for real-time updates
   });
 
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
