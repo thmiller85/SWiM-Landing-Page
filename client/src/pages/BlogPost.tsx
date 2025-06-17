@@ -17,7 +17,7 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { blogService } from '@/lib/blog';
+import { staticBlogService } from '@/lib/static-blog';
 import { BlogPost as BlogPostType } from '@shared/blog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,12 +50,12 @@ const BlogPost = ({ slug }: BlogPostProps) => {
 
   const { data: post, isLoading, error } = useQuery<BlogPostType>({
     queryKey: ['blog-post', slug],
-    queryFn: () => blogService.getPostBySlug(slug),
+    queryFn: () => staticBlogService.getPostBySlug(slug),
   });
 
   const { data: recentPosts = [] } = useQuery<BlogPostType[]>({
     queryKey: ['blog-recent-posts'],
-    queryFn: () => blogService.getRecentPosts(5),
+    queryFn: () => staticBlogService.getRecentPosts(5),
   });
 
   // Analytics tracking for markdown blog system

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import ReactMarkdown from 'react-markdown';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
-import { blogService } from '@/lib/blog';
+import { staticBlogService } from '@/lib/static-blog';
 import { BlogPost } from '@shared/blog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,7 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      return blogService.getAllPosts({
+      return staticBlogService.getAllPosts({
         search: searchQuery || undefined,
         category: selectedCategory !== 'all' ? selectedCategory : undefined,
         tag: selectedTag !== 'all' ? selectedTag : undefined
@@ -67,7 +67,7 @@ const Blog = () => {
             </Badge>
             <div className="flex items-center text-white/60 text-sm">
               <Calendar className="h-4 w-4 mr-1" />
-              {blogService.formatDate(post.publishedAt)}
+              {staticBlogService.formatDate(post.publishedAt)}
             </div>
             <div className="flex items-center text-white/60 text-sm">
               <Clock className="h-4 w-4 mr-1" />
