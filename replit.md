@@ -29,6 +29,12 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 17, 2025 - Blog API and Direct URL Issues Resolved
+- **Blog List API Fixed**: Corrected API endpoint from `/api/blog/posts/database` to `/api/blog/posts/database/all` to properly display all published posts
+- **Database Integration Verified**: Confirmed all 3 published posts are correctly retrieved from PostgreSQL database
+- **Direct URL Access Working**: Server-side rendering properly handles blog post URLs with full HTML and meta tags for social sharing
+- **SEO Optimization Confirmed**: Blog post URLs generate complete server-rendered pages with proper Open Graph and JSON-LD metadata
+
 ### June 17, 2025 - Deployment Build Process Fixes Complete
 - **Build Path Detection Fixed**: Updated prerender script to automatically detect build output in multiple possible locations (dist/public, dist, client/dist)
 - **Error Handling Enhanced**: Added comprehensive error handling to prevent deployment failures when prerender step fails

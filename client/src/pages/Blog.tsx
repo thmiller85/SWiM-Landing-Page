@@ -58,7 +58,7 @@ const Blog = () => {
       
       // Fall back to database API
       try {
-        const response = await fetch('/api/blog/posts/database');
+        const response = await fetch('/api/blog/posts/database/all');
         if (response.ok) {
           let dbPosts = await response.json();
           
