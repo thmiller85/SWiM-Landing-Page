@@ -17,12 +17,21 @@ export default function CMSLogin() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: (data: { username: string; password: string }) =>
-      apiRequest('/api/cms/auth/login', {
+    mutationFn: async (data: { username: string; password: string }) => {
+      const response = await fetch('/api/cms/auth/login', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-      }),
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Login failed');
+      }
+      
+      return response.json();
+    },
     onSuccess: (data) => {
       localStorage.setItem('cms_user', JSON.stringify(data.user));
       toast({
