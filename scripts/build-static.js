@@ -98,7 +98,24 @@ Workflow automation success starts with understanding your current processes and
   console.log('Building static site...');
   execSync('vite build', { stdio: 'inherit' });
   
-  console.log('✅ Static build complete!');
+  // Copy data files to build output
+  const buildDataDir = path.join(__dirname, '../client/dist/data');
+  if (!fs.existsSync(buildDataDir)) {
+    fs.mkdirSync(buildDataDir, { recursive: true });
+  }
+  
+  // Copy all JSON files to the build directory
+  const sourceFiles = fs.readdirSync(dataDir);
+  sourceFiles.forEach(file => {
+    if (file.endsWith('.json')) {
+      fs.copyFileSync(
+        path.join(dataDir, file),
+        path.join(buildDataDir, file)
+      );
+    }
+  });
+  
+  console.log('✅ Static build complete with exported content!');
   
 } catch (error) {
   console.error('❌ Build failed:', error.message);

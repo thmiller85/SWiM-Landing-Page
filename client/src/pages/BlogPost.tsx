@@ -48,15 +48,19 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
 
-  const { data: post, isLoading, error } = useQuery<BlogPostType>({
+  const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
-    queryFn: () => staticBlogService.getPostBySlug(slug),
-  });
+    queryFn: async () => {
+      const result = await staticBlogService.getPostBySlug(slug);
+      if (!result) throw new Error('Post not found');
+      return result;
+    },
+  }) as { data: BlogPostType | undefined, isLoading: boolean, error: any };
 
-  const { data: recentPosts = [] } = useQuery<BlogPostType[]>({
+  const { data: recentPosts = [] } = useQuery({
     queryKey: ['blog-recent-posts'],
     queryFn: () => staticBlogService.getRecentPosts(5),
-  });
+  }) as { data: BlogPostType[] };
 
   // Analytics tracking for markdown blog system
   const handleAnalytics = (action: string) => {

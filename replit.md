@@ -28,6 +28,15 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 17, 2025 - Replit One-Click Deployment Configuration
+- **Simplified Deployment**: Configured automatic static deployment from Replit redeploy button
+- **Hybrid Architecture**: CMS for local development, static export for production deployment
+- **Build Automation**: Created `scripts/build-static.js` that automatically exports content and builds static site
+- **Static Blog Service**: Frontend automatically switches between database API (dev) and static JSON (production)
+- **Deployment Documentation**: Added comprehensive `REPLIT_DEPLOYMENT_GUIDE.md` with step-by-step instructions
+- **Production Configuration**: Updated `vercel.json` for static hosting with proper SPA routing
+- **Content Export System**: Database content automatically exported to JSON files during build process
+
 ### June 17, 2025 - Production Deployment Configuration & CMS Enhancements
 - **Fixed Production Deployment**: Updated `vercel.json` for full-stack Node.js deployment with PostgreSQL integration
 - **Deployment Documentation**: Created comprehensive `DEPLOYMENT_GUIDE.md` with environment variables and database setup instructions
