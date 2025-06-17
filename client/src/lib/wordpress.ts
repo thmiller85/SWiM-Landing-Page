@@ -365,9 +365,15 @@ export class WordPressAPI {
 }
 
 // Create the WordPress API instance
-// The base URL should be set via environment variables
-const WORDPRESS_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://your-wordpress-site.com';
+// Direct configuration for your WordPress.com site
+const WORDPRESS_URL = 'https://tom945f442029a8.wordpress.com';
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY;
+
+console.log('WordPress Configuration Updated:', {
+  WORDPRESS_URL,
+  isWordPressCom: WORDPRESS_URL.includes('.wordpress.com'),
+  timestamp: new Date().toISOString()
+});
 
 export const wordpressAPI = new WordPressAPI(WORDPRESS_URL, WORDPRESS_API_KEY);
 
