@@ -197,7 +197,10 @@ function PostsTab({
     }),
     onSuccess: () => {
       toast({ title: 'Post created successfully!' });
+      // Invalidate both CMS and blog caches to ensure frontend updates
       queryClient.invalidateQueries({ queryKey: ['cms-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/blog/posts/database/all'] });
+      queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
       onCancelEdit();
     },
     onError: (error: any) => {
@@ -214,7 +217,10 @@ function PostsTab({
       }),
     onSuccess: () => {
       toast({ title: 'Post updated successfully!' });
+      // Invalidate both CMS and blog caches to ensure frontend updates
       queryClient.invalidateQueries({ queryKey: ['cms-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/blog/posts/database/all'] });
+      queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
       onCancelEdit();
     },
     onError: (error: any) => {
@@ -226,7 +232,10 @@ function PostsTab({
     mutationFn: (id: number) => apiRequest(`/api/cms/posts/${id}`, { method: 'DELETE' }),
     onSuccess: () => {
       toast({ title: 'Post deleted successfully!' });
+      // Invalidate both CMS and blog caches to ensure frontend updates
       queryClient.invalidateQueries({ queryKey: ['cms-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/blog/posts/database/all'] });
+      queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
     },
     onError: (error: any) => {
       toast({ title: 'Failed to delete post', description: error.message, variant: 'destructive' });
