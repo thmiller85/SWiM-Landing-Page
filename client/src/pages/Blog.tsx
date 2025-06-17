@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
-import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost, ConvertedBlogPost } from '@/lib/wordpress';
+import { blogService } from '@/lib/blog';
+import { BlogPost } from '@shared/blog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,32 +17,30 @@ const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
 
-  const { data: wordPressPosts = [], isLoading, error } = useQuery<WordPressPost[]>({
-    queryKey: ['wordpress-posts', { 
+  const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
+    queryKey: ['blog-posts', { 
       category: selectedCategory,
       tag: selectedTag,
       search: searchQuery,
     }],
     queryFn: async () => {
-      if (searchQuery) {
-        return wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
-      }
-      return wordpressAPI.getPosts({ per_page: 20 });
+      return blogService.getAllPosts({
+        search: searchQuery || undefined,
+        category: selectedCategory !== 'all' ? selectedCategory : undefined,
+        tag: selectedTag !== 'all' ? selectedTag : undefined
+      });
     },
     retry: 1,
     retryDelay: 1000,
     staleTime: 5 * 60 * 1000, // 5 minutes cache
   });
 
-  // Convert WordPress posts to our expected format
-  const posts = wordPressPosts.map(convertWordPressPost);
-
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
   const tags = ['all', 'workflow', 'automation', 'ai', 'b2b', 'saas', 'productivity', 'strategy'];
 
 
 
-  const BlogCard = ({ post, index }: { post: ConvertedBlogPost; index: number }) => (
+  const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => (
     <motion.article
       variants={fadeIn}
       initial="hidden"
@@ -67,11 +66,11 @@ const Blog = () => {
             </Badge>
             <div className="flex items-center text-white/60 text-sm">
               <Calendar className="h-4 w-4 mr-1" />
-              {formatDate(post.publishedAt)}
+              {blogService.formatDate(post.publishedAt)}
             </div>
             <div className="flex items-center text-white/60 text-sm">
               <Clock className="h-4 w-4 mr-1" />
-              {getReadingTime(post.content)} min read
+              {post.readingTime} min read
             </div>
           </div>
 

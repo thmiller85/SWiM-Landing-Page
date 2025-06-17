@@ -146,8 +146,8 @@ export class BlogService {
 
   getBlogMetadata(): BlogMetadata {
     const posts = this.getAllPosts();
-    const categories = [...new Set(posts.map(post => post.category))];
-    const tags = [...new Set(posts.flatMap(post => post.tags))];
+    const categories = Array.from(new Set(posts.map(post => post.category)));
+    const tags = Array.from(new Set(posts.flatMap(post => post.tags)));
 
     return {
       totalPosts: posts.length,
