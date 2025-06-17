@@ -443,10 +443,15 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     ctaType = 'demo';
   }
 
-  // Function to clean HTML content and extract plain text
+  // Function to clean HTML content and extract plain text - enhanced for WordPress blocks
   const cleanHtmlContent = (htmlContent: string): string => {
+    if (!htmlContent) return '';
+    
     return htmlContent
-      // Remove all HTML tags including WordPress blocks
+      // Remove WordPress block wrappers specifically
+      .replace(/<div class="wp-block-[^"]*">/g, '')
+      .replace(/<\/div>/g, '')
+      // Remove all other HTML tags
       .replace(/<[^>]*>/g, '')
       // Replace HTML entities
       .replace(/&nbsp;/g, ' ')
@@ -459,7 +464,8 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
       .replace(/&#8221;/g, '"')
       .replace(/&#8211;/g, '–')
       .replace(/&#8212;/g, '—')
-      // Remove extra whitespace and newlines
+      .replace(/\\\u[0-9a-f]{4}/gi, '') // Remove unicode escapes
+      // Clean up whitespace
       .replace(/\s+/g, ' ')
       .trim();
   };
