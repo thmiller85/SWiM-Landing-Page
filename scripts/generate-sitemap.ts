@@ -1,6 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { generateBlogPages } from './generate-blog-pages';
 
 const baseUrl = 'https://swimsolutions.ai';
 const routes = [

@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import syncFs from 'fs';
 import path from 'path';
 import { storage } from '../server/storage';
 
@@ -14,8 +15,12 @@ async function generateBlogPages() {
     const posts = await storage.getPublishedPosts();
     console.log(`📝 Found ${posts.length} published posts`);
     
-    // Create blog directory in dist
-    const blogDir = path.join(process.cwd(), 'client/dist/blog');
+    // Create blog directory in the correct dist location
+    const syncFs = await import('fs');
+    const distDir = syncFs.existsSync(path.join(process.cwd(), 'dist/public')) 
+      ? path.join(process.cwd(), 'dist/public') 
+      : path.join(process.cwd(), 'client/dist');
+    const blogDir = path.join(distDir, 'blog');
     await fs.mkdir(blogDir, { recursive: true });
     
     // Generate HTML template function
