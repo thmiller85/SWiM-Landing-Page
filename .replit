@@ -8,8 +8,7 @@ packages = ["imagemagick"]
 
 [deployment]
 deploymentTarget = "cloudrun"
-build = ["sh", "-c", "npm run build"]
-run = ["sh", "-c", "npm start"]
+run = ["sh", "-c", "tsx server/simple.ts"]
 
 [[ports]]
 localPort = 5000
