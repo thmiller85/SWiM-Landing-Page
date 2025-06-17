@@ -45,11 +45,9 @@ const getReadingTime = (content: string) => {
   return Math.ceil(words / wordsPerMinute);
 };
 
-interface BlogPostProps {
-  slug: string;
-}
-
-const BlogPost = ({ slug }: BlogPostProps) => {
+const BlogPost = () => {
+  const params = useParams();
+  const slug = params.slug as string;
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
   const { 
