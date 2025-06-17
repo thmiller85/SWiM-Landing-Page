@@ -497,14 +497,18 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
       return `\n\n${hashes} ${content.trim()}\n\n`;
     });
     
-    // Handle lists first to preserve nested content
+    // Handle lists with aggressive separation to prevent run-on text
     cleaned = cleaned.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/g, (match, listContent) => {
       const items = listContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
       const cleanItems = items.map((item: string) => {
-        const content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1').replace(/<[^>]*>/g, '').trim();
+        let content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1');
+        // Remove any nested HTML and clean up
+        content = content.replace(/<[^>]*>/g, '').trim();
+        // Split on potential concatenated bullet points
+        content = content.replace(/•\s*/g, '\n• ').trim();
         return `• ${content}`;
       });
-      return `\n\n${cleanItems.join('\n')}\n\n`;
+      return `\n\n${cleanItems.join('\n\n')}\n\n`;
     });
     
     cleaned = cleaned.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/g, (match, listContent) => {
@@ -516,9 +520,23 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
       return `\n\n${cleanItems.join('\n')}\n\n`;
     });
     
+    // Handle any remaining bullet points that might be in paragraphs
+    cleaned = cleaned.replace(/•\s*([^•]+?)(?=•|$)/g, (match, content) => {
+      return `\n\n• ${content.trim()}\n\n`;
+    });
+    
     // Convert paragraphs with better spacing
     cleaned = cleaned.replace(/<p[^>]*>([\s\S]*?)<\/p>/g, (match, content) => {
-      const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+      let cleanContent = content.replace(/<[^>]*>/g, '').trim();
+      
+      // If paragraph contains multiple bullet points, split them
+      if (cleanContent.includes('•')) {
+        const bulletItems = cleanContent.split('•').filter(item => item.trim());
+        if (bulletItems.length > 1) {
+          return '\n\n' + bulletItems.map(item => `• ${item.trim()}`).join('\n\n') + '\n\n';
+        }
+      }
+      
       return cleanContent ? `\n\n${cleanContent}\n\n` : '';
     });
     
@@ -545,6 +563,16 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     cleaned = cleaned.replace(/&#8221;/g, '"');
     cleaned = cleaned.replace(/&#8211;/g, '–');
     cleaned = cleaned.replace(/&#8212;/g, '—');
+    
+    // Handle specific patterns where bullet points got concatenated
+    // Split on year patterns (e.g., "2020: text • 2022: text")
+    cleaned = cleaned.replace(/(\d{4}:\s*[^•]*?)•\s*(\d{4}:)/g, '$1\n\n• $2');
+    
+    // Split on patterns like "Process mapping tools • Integration engines"
+    cleaned = cleaned.replace(/([a-z])\s*•\s*([A-Z])/g, '$1\n\n• $2');
+    
+    // Split on sentence endings followed by bullet points
+    cleaned = cleaned.replace(/([.!?])\s*•\s*/g, '$1\n\n• ');
     
     // Clean up excessive line breaks but preserve structure
     cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n');

@@ -259,9 +259,9 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                         h3: ({ children }) => <h3 className="text-xl font-semibold text-white mb-3 mt-6">{children}</h3>,
                         h4: ({ children }) => <h4 className="text-lg font-semibold text-white mb-2 mt-4">{children}</h4>,
                         p: ({ children }) => <p className="text-white/90 mb-4 leading-relaxed">{children}</p>,
-                        ul: ({ children }) => <ul className="text-white/90 mb-6 pl-6 list-disc list-outside">{children}</ul>,
-                        ol: ({ children }) => <ol className="text-white/90 mb-6 pl-6 list-decimal list-outside">{children}</ol>,
-                        li: ({ children }) => <li className="text-white/90 mb-2">{children}</li>,
+                        ul: ({ children }) => <ul className="text-white/90 mb-6 space-y-3 pl-6 list-disc list-outside">{children}</ul>,
+                        ol: ({ children }) => <ol className="text-white/90 mb-6 space-y-3 pl-6 list-decimal list-outside">{children}</ol>,
+                        li: ({ children }) => <li className="text-white/90 leading-relaxed">{children}</li>,
                         a: ({ children, href }) => (
                           <a 
                             href={href} 
