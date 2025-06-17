@@ -200,59 +200,94 @@ export class WordPressAPI {
   }
 
   private convertWordPressComPosts(posts: any[]): WordPressPost[] {
-    return posts.map(post => ({
-      id: post.ID,
-      date: post.date,
-      date_gmt: post.date,
-      guid: { rendered: post.URL },
-      modified: post.modified,
-      modified_gmt: post.modified,
-      slug: post.slug,
-      status: post.status,
-      type: post.type || 'post',
-      link: post.URL,
-      title: { rendered: post.title },
-      content: { rendered: post.content, protected: false },
-      excerpt: { rendered: post.excerpt, protected: false },
-      author: post.author?.ID || 1,
-      featured_media: post.featured_image ? parseInt(post.featured_image) : 0,
-      comment_status: post.comment_status || 'open',
-      ping_status: 'open',
-      sticky: post.sticky || false,
-      template: '',
-      format: 'standard',
-      meta: post.metadata || {},
-      categories: post.categories ? Object.keys(post.categories).map(id => parseInt(id)) : [],
-      tags: post.tags ? Object.keys(post.tags).map(id => parseInt(id)) : [],
-      _embedded: {
-        author: post.author ? [{
-          id: post.author.ID,
-          name: post.author.name,
-          slug: post.author.login,
-          avatar_urls: { '96': post.author.avatar_URL }
-        }] : [],
-        'wp:featuredmedia': post.featured_image ? [{
-          id: parseInt(post.featured_image),
-          source_url: post.featured_image,
-          alt_text: '',
-          media_details: { width: 0, height: 0, sizes: {} }
-        }] : [],
-        'wp:term': [
-          post.categories ? Object.values(post.categories).map((cat: any) => ({
-            id: cat.ID,
-            name: cat.name,
-            slug: cat.slug,
-            taxonomy: 'category'
-          })) : [],
-          post.tags ? Object.values(post.tags).map((tag: any) => ({
-            id: tag.ID,
-            name: tag.name,
-            slug: tag.slug,
-            taxonomy: 'post_tag'
-          })) : []
-        ]
-      }
-    }));
+    return posts.map(post => {
+      // Clean HTML content function specifically for WordPress.com
+      const cleanHtmlContent = (htmlContent: string): string => {
+        if (!htmlContent) return '';
+        
+        return htmlContent
+          // Remove WordPress block wrappers
+          .replace(/<div class="wp-block-[^"]*">/g, '')
+          .replace(/<\/div>/g, '')
+          // Remove all other HTML tags
+          .replace(/<[^>]*>/g, '')
+          // Replace HTML entities
+          .replace(/&nbsp;/g, ' ')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#8217;/g, "'")
+          .replace(/&#8220;/g, '"')
+          .replace(/&#8221;/g, '"')
+          .replace(/&#8211;/g, '–')
+          .replace(/&#8212;/g, '—')
+          .replace(/\\\u[\da-f]{4}/gi, '') // Remove unicode escapes
+          // Clean up whitespace
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+
+      // Generate a clean excerpt from content since WordPress.com often has empty excerpts
+      const contentText = cleanHtmlContent(post.content || '');
+      const cleanExcerpt = contentText.length > 200 
+        ? contentText.substring(0, 200) + '...' 
+        : contentText;
+
+      return {
+        id: post.ID,
+        date: post.date,
+        date_gmt: post.date,
+        guid: { rendered: post.URL },
+        modified: post.modified,
+        modified_gmt: post.modified,
+        slug: post.slug,
+        status: post.status,
+        type: post.type || 'post',
+        link: post.URL,
+        title: { rendered: post.title },
+        content: { rendered: post.content, protected: false },
+        excerpt: { rendered: cleanExcerpt, protected: false }, // Use our clean excerpt
+        author: post.author?.ID || 1,
+        featured_media: post.featured_image ? parseInt(post.featured_image) : 0,
+        comment_status: post.comment_status || 'open',
+        ping_status: 'open',
+        sticky: post.sticky || false,
+        template: '',
+        format: 'standard',
+        meta: post.metadata || {},
+        categories: post.categories ? Object.keys(post.categories).map(id => parseInt(id)) : [],
+        tags: post.tags ? Object.keys(post.tags).map(id => parseInt(id)) : [],
+        _embedded: {
+          author: post.author ? [{
+            id: post.author.ID,
+            name: post.author.name,
+            slug: post.author.login,
+            avatar_urls: { '96': post.author.avatar_URL }
+          }] : [],
+          'wp:featuredmedia': post.featured_image ? [{
+            id: parseInt(post.featured_image),
+            source_url: post.featured_image,
+            alt_text: '',
+            media_details: { width: 0, height: 0, sizes: {} }
+          }] : [],
+          'wp:term': [
+            post.categories ? Object.values(post.categories).map((cat: any) => ({
+              id: cat.ID,
+              name: cat.name,
+              slug: cat.slug,
+              taxonomy: 'category'
+            })) : [],
+            post.tags ? Object.values(post.tags).map((tag: any) => ({
+              id: tag.ID,
+              name: tag.name,
+              slug: tag.slug,
+              taxonomy: 'post_tag'
+            })) : []
+          ]
+        }
+      };
+    });
   }
 
   async getPost(slug: string): Promise<WordPressPost> {
@@ -361,8 +396,6 @@ export class WordPressAPI {
 // Direct configuration for your WordPress.com site
 const WORDPRESS_URL = 'https://tom945f442029a8.wordpress.com';
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY;
-
-// WordPress API configured for WordPress.com site
 
 export const wordpressAPI = new WordPressAPI(WORDPRESS_URL, WORDPRESS_API_KEY);
 
