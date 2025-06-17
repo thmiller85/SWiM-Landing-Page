@@ -117,6 +117,39 @@ Workflow automation success starts with understanding your current processes and
       );
     }
   });
+
+  // Copy blog images to build output
+  const sourceImagesDir = path.join(__dirname, '../public/images');
+  const buildImagesDir = path.join(__dirname, '../client/dist/images');
+  
+  if (fs.existsSync(sourceImagesDir)) {
+    // Create images directory structure
+    if (!fs.existsSync(buildImagesDir)) {
+      fs.mkdirSync(buildImagesDir, { recursive: true });
+    }
+    
+    // Copy all images recursively
+    function copyDir(src, dest) {
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+      }
+      
+      const items = fs.readdirSync(src);
+      items.forEach(item => {
+        const srcPath = path.join(src, item);
+        const destPath = path.join(dest, item);
+        
+        if (fs.statSync(srcPath).isDirectory()) {
+          copyDir(srcPath, destPath);
+        } else {
+          fs.copyFileSync(srcPath, destPath);
+        }
+      });
+    }
+    
+    copyDir(sourceImagesDir, buildImagesDir);
+    console.log('📸 Blog images copied to build directory');
+  }
   
   console.log('✅ Static build complete with exported content!');
   
