@@ -208,11 +208,11 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
-                  {getReadingTime(post.content)} min read
+                  {post.readingTime} min read
                 </div>
                 <div className="flex items-center">
                   <Eye className="h-4 w-4 mr-2" />
-                  {post.readingTime} min read
+                  Published
                 </div>
               </motion.div>
             </motion.div>
@@ -377,7 +377,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                       <h3 className="text-lg font-semibold text-white mb-4">Recent Articles</h3>
                       <div className="space-y-4">
                         {recentPosts.slice(0, 3).filter(p => p.slug !== post.slug).map((recentPost) => (
-                          <Link key={recentPost.id} href={`/blog/${recentPost.slug}`}>
+                          <Link key={recentPost.slug} href={`/blog/${recentPost.slug}`}>
                             <div className="group cursor-pointer">
                               <h4 className="text-sm font-medium text-white group-hover:text-accent transition-colors line-clamp-2 mb-2">
                                 {recentPost.title}

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { ConvertedBlogPost } from '@/lib/wordpress';
+import { BlogPost } from '@shared/blog';
 
 interface SEOHeadProps {
-  post?: ConvertedBlogPost;
+  post?: BlogPost;
   title?: string;
   description?: string;
   image?: string;
