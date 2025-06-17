@@ -10,7 +10,7 @@ class BlogService {
     limit?: number;
   }): Promise<BlogPost[]> {
     // Use database endpoint for real-time data
-    const response = await fetch(`${this.baseUrl}/posts/database`);
+    const response = await fetch(`${this.baseUrl}/posts/database/all`);
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);
     }
