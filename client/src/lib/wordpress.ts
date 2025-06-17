@@ -109,8 +109,8 @@ export class WordPressAPI {
     let url: URL;
     
     if (this.isWordPressCom) {
-      // Use WordPress.com WP REST API v2 for full content access
-      url = new URL(`https://public-api.wordpress.com/wp/v2/sites/245590138${endpoint}`);
+      // Use WordPress.com Reader API for full content access
+      url = new URL(`https://public-api.wordpress.com/rest/v1.2/sites/245590138${endpoint}`);
     } else {
       // Use standard WordPress REST API
       url = new URL(`${this.baseUrl}/wp-json/wp/v2${endpoint}`);
@@ -161,22 +161,34 @@ export class WordPressAPI {
     order?: 'asc' | 'desc';
   } = {}): Promise<WordPressPost[]> {
     if (this.isWordPressCom) {
-      // Use standard WordPress REST API v2 format for WordPress.com
+      // Use WordPress.com Reader API v1.2 with full content parameters
       const queryParams: Record<string, any> = {
         status: 'publish',
-        orderby: 'date',
-        order: 'desc',
-        per_page: params.per_page || 10,
-        page: params.page || 1,
-        _embed: true, // Include embedded data
+        order_by: 'date',
+        order: 'DESC',
+        number: params.per_page || 10,
+        offset: params.page ? (params.page - 1) * (params.per_page || 10) : 0,
+        content_width: 99999, // Request maximum content width
+        pretty: true, // Format content nicely
       };
 
       if (params.search) {
         queryParams.search = params.search;
       }
 
-      const response = await this.request<WordPressPost[]>('/posts', queryParams);
-      return Array.isArray(response) ? response : [];
+      const response = await this.request<any>('/posts', queryParams);
+      
+      // Handle WordPress.com API response structure
+      if (response && typeof response === 'object') {
+        if (response.posts && Array.isArray(response.posts)) {
+          return this.convertWordPressComPosts(response.posts);
+        }
+        if (Array.isArray(response)) {
+          return this.convertWordPressComPosts(response);
+        }
+      }
+      
+      return [];
     } else {
       // Standard WordPress REST API
       const queryParams: Record<string, any> = {
