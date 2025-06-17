@@ -100,6 +100,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database blog routes - must come before generic :slug route
+  app.get('/api/blog/posts/database/all', async (req, res) => {
+    try {
+      console.log('Fetching published posts from database...');
+      const posts = await storage.getPublishedPosts();
+      console.log(`Found ${posts.length} published posts`);
+      const convertedPosts = posts.map(post => storage.convertToClientFormat(post));
+      res.json(convertedPosts);
+    } catch (error) {
+      console.error('Error fetching database posts:', error);
+      res.status(500).json({ error: 'Failed to fetch posts from database', details: (error as Error).message });
+    }
+  });
+
+  app.get('/api/blog/posts/database/:slug', async (req, res) => {
+    try {
+      const post = await storage.getPostBySlug(req.params.slug);
+      if (!post || post.status !== 'published') {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      // Track view
+      await storage.trackView(post.id);
+      
+      const convertedPost = storage.convertToClientFormat(post);
+      res.json(convertedPost);
+    } catch (error) {
+      console.error('Error fetching database post:', error);
+      res.status(500).json({ error: 'Failed to fetch post from database' });
+    }
+  });
+
   app.get("/api/blog/posts/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
@@ -457,37 +489,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Database blog routes - specific routes first to avoid conflicts
-  app.get('/api/blog/posts/database/all', async (req, res) => {
-    try {
-      console.log('Fetching published posts from database...');
-      const posts = await storage.getPublishedPosts();
-      console.log(`Found ${posts.length} published posts`);
-      const convertedPosts = posts.map(post => storage.convertToClientFormat(post));
-      res.json(convertedPosts);
-    } catch (error) {
-      console.error('Error fetching database posts:', error);
-      res.status(500).json({ error: 'Failed to fetch posts from database', details: error.message });
-    }
-  });
 
-  app.get('/api/blog/posts/database/:slug', async (req, res) => {
-    try {
-      const post = await storage.getPostBySlug(req.params.slug);
-      if (!post || post.status !== 'published') {
-        return res.status(404).json({ error: 'Post not found' });
-      }
-      
-      // Track view
-      await storage.trackView(post.id);
-      
-      const convertedPost = storage.convertToClientFormat(post);
-      res.json(convertedPost);
-    } catch (error) {
-      console.error('Error fetching database post:', error);
-      res.status(500).json({ error: 'Failed to fetch post from database' });
-    }
-  });
 
   // Blog post SEO route - handles server-side rendering of meta tags
   app.get('/blog/:slug', async (req, res, next) => {
