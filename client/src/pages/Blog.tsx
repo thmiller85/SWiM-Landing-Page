@@ -42,27 +42,65 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      // Try static JSON files first (optimized for static deployment)
+      const isDevelopment = import.meta.env.DEV;
+      
+      // In development, always use database for real-time updates
+      if (isDevelopment) {
+        try {
+          const response = await fetch('/api/blog/posts/database/all');
+          if (response.ok) {
+            let dbPosts = await response.json();
+            
+            // Apply filters on client side for database posts
+            if (selectedCategory !== 'all') {
+              dbPosts = dbPosts.filter((post: BlogPost) => 
+                post.category.toLowerCase() === selectedCategory.toLowerCase()
+              );
+            }
+            
+            if (selectedTag !== 'all') {
+              dbPosts = dbPosts.filter((post: BlogPost) => 
+                post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
+              );
+            }
+            
+            if (searchQuery) {
+              const query = searchQuery.toLowerCase();
+              dbPosts = dbPosts.filter((post: BlogPost) =>
+                post.title.toLowerCase().includes(query) ||
+                post.content.toLowerCase().includes(query) ||
+                post.excerpt.toLowerCase().includes(query) ||
+                post.tags.some(tag => tag.toLowerCase().includes(query))
+              );
+            }
+            return dbPosts;
+          }
+        } catch (dbError) {
+          console.error('Database API failed in development:', dbError);
+        }
+      }
+      
+      // In production, try static files first, then fallback to database
       try {
         const filteredPosts = await staticBlogService.getAllPosts({
           search: searchQuery || undefined,
           category: selectedCategory !== 'all' ? selectedCategory : undefined,
           tag: selectedTag !== 'all' ? selectedTag : undefined
         });
-        if (filteredPosts.length > 0 || searchQuery || selectedCategory !== 'all' || selectedTag !== 'all') {
+        if (filteredPosts.length > 0) {
           return filteredPosts;
         }
       } catch (staticError) {
-        // Static content not available, try database
+        // Static content not available, try database fallback
       }
       
-      // Fall back to database API
+      // Database fallback for production
       try {
         const response = await fetch('/api/blog/posts/database/all');
         if (response.ok) {
           let dbPosts = await response.json();
           
-          // Apply filters on client side for database posts
+          // Apply filters
           if (selectedCategory !== 'all') {
             dbPosts = dbPosts.filter((post: BlogPost) => 
               post.category.toLowerCase() === selectedCategory.toLowerCase()
@@ -87,7 +125,7 @@ const Blog = () => {
           return dbPosts;
         }
       } catch (dbError) {
-        // Database not available
+        console.error('Database fallback failed:', dbError);
       }
       
       return [];
