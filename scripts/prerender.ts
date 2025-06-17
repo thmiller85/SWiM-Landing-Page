@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
+import { generateBlogPages } from './generate-blog-pages.js';
 
 // Define routes that need to be pre-rendered for SEO (marketing pages only)
 const routes = [

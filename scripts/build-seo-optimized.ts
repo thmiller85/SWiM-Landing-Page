@@ -19,7 +19,7 @@ async function buildSEOOptimized() {
   try {
     // Step 1: Build the React application
     console.log('📦 Building React application...');
-    await execAsync('npm run build:client');
+    await execAsync('vite build');
     
     // Step 2: Generate static blog pages
     console.log('📝 Generating static blog pages...');
@@ -125,7 +125,7 @@ Allow: /images/
 }
 
 // Run if called directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   buildSEOOptimized();
 }
 
