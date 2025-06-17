@@ -133,15 +133,29 @@ export class WordPressAPI {
       headers['Authorization'] = `Bearer ${this.apiKey}`;
     }
 
-    const response = await fetch(url.toString(), {
-      headers,
-    });
+    console.log('WordPress API Request:', url.toString());
 
-    if (!response.ok) {
-      throw new Error(`WordPress API error: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetch(url.toString(), {
+        headers,
+        mode: 'cors',
+      });
+
+      console.log('WordPress API Response Status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('WordPress API Error Response:', errorText);
+        throw new Error(`WordPress API error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('WordPress API Success:', data);
+      return data;
+    } catch (error) {
+      console.error('WordPress API Request Failed:', error);
+      throw error;
     }
-
-    return response.json();
   }
 
   async getPosts(params: {

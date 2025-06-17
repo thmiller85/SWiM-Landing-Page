@@ -16,18 +16,30 @@ const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
 
-  const { data: wordPressPosts = [], isLoading } = useQuery<WordPressPost[]>({
+  const { data: wordPressPosts = [], isLoading, error } = useQuery<WordPressPost[]>({
     queryKey: ['wordpress-posts', { 
       category: selectedCategory,
       tag: selectedTag,
       search: searchQuery,
     }],
     queryFn: async () => {
-      if (searchQuery) {
-        return wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
+      try {
+        console.log('Fetching WordPress posts...');
+        if (searchQuery) {
+          const result = await wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
+          console.log('Search result:', result);
+          return result;
+        }
+        const result = await wordpressAPI.getPosts({ per_page: 20 });
+        console.log('Posts result:', result);
+        return result;
+      } catch (err) {
+        console.error('WordPress API error:', err);
+        throw err;
       }
-      return wordpressAPI.getPosts({ per_page: 20 });
     },
+    retry: 1,
+    retryDelay: 1000,
   });
 
   // Convert WordPress posts to our expected format
@@ -216,6 +228,30 @@ const Blog = () => {
                   </div>
                 ))}
               </div>
+            ) : error ? (
+              <motion.div
+                variants={fadeIn}
+                initial="hidden"
+                animate="visible"
+                className="text-center py-20"
+              >
+                <div className="text-6xl mb-4">⚠️</div>
+                <h3 className="text-2xl font-bold text-white mb-4">Error Loading Articles</h3>
+                <p className="text-white/80 mb-8">
+                  {error instanceof Error ? error.message : 'Failed to load articles from WordPress'}
+                </p>
+                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4 text-left max-w-2xl mx-auto">
+                  <pre className="text-sm text-white/90 whitespace-pre-wrap">
+                    {error instanceof Error ? error.stack : JSON.stringify(error, null, 2)}
+                  </pre>
+                </div>
+                <Button
+                  onClick={() => window.location.reload()}
+                  className="bg-accent hover:bg-accent/90"
+                >
+                  Retry
+                </Button>
+              </motion.div>
             ) : posts.length > 0 ? (
               <motion.div
                 variants={staggerContainer}
