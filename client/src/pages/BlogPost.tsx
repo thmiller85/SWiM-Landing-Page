@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams, useLocation } from 'wouter';
+import { useNavigation } from '@/context/NavigationContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -24,8 +25,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
 import SEOHead from '@/components/SEOHead';
-import BlogNavbar from '@/components/BlogNavbar';
-import BlogFooter from '@/components/BlogFooter';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 // Utility functions
 const formatDate = (dateString: string) => {
@@ -49,6 +50,16 @@ interface BlogPostProps {
 const BlogPost = ({ slug }: BlogPostProps) => {
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
+  const { 
+    servicesRef, 
+    aiSolutionsRef, 
+    workflowRef, 
+    caseStudiesRef, 
+    aboutRef, 
+    contactRef, 
+    scrollToSection,
+    navigateAndScroll
+  } = useNavigation();
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
@@ -174,7 +185,14 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         type="article"
         url={`${window.location.origin}/blog/${slug}`}
       />
-      <BlogNavbar showBackButton={true} backHref="/blog" backText="Back to Blog" />
+      <Navbar 
+        onServicesClick={() => navigateAndScroll(servicesRef)}
+        onAISolutionsClick={() => navigateAndScroll(aiSolutionsRef)}
+        onWorkflowClick={() => navigateAndScroll(workflowRef)}
+        onCaseStudiesClick={() => navigateAndScroll(caseStudiesRef)}
+        onAboutClick={() => navigateAndScroll(aboutRef)}
+        onContactClick={() => navigateAndScroll(contactRef)}
+      />
       <div className="gradient-bg">
         {/* Header */}
         <header className="pt-24 pb-12">
@@ -423,7 +441,11 @@ const BlogPost = ({ slug }: BlogPostProps) => {
           </div>
         </main>
       </div>
-      <BlogFooter />
+      <Footer 
+        onServicesClick={() => navigateAndScroll(servicesRef)}
+        onAboutClick={() => navigateAndScroll(aboutRef)}
+        onContactClick={() => navigateAndScroll(contactRef)}
+      />
     </div>
   );
 };

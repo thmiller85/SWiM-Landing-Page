@@ -12,13 +12,23 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
 import SEOHead from '@/components/SEOHead';
-import BlogNavbar from '@/components/BlogNavbar';
-import BlogFooter from '@/components/BlogFooter';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { useNavigation } from '@/context/NavigationContext';
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
+  const { 
+    servicesRef, 
+    aiSolutionsRef, 
+    workflowRef, 
+    caseStudiesRef, 
+    aboutRef, 
+    contactRef, 
+    navigateAndScroll
+  } = useNavigation();
 
   const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
     queryKey: ['blog-posts', { 
@@ -127,7 +137,14 @@ const Blog = () => {
         description="Expert insights on AI implementation, workflow automation, and business intelligence. Learn how to transform your business with cutting-edge AI solutions."
         url={`${window.location.origin}/blog`}
       />
-      <BlogNavbar />
+      <Navbar 
+        onServicesClick={() => navigateAndScroll(servicesRef)}
+        onAISolutionsClick={() => navigateAndScroll(aiSolutionsRef)}
+        onWorkflowClick={() => navigateAndScroll(workflowRef)}
+        onCaseStudiesClick={() => navigateAndScroll(caseStudiesRef)}
+        onAboutClick={() => navigateAndScroll(aboutRef)}
+        onContactClick={() => navigateAndScroll(contactRef)}
+      />
       <div className="gradient-bg">
         {/* Hero Section */}
         <section className="pt-24 pb-16">
