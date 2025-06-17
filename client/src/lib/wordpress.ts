@@ -176,13 +176,9 @@ export class WordPressAPI {
 
       const response = await this.request<any>('/posts', queryParams);
       
-      // DEBUG: Log the actual response to see what we're getting
-      console.log('FULL WordPress.com API Response:', JSON.stringify(response, null, 2));
-      
       // Handle WordPress.com API response structure
       if (response && typeof response === 'object') {
         if (response.posts && Array.isArray(response.posts)) {
-          console.log('First post data:', JSON.stringify(response.posts[0], null, 2));
           return this.convertWordPressComPosts(response.posts);
         }
         if (Array.isArray(response)) {
@@ -220,14 +216,13 @@ export class WordPressAPI {
         if (!htmlContent) return '';
         
         return htmlContent
-          // Remove WordPress.com specific block wrappers first
-          .replace(/<div class="wp-block-jetpack-markdown">/g, '')
-          .replace(/<div class="wp-block-[^"]*">/g, '')
-          .replace(/<\/div>/g, '')
-          // Remove paragraph tags but keep content
-          .replace(/<p>/g, '')
-          .replace(/<\/p>/g, ' ')
-          // Remove all other HTML tags
+          // First trim leading/trailing whitespace
+          .trim()
+          // Remove WordPress.com specific block wrappers with any attributes
+          .replace(/<div[^>]*class="wp-block-jetpack-markdown"[^>]*>/gi, '')
+          .replace(/<div[^>]*class="wp-block-[^"]*"[^>]*>/gi, '')
+          .replace(/<\/div>/gi, '')
+          // Remove all HTML tags completely
           .replace(/<[^>]*>/g, '')
           // Replace HTML entities
           .replace(/&nbsp;/g, ' ')
@@ -246,9 +241,11 @@ export class WordPressAPI {
           .trim();
       };
 
-      // Generate a clean excerpt from content since WordPress.com often has empty excerpts
-      const rawContent = post.content || post.excerpt || '';
+      // WordPress.com returns content in the 'content' field, no separate excerpt
+      const rawContent = post.content || '';
       const contentText = cleanHtmlContent(rawContent);
+      
+      // Generate excerpt from cleaned content
       const cleanExcerpt = contentText.length > 200 
         ? contentText.substring(0, 200) + '...' 
         : contentText;

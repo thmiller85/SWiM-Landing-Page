@@ -82,10 +82,6 @@ const Blog = () => {
           <p className="text-white/80 mb-4 line-clamp-3">
             {post.excerpt}
           </p>
-          {/* DEBUG: Show raw data */}
-          <div className="text-xs text-red-400 mb-2">
-            DEBUG excerpt: {JSON.stringify(post.excerpt).slice(0, 100)}...
-          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center text-white/60 text-sm">
