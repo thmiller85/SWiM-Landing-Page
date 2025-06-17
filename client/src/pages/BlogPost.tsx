@@ -23,6 +23,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
+import SEOHead from '@/components/SEOHead';
+import BlogNavbar from '@/components/BlogNavbar';
+import BlogFooter from '@/components/BlogFooter';
 
 // Utility functions
 const formatDate = (dateString: string) => {
@@ -38,7 +41,6 @@ const getReadingTime = (content: string) => {
   const words = content.split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
 };
-import SEOHead from '@/components/SEOHead';
 
 interface BlogPostProps {
   slug: string;
