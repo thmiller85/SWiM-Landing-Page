@@ -620,11 +620,11 @@ window.__vite_plugin_react_preamble_installed__ = true
     }
     </script>
     
-    ${isDev ? '' : '<link rel="stylesheet" href="/assets/index.css" />'}
+    ${isDev ? '' : '<link rel="stylesheet" href="/index.css" />'}
   </head>
   <body>
     <div id="root"></div>
-    ${isDev ? '<script type="module" src="/src/main.tsx"></script>' : '<script type="module" crossorigin src="/assets/index.js"></script>'}
+    ${isDev ? '<script type="module" src="/src/main.tsx"></script>' : '<script type="module" crossorigin src="/index.js"></script>'}
   </body>
 </html>`;
 

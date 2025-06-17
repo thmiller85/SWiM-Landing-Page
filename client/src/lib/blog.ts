@@ -9,25 +9,41 @@ class BlogService {
     search?: string;
     limit?: number;
   }): Promise<BlogPost[]> {
-    const searchParams = new URLSearchParams();
-    
-    if (params?.category) searchParams.append('category', params.category);
-    if (params?.tag) searchParams.append('tag', params.tag);
-    if (params?.search) searchParams.append('search', params.search);
-    if (params?.limit) searchParams.append('limit', params.limit.toString());
-    
-    const url = `${this.baseUrl}/posts${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
-    
-    const response = await fetch(url);
+    // Use database endpoint for real-time data
+    const response = await fetch(`${this.baseUrl}/posts/database`);
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);
     }
     
-    return response.json();
+    let posts = await response.json();
+    
+    // Apply client-side filtering if needed
+    if (params?.category) {
+      posts = posts.filter((post: BlogPost) => post.category.toLowerCase() === params.category!.toLowerCase());
+    }
+    
+    if (params?.tag) {
+      posts = posts.filter((post: BlogPost) => post.tags.some(tag => tag.toLowerCase() === params.tag!.toLowerCase()));
+    }
+    
+    if (params?.search) {
+      const searchTerm = params.search.toLowerCase();
+      posts = posts.filter((post: BlogPost) => 
+        post.title.toLowerCase().includes(searchTerm) ||
+        post.excerpt.toLowerCase().includes(searchTerm) ||
+        post.content.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    if (params?.limit) {
+      posts = posts.slice(0, params.limit);
+    }
+    
+    return posts;
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost> {
-    const response = await fetch(`${this.baseUrl}/posts/${slug}`);
+    const response = await fetch(`${this.baseUrl}/posts/database/${slug}`);
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error('Post not found');
