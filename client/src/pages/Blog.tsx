@@ -21,40 +21,20 @@ const Blog = () => {
       category: selectedCategory,
       tag: selectedTag,
       search: searchQuery,
-      timestamp: Date.now(), // Force cache invalidation
     }],
     queryFn: async () => {
-      console.log('Starting WordPress API fetch...');
-      try {
-        let result;
-        if (searchQuery) {
-          result = await wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
-        } else {
-          result = await wordpressAPI.getPosts({ per_page: 20 });
-        }
-        console.log('WordPress API fetch result:', result);
-        console.log('Result length:', result.length);
-        return result;
-      } catch (err) {
-        console.error('WordPress API fetch error:', err);
-        throw err;
+      if (searchQuery) {
+        return wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
       }
+      return wordpressAPI.getPosts({ per_page: 20 });
     },
     retry: 1,
     retryDelay: 1000,
-    staleTime: 0, // Force fresh data every time
-    refetchOnMount: true,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
   });
-
-  console.log('Blog component render - Loading:', isLoading, 'Error:', error, 'Posts count:', wordPressPosts?.length);
 
   // Convert WordPress posts to our expected format
-  const posts = wordPressPosts.map(post => {
-    console.log('Raw WordPress post:', post);
-    const converted = convertWordPressPost(post);
-    console.log('Converted post:', converted);
-    return converted;
-  });
+  const posts = wordPressPosts.map(convertWordPressPost);
 
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
   const tags = ['all', 'workflow', 'automation', 'ai', 'b2b', 'saas', 'productivity', 'strategy'];
