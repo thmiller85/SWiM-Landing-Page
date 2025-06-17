@@ -61,6 +61,11 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     navigateAndScroll
   } = useNavigation();
 
+  // Scroll to top when component mounts or slug changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [slug]);
+
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
     queryFn: async () => {

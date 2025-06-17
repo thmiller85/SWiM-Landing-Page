@@ -30,6 +30,11 @@ const Blog = () => {
     navigateAndScroll
   } = useNavigation();
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const { data: posts = [], isLoading, error } = useQuery<BlogPost[]>({
     queryKey: ['blog-posts', { 
       category: selectedCategory,
