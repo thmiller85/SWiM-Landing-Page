@@ -6,6 +6,14 @@ import path from 'path';
 
 console.log('Building production application...');
 
+// Export current blog data from database
+console.log('Exporting blog data from database...');
+try {
+  execSync('tsx scripts/export-blog-data.ts', { stdio: 'inherit' });
+} catch (exportError) {
+  console.log('⚠️ Blog data export failed, using existing data...');
+}
+
 // Build frontend
 console.log('Building frontend...');
 execSync('vite build', { stdio: 'inherit' });

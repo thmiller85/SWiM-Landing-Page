@@ -44,28 +44,23 @@ const Blog = () => {
     queryFn: async () => {
       // Try static JSON files first (optimized for static deployment)
       try {
-        console.log('Attempting to load static content...');
         const filteredPosts = await staticBlogService.getAllPosts({
           search: searchQuery || undefined,
           category: selectedCategory !== 'all' ? selectedCategory : undefined,
           tag: selectedTag !== 'all' ? selectedTag : undefined
         });
-        console.log('Static content loaded:', filteredPosts.length, 'posts');
         if (filteredPosts.length > 0 || searchQuery || selectedCategory !== 'all' || selectedTag !== 'all') {
           return filteredPosts;
         }
       } catch (staticError) {
-        console.log('Static content not available, trying database...', staticError instanceof Error ? staticError.message : staticError);
+        // Static content not available, try database
       }
       
       // Fall back to database API
       try {
-        console.log('Fetching from database API...');
         const response = await fetch('/api/blog/posts/database/all');
-        console.log('Database API response status:', response.status);
         if (response.ok) {
           let dbPosts = await response.json();
-          console.log('Database posts received:', dbPosts.length);
           
           // Apply filters on client side for database posts
           if (selectedCategory !== 'all') {
@@ -89,14 +84,12 @@ const Blog = () => {
               post.tags.some(tag => tag.toLowerCase().includes(query))
             );
           }
-          console.log('Returning', dbPosts.length, 'posts from database');
           return dbPosts;
         }
       } catch (dbError) {
-        console.log('Database API failed:', dbError);
+        // Database not available
       }
       
-      console.log('No posts found from any source, returning empty array');
       return [];
     },
     retry: 1,
