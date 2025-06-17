@@ -349,6 +349,29 @@ function PostEditor({
     }));
   };
 
+  const handleFeaturedImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const uploadData = new FormData();
+    uploadData.append('image', file);
+    uploadData.append('altText', `Featured image for ${formData.title || 'post'}`);
+
+    try {
+      const response = await fetch('/api/cms/images/upload', {
+        method: 'POST',
+        body: uploadData,
+      });
+      
+      if (!response.ok) throw new Error('Upload failed');
+      
+      const result = await response.json();
+      setFormData(prev => ({ ...prev, featuredImage: result.url }));
+    } catch (error) {
+      console.error('Failed to upload featured image:', error);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -485,22 +508,39 @@ function PostEditor({
             </div>
           </div>
 
-          {/* Featured Image */}
+          {/* Featured Image Upload */}
           <div>
             <Label className="text-white">Featured Image</Label>
-            <Select value={formData.featuredImage || 'none'} onValueChange={(value) => setFormData(prev => ({ ...prev, featuredImage: value === 'none' ? '' : value }))}>
-              <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                <SelectValue placeholder="Select an image" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">No image</SelectItem>
-                {images.map((image) => (
-                  <SelectItem key={image.id} value={image.url || 'none'}>
-                    {image.originalName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFeaturedImageUpload}
+                className="block w-full text-sm text-white
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-full file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-blue-50 file:text-blue-700
+                         hover:file:bg-blue-100"
+              />
+              {formData.featuredImage && (
+                <div className="flex items-center gap-2 p-2 bg-white/10 rounded border border-white/20">
+                  <img 
+                    src={formData.featuredImage} 
+                    alt="Featured" 
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <span className="text-white text-sm flex-1">Featured image uploaded</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, featuredImage: '' }))}
+                    className="text-red-400 hover:text-red-300"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Tags and Keywords */}
