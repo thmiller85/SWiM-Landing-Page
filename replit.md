@@ -28,6 +28,16 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 17, 2025 - Migration to Markdown-Based Blog System
+- **Eliminated WordPress Dependency**: Replaced WordPress REST API with direct markdown file-based blog system
+- **Single Source of Truth**: Blog posts now stored as markdown files in `/content/blog/` with frontmatter metadata
+- **Simplified Workflow**: No more duplicate work - create markdown once with all metadata included
+- **Perfect Formatting Preservation**: Native markdown rendering eliminates HTML conversion issues
+- **Enhanced Performance**: Direct file serving removes API calls and external dependencies
+- **Complete Control**: Full control over content structure, metadata, and SEO optimization
+- **Version Control Integration**: Blog content now tracked in Git alongside codebase
+- **Production Ready**: Implemented comprehensive blog service with caching and error handling
+
 ### June 16, 2025 - Team Update: David Stockdale Removal & Layout Optimization
 - **Personnel Change**: Removed David Stockdale (former CTO) from all team pages and documentation
 - **Updated Team Structure**: Team now consists of Ross Stockdale (CMO), Tom Miller (CPO), and Steve Wurster (CGO)

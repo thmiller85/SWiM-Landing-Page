@@ -17,7 +17,8 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { wordpressAPI, convertWordPressPost, getReadingTime, formatDate, WordPressPost, ConvertedBlogPost } from '@/lib/wordpress';
+import { blogService } from '@/lib/blog';
+import { BlogPost as BlogPostType } from '@shared/blog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -32,19 +33,15 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
 
-  const { data: wpPost, isLoading, error } = useQuery<WordPressPost>({
-    queryKey: ['wordpress-post', slug],
-    queryFn: () => wordpressAPI.getPost(slug),
+  const { data: post, isLoading, error } = useQuery<BlogPostType>({
+    queryKey: ['blog-post', slug],
+    queryFn: () => blogService.getPostBySlug(slug),
   });
 
-  const { data: wpRecentPosts = [] } = useQuery<WordPressPost[]>({
-    queryKey: ['wordpress-recent-posts'],
-    queryFn: () => wordpressAPI.getPosts({ per_page: 5 }),
+  const { data: recentPosts = [] } = useQuery<BlogPostType[]>({
+    queryKey: ['blog-recent-posts'],
+    queryFn: () => blogService.getRecentPosts(5),
   });
-
-  // Convert WordPress data to our expected format
-  const post = wpPost ? convertWordPressPost(wpPost) : null;
-  const recentPosts = wpRecentPosts.map(convertWordPressPost);
 
   const shareMutation = useMutation({
     mutationFn: () => wordpressAPI.trackShare(post?.id || 0),
