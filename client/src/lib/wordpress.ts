@@ -497,16 +497,30 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
       return `\n\n${hashes} ${content.trim()}\n\n`;
     });
     
-    // Convert lists with proper formatting
-    cleaned = cleaned.replace(/<ul[^>]*>/g, '\n\n');
-    cleaned = cleaned.replace(/<\/ul>/g, '\n\n');
-    cleaned = cleaned.replace(/<ol[^>]*>/g, '\n\n');
-    cleaned = cleaned.replace(/<\/ol>/g, '\n\n');
-    cleaned = cleaned.replace(/<li[^>]*>([^<]*)<\/li>/g, '• $1\n');
+    // Handle lists first to preserve nested content
+    cleaned = cleaned.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/g, (match, listContent) => {
+      const items = listContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
+      const cleanItems = items.map(item => {
+        const content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1').replace(/<[^>]*>/g, '').trim();
+        return `• ${content}`;
+      });
+      return `\n\n${cleanItems.join('\n\n')}\n\n`;
+    });
     
-    // Convert paragraphs with proper spacing
-    cleaned = cleaned.replace(/<p[^>]*>/g, '\n\n');
-    cleaned = cleaned.replace(/<\/p>/g, '');
+    cleaned = cleaned.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/g, (match, listContent) => {
+      const items = listContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
+      const cleanItems = items.map((item, index) => {
+        const content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1').replace(/<[^>]*>/g, '').trim();
+        return `${index + 1}. ${content}`;
+      });
+      return `\n\n${cleanItems.join('\n\n')}\n\n`;
+    });
+    
+    // Convert paragraphs with better spacing
+    cleaned = cleaned.replace(/<p[^>]*>([\s\S]*?)<\/p>/g, (match, content) => {
+      const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+      return cleanContent ? `\n\n${cleanContent}\n\n` : '';
+    });
     
     // Convert formatting tags
     cleaned = cleaned.replace(/<strong[^>]*>([^<]*)<\/strong>/g, '**$1**');

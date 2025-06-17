@@ -254,14 +254,14 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                       remarkPlugins={[remarkGfm]}
                       rehypePlugins={[rehypeHighlight]}
                       components={{
-                        h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-6 mt-8">{children}</h1>,
-                        h2: ({ children }) => <h2 className="text-2xl font-bold text-white mb-4 mt-6">{children}</h2>,
-                        h3: ({ children }) => <h3 className="text-xl font-semibold text-white mb-3 mt-4">{children}</h3>,
-                        h4: ({ children }) => <h4 className="text-lg font-semibold text-white mb-2 mt-3">{children}</h4>,
-                        p: ({ children }) => <p className="text-white/90 mb-4 leading-relaxed">{children}</p>,
-                        ul: ({ children }) => <ul className="list-disc list-inside text-white/90 mb-4 space-y-2">{children}</ul>,
-                        ol: ({ children }) => <ol className="list-decimal list-inside text-white/90 mb-4 space-y-2">{children}</ol>,
-                        li: ({ children }) => <li className="text-white/90">{children}</li>,
+                        h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-8 mt-12">{children}</h1>,
+                        h2: ({ children }) => <h2 className="text-2xl font-bold text-white mb-6 mt-10">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-xl font-semibold text-white mb-4 mt-8">{children}</h3>,
+                        h4: ({ children }) => <h4 className="text-lg font-semibold text-white mb-3 mt-6">{children}</h4>,
+                        p: ({ children }) => <p className="text-white/90 mb-6 leading-relaxed text-base">{children}</p>,
+                        ul: ({ children }) => <ul className="list-none text-white/90 mb-8 space-y-3 pl-0">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-none text-white/90 mb-8 space-y-3 pl-0">{children}</ol>,
+                        li: ({ children }) => <li className="text-white/90 mb-3 pl-6 relative before:content-['•'] before:absolute before:left-0 before:text-accent before:font-bold">{children}</li>,
                         a: ({ children, href }) => (
                           <a 
                             href={href} 
