@@ -222,7 +222,6 @@ export class WordPressAPI {
           .replace(/&#8221;/g, '"')
           .replace(/&#8211;/g, '–')
           .replace(/&#8212;/g, '—')
-          .replace(/\\u[0-9a-f]{4}/gi, '') // Remove unicode escapes
           // Clean up whitespace
           .replace(/\s+/g, ' ')
           .trim();
@@ -464,7 +463,6 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
       .replace(/&#8221;/g, '"')
       .replace(/&#8211;/g, '–')
       .replace(/&#8212;/g, '—')
-      .replace(/\\\u[0-9a-f]{4}/gi, '') // Remove unicode escapes
       // Clean up whitespace
       .replace(/\s+/g, ' ')
       .trim();

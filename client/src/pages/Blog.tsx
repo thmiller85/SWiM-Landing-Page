@@ -33,7 +33,12 @@ const Blog = () => {
   });
 
   // Convert WordPress posts to our expected format
-  const posts = wordPressPosts.map(convertWordPressPost);
+  const posts = wordPressPosts.map(post => {
+    const converted = convertWordPressPost(post);
+    console.log('Original post excerpt:', post.excerpt);
+    console.log('Converted post excerpt:', converted.excerpt);
+    return converted;
+  });
 
   const categories = ['all', 'Workflow Automation', 'AI Solutions', 'SaaS Development'];
   const tags = ['all', 'workflow', 'automation', 'ai', 'b2b', 'saas', 'productivity', 'strategy'];
