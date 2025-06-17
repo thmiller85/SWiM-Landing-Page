@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
 import { generateSitemap } from './generate-sitemap.js';
+import { storage } from '../server/storage.js';
 
 // Define routes that need to be pre-rendered for SEO (marketing pages only)
 const routes = [
@@ -20,7 +21,7 @@ const routes = [
   '/services/ai-security-ethics'
 ];
 
-const distPath = path.resolve('dist/public');
+const distPath = path.resolve('dist');
 const templatePath = path.join(distPath, 'index.html');
 
 async function prerenderRoutes() {
@@ -76,8 +77,107 @@ async function prerenderRoutes() {
     console.log(`✓ Created SPA fallback: ${adminRoute}`);
   }
   
+  // Generate blog post pages
+  console.log('\n📝 Generating blog post pages...');
+  let blogPosts: any[] = [];
+  
+  try {
+    blogPosts = await storage.getPublishedPosts();
+    console.log(`Found ${blogPosts.length} published blog posts`);
+    
+    for (const post of blogPosts) {
+      const blogPost = storage.convertToClientFormat(post);
+      const blogPath = path.join(distPath, 'blog', blogPost.slug);
+      const blogFilePath = path.join(blogPath, 'index.html');
+      
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(blogPath)) {
+        fs.mkdirSync(blogPath, { recursive: true });
+      }
+      
+      // Generate SEO-optimized HTML for blog post
+      let blogHtml = template;
+      
+      // Update meta tags for the blog post
+      blogHtml = blogHtml.replace(/<title>.*?<\/title>/, `<title>${blogPost.metaTitle || blogPost.title}</title>`);
+      blogHtml = blogHtml.replace(/<meta name="description" content=".*?"/, `<meta name="description" content="${blogPost.metaDescription}"`);
+      
+      // Add Open Graph meta tags
+      const openGraphTags = `
+    <meta property="og:title" content="${blogPost.metaTitle || blogPost.title}" />
+    <meta property="og:description" content="${blogPost.metaDescription}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://swimsolutions.ai/blog/${blogPost.slug}" />
+    <meta property="article:author" content="${blogPost.author}" />
+    <meta property="article:published_time" content="${blogPost.publishedAt}" />
+    <meta property="article:section" content="${blogPost.category}" />`;
+      
+      if (blogPost.featuredImage) {
+        blogHtml = blogHtml.replace('</head>', `    <meta property="og:image" content="${blogPost.featuredImage}" />\n</head>`);
+      }
+      
+      blogHtml = blogHtml.replace('</head>', `${openGraphTags}\n</head>`);
+      
+      // Add JSON-LD structured data
+      const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": blogPost.title,
+        "description": blogPost.metaDescription,
+        "author": {
+          "@type": "Person",
+          "name": blogPost.author
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SWiM Agency",
+          "url": "https://swimsolutions.ai"
+        },
+        "datePublished": blogPost.publishedAt,
+        "dateModified": blogPost.updatedAt,
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://swimsolutions.ai/blog/${blogPost.slug}`
+        },
+        "articleSection": blogPost.category,
+        "keywords": blogPost.tags.join(", ")
+      };
+      
+      if (blogPost.featuredImage) {
+        (structuredData as any).image = blogPost.featuredImage;
+      }
+      
+      blogHtml = blogHtml.replace(
+        '</head>',
+        `  <script type="application/ld+json">${JSON.stringify(structuredData, null, 2)}</script>\n</head>`
+      );
+      
+      // Add hidden SEO content for crawlers
+      const seoContent = `
+        <div style="display: none;" id="seo-content">
+          <h1>${blogPost.title}</h1>
+          <p>${blogPost.excerpt}</p>
+          <div>Author: ${blogPost.author}</div>
+          <div>Category: ${blogPost.category}</div>
+          <div>Tags: ${blogPost.tags.join(', ')}</div>
+          <div>Reading time: ${blogPost.readingTime} minutes</div>
+        </div>
+      `;
+      
+      blogHtml = blogHtml.replace('<div id="root"></div>', `<div id="root"></div>${seoContent}`);
+      
+      fs.writeFileSync(blogFilePath, blogHtml);
+      console.log(`✓ Generated: /blog/${blogPost.slug}`);
+    }
+  } catch (error) {
+    console.warn('Could not generate blog posts (database not available):', error.message);
+  }
+
   console.log(`\n🎉 Successfully pre-rendered ${routes.length} marketing pages`);
   console.log(`✓ Created ${adminRoutes.length} admin route fallbacks`);
+  if (blogPosts.length > 0) {
+    console.log(`✓ Generated ${blogPosts.length} blog post pages`);
+  }
   console.log('💡 Contact form and interactive features remain client-side');
   
   // Copy frontend files to correct location for server
