@@ -123,21 +123,37 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     
     switch (post?.ctaType) {
       case 'consultation':
-        navigate('/#contact');
+        navigateToContact();
         break;
       case 'download':
         handleDownload();
         break;
       case 'newsletter':
-        // Scroll to newsletter signup
-        navigate('/#contact');
+        navigateToContact();
         break;
       case 'demo':
-        navigate('/#contact');
+        navigateToContact();
         break;
       default:
-        navigate('/#contact');
+        navigateToContact();
     }
+  };
+
+  const navigateToContact = () => {
+    navigate('/');
+    // Small delay to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const contactSection = document.getElementById("contact");
+      if (contactSection) {
+        const headerOffset = 120;
+        const elementPosition = contactSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, 100);
   };
 
   if (error) {
