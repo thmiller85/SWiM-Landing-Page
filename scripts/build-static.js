@@ -120,15 +120,15 @@ Workflow automation success starts with understanding your current processes and
 
   // Copy blog images to build output
   const sourceImagesDir = path.join(__dirname, '../public/images');
+  const clientPublicImagesDir = path.join(__dirname, '../client/public/images');
   const buildImagesDir = path.join(__dirname, '../client/dist/images');
   
+  // Copy images to client/public first (for Vite to pick up during build)
   if (fs.existsSync(sourceImagesDir)) {
-    // Create images directory structure
-    if (!fs.existsSync(buildImagesDir)) {
-      fs.mkdirSync(buildImagesDir, { recursive: true });
+    if (!fs.existsSync(clientPublicImagesDir)) {
+      fs.mkdirSync(clientPublicImagesDir, { recursive: true });
     }
     
-    // Copy all images recursively
     function copyDir(src, dest) {
       if (!fs.existsSync(dest)) {
         fs.mkdirSync(dest, { recursive: true });
@@ -147,8 +147,8 @@ Workflow automation success starts with understanding your current processes and
       });
     }
     
-    copyDir(sourceImagesDir, buildImagesDir);
-    console.log('📸 Blog images copied to build directory');
+    copyDir(sourceImagesDir, clientPublicImagesDir);
+    console.log('📸 Blog images copied to client/public for build');
   }
   
   console.log('✅ Static build complete with exported content!');
