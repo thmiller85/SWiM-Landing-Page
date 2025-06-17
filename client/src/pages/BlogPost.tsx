@@ -192,9 +192,18 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                 <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
                   {post.title}
                 </h1>
-                <p className="text-xl text-white/80 mb-6">
-                  {post.excerpt}
-                </p>
+                <div className="text-xl text-white/80 mb-6">
+                  <ReactMarkdown 
+                    components={{
+                      p: ({ children }) => <>{children}</>,
+                      strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                      em: ({ children }) => <em className="italic text-white/90">{children}</em>,
+                      a: ({ children, href }) => <a href={href} className="text-accent hover:text-highlight underline transition-colors">{children}</a>
+                    }}
+                  >
+                    {post.excerpt}
+                  </ReactMarkdown>
+                </div>
               </motion.div>
 
               <motion.div variants={fadeIn} className="flex flex-wrap items-center gap-6 text-white/60">
