@@ -1,18 +1,24 @@
 {
-  "buildCommand": "vite build && tsx scripts/generate-sitemap.ts",
-  "outputDirectory": "client/dist",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["client/dist/**"]
+      }
+    }
+  ],
   "routes": [
     {
-      "src": "/blog/([^/]+)",
-      "dest": "/blog/$1/index.html"
-    },
-    {
-      "src": "/blog/?",
-      "dest": "/blog/index.html"
+      "src": "/assets/(.*)",
+      "dest": "/client/dist/assets/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/dist/index.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
