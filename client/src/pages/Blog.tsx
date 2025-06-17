@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
+import ReactMarkdown from 'react-markdown';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
 import { blogService } from '@/lib/blog';
 import { BlogPost } from '@shared/blog';
@@ -78,9 +79,9 @@ const Blog = () => {
             {post.title}
           </h2>
 
-          <p className="text-white/80 mb-4 line-clamp-3">
-            {post.excerpt}
-          </p>
+          <div className="text-white/80 mb-4 line-clamp-3 prose prose-invert prose-sm">
+            <ReactMarkdown>{post.excerpt}</ReactMarkdown>
+          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center text-white/60 text-sm">

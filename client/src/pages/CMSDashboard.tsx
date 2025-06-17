@@ -450,9 +450,12 @@ function PostEditor({
                 value={formData.excerpt || ''}
                 onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                placeholder="Brief excerpt for blog listing"
+                placeholder="Brief excerpt for blog listing (Markdown supported: **bold**, *italic*, [links](url))"
                 rows={3}
               />
+              <p className="text-xs text-white/60 mt-1">
+                Markdown formatting supported for better text presentation
+              </p>
             </div>
           </div>
 
@@ -469,7 +472,7 @@ function PostEditor({
           </div>
 
           {/* Publishing Options */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <Label className="text-white">Status</Label>
               <Select value={formData.status || 'draft'} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
@@ -479,6 +482,19 @@ function PostEditor({
                 <SelectContent>
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="published">Published</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-white">Author *</Label>
+              <Select value={formData.author || 'Ross Stockdale'} onValueChange={(value) => setFormData(prev => ({ ...prev, author: value }))}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Ross Stockdale">Ross Stockdale (CMO)</SelectItem>
+                  <SelectItem value="Tom Miller">Tom Miller (CPO)</SelectItem>
+                  <SelectItem value="Steve Wurster">Steve Wurster (CGO)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
