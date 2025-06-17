@@ -56,18 +56,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Blog API routes
-  app.get("/api/blog/posts", (req, res) => {
+  app.get("/api/blog/posts", async (req, res) => {
     try {
       const { category, tag, search, limit } = req.query;
       
-      let posts = blogService.getAllPosts();
+      let posts;
       
       if (search && typeof search === 'string') {
-        posts = blogService.searchPosts(search);
+        posts = await storage.searchPosts(search);
       } else if (category && typeof category === 'string') {
-        posts = blogService.getPostsByCategory(category);
+        posts = await storage.getPostsByCategory(category);
       } else if (tag && typeof tag === 'string') {
-        posts = blogService.getPostsByTag(tag);
+        posts = await storage.getPostsByTag(tag);
+      } else {
+        posts = await storage.getPublishedPosts();
       }
       
       if (limit && typeof limit === 'string') {
@@ -77,23 +79,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      res.json(posts);
+      // Convert database posts to blog format
+      const blogPosts = posts.map(post => storage.convertToClientFormat(post));
+      
+      res.json(blogPosts);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
       res.status(500).json({ error: "Failed to fetch blog posts" });
     }
   });
 
-  app.get("/api/blog/posts/:slug", (req, res) => {
+  app.get("/api/blog/posts/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
-      const post = blogService.getPostBySlug(slug);
+      const post = await storage.getPostBySlug(slug);
       
-      if (!post) {
+      if (!post || post.status !== 'published') {
         return res.status(404).json({ error: "Post not found" });
       }
       
-      res.json(post);
+      // Convert database post to blog format
+      const blogPost = storage.convertToClientFormat(post);
+      
+      res.json(blogPost);
     } catch (error) {
       console.error('Error fetching blog post:', error);
       res.status(500).json({ error: "Failed to fetch blog post" });
@@ -110,12 +118,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/blog/recent", (req, res) => {
+  app.get("/api/blog/recent", async (req, res) => {
     try {
       const { limit } = req.query;
       const limitNum = limit && typeof limit === 'string' ? parseInt(limit) : 5;
-      const posts = blogService.getRecentPosts(limitNum);
-      res.json(posts);
+      const posts = await storage.getRecentPosts(limitNum);
+      
+      // Convert database posts to blog format
+      const blogPosts = posts.map(post => storage.convertToClientFormat(post));
+      
+      res.json(blogPosts);
     } catch (error) {
       console.error('Error fetching recent posts:', error);
       res.status(500).json({ error: "Failed to fetch recent posts" });
