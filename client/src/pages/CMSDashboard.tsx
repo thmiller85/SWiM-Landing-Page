@@ -449,7 +449,7 @@ function PostEditor({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label className="text-white">Status</Label>
-              <Select value={formData.status} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
+              <Select value={formData.status || 'draft'} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
                 <SelectTrigger className="bg-white/10 border-white/20 text-white">
                   <SelectValue />
                 </SelectTrigger>
@@ -471,7 +471,7 @@ function PostEditor({
             </div>
             <div>
               <Label className="text-white">CTA Type</Label>
-              <Select value={formData.ctaType} onValueChange={(value) => setFormData(prev => ({ ...prev, ctaType: value }))}>
+              <Select value={formData.ctaType || 'consultation'} onValueChange={(value) => setFormData(prev => ({ ...prev, ctaType: value }))}>
                 <SelectTrigger className="bg-white/10 border-white/20 text-white">
                   <SelectValue />
                 </SelectTrigger>
@@ -488,14 +488,14 @@ function PostEditor({
           {/* Featured Image */}
           <div>
             <Label className="text-white">Featured Image</Label>
-            <Select value={formData.featuredImage || ''} onValueChange={(value) => setFormData(prev => ({ ...prev, featuredImage: value }))}>
+            <Select value={formData.featuredImage || ''} onValueChange={(value) => setFormData(prev => ({ ...prev, featuredImage: value || '' }))}>
               <SelectTrigger className="bg-white/10 border-white/20 text-white">
                 <SelectValue placeholder="Select an image" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">No image</SelectItem>
                 {images.map((image) => (
-                  <SelectItem key={image.id} value={image.url}>
+                  <SelectItem key={image.id} value={image.url || ''}>
                     {image.originalName}
                   </SelectItem>
                 ))}
