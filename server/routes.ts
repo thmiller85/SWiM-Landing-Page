@@ -57,10 +57,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Serve uploaded images
-  app.use('/images', (req, res, next) => {
-    const imagePath = path.join(process.cwd(), 'public', req.url);
+  app.get('/images/*', (req, res) => {
+    const imagePath = path.join(process.cwd(), 'public', req.path);
     res.sendFile(imagePath, (err) => {
       if (err) {
+        console.error('Image serving error:', err);
         res.status(404).json({ error: 'Image not found' });
       }
     });
