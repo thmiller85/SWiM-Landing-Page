@@ -79,6 +79,79 @@ async function fixDeployment() {
     }
   }
   
+  // Step 7: Generate blog post pages for direct URL access
+  console.log('Generating blog post pages...');
+  try {
+    // Create a basic blog post page structure
+    const blogPostTemplate = indexContent.replace(
+      /<title>.*?<\/title>/,
+      '<title>SWiM Blog - ${POST_TITLE}</title>'
+    ).replace(
+      /<meta name="description" content=".*?"/,
+      '<meta name="description" content="${POST_DESCRIPTION}"'
+    );
+    
+    // Create the blog post directory structure
+    const blogDir = path.join('dist', 'blog');
+    if (!fs.existsSync(blogDir)) {
+      fs.mkdirSync(blogDir, { recursive: true });
+    }
+    
+    // Create the specific blog post directory
+    const postSlug = 'the-complete-guide-to-workflow-automation-for-b2b-companies';
+    const postDir = path.join(blogDir, postSlug);
+    if (!fs.existsSync(postDir)) {
+      fs.mkdirSync(postDir, { recursive: true });
+    }
+    
+    // Generate the blog post HTML
+    let postHtml = blogPostTemplate
+      .replace('${POST_TITLE}', 'The Complete Guide to Workflow Automation for B2B Companies | SWiM')
+      .replace('${POST_DESCRIPTION}', 'Learn how to implement workflow automation in your B2B company to increase efficiency, reduce costs, and scale operations effectively.');
+    
+    // Add Open Graph tags for social sharing
+    const ogTags = `
+    <meta property="og:title" content="The Complete Guide to Workflow Automation for B2B Companies" />
+    <meta property="og:description" content="Learn how to implement workflow automation in your B2B company to increase efficiency, reduce costs, and scale operations effectively." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://swimsolutions.replit.app/blog/${postSlug}" />
+    <meta property="article:author" content="Ross Stockdale" />
+    <meta property="article:section" content="Workflow Automation" />`;
+    
+    postHtml = postHtml.replace('</head>', `${ogTags}\n</head>`);
+    
+    // Add structured data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "The Complete Guide to Workflow Automation for B2B Companies",
+      "description": "Learn how to implement workflow automation in your B2B company to increase efficiency, reduce costs, and scale operations effectively.",
+      "author": {
+        "@type": "Person",
+        "name": "Ross Stockdale"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SWiM Agency",
+        "url": "https://swimsolutions.replit.app"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://swimsolutions.replit.app/blog/${postSlug}`
+      },
+      "articleSection": "Workflow Automation"
+    };
+    
+    postHtml = postHtml.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(structuredData, null, 2)}</script>\n</head>`);
+    
+    // Write the blog post HTML file
+    fs.writeFileSync(path.join(postDir, 'index.html'), postHtml);
+    console.log(`Generated blog post: /blog/${postSlug}`);
+    
+  } catch (error) {
+    console.warn('Blog post generation skipped:', error.message);
+  }
+  
   console.log('✅ Deployment fix complete!');
   console.log('📁 Files in dist:');
   const distFiles = fs.readdirSync('dist');
