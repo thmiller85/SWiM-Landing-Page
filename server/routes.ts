@@ -51,9 +51,143 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), environment: process.env.NODE_ENV });
   });
   
-  // Serve sitemap.xml
-  app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(path.resolve(process.cwd(), 'client/public/sitemap.xml'));
+  // Dynamic sitemap generation based on current database posts
+  app.get('/sitemap.xml', async (req, res) => {
+    try {
+      const posts = await storage.getPublishedPosts();
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://your-domain.com' 
+        : 'http://localhost:5000';
+      
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${baseUrl}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/blog</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+${posts.map(post => `  <url>
+    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <lastmod>${post.updatedAt.toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+      res.set('Content-Type', 'application/xml');
+      res.send(sitemap);
+    } catch (error) {
+      console.error('Error generating sitemap:', error);
+      // Fallback to static sitemap if it exists
+      const staticSitemapPath = path.resolve(process.cwd(), 'client/public/sitemap.xml');
+      if (require('fs').existsSync(staticSitemapPath)) {
+        res.sendFile(staticSitemapPath);
+      } else {
+        res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
+      }
+    }
+  });
+
+  // Server-side rendered blog post pages for SEO optimization
+  app.get('/blog/:slug', async (req, res, next) => {
+    try {
+      const slug = req.params.slug;
+      const post = await storage.getPostBySlug(slug);
+      
+      if (!post) {
+        // If post not found, continue to SPA fallback
+        return next();
+      }
+      
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://your-domain.com' 
+        : 'http://localhost:5000';
+      
+      // Generate server-side rendered HTML with complete meta tags
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${post.metaTitle || post.title}</title>
+  <meta name="description" content="${post.metaDescription || post.excerpt || ''}">
+  <meta name="keywords" content="${post.targetKeywords?.join(', ') || ''}">
+  <meta name="author" content="${post.author}">
+  <link rel="canonical" href="${baseUrl}/blog/${post.slug}">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${baseUrl}/blog/${post.slug}">
+  <meta property="og:title" content="${post.metaTitle || post.title}">
+  <meta property="og:description" content="${post.metaDescription || post.excerpt || ''}">
+  ${post.featuredImage ? `<meta property="og:image" content="${baseUrl}${post.featuredImage}">` : ''}
+  <meta property="og:site_name" content="SWiM AI">
+  <meta property="article:author" content="${post.author}">
+  <meta property="article:published_time" content="${post.publishedAt?.toISOString() || post.createdAt.toISOString()}">
+  <meta property="article:modified_time" content="${post.updatedAt.toISOString()}">
+  <meta property="article:section" content="${post.category}">
+  ${post.tags?.map(tag => `<meta property="article:tag" content="${tag}">`).join('\n  ') || ''}
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="${baseUrl}/blog/${post.slug}">
+  <meta property="twitter:title" content="${post.metaTitle || post.title}">
+  <meta property="twitter:description" content="${post.metaDescription || post.excerpt || ''}">
+  ${post.featuredImage ? `<meta property="twitter:image" content="${baseUrl}${post.featuredImage}">` : ''}
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "${post.title}",
+    "description": "${post.metaDescription || post.excerpt || ''}",
+    "image": "${post.featuredImage ? baseUrl + post.featuredImage : ''}",
+    "author": {
+      "@type": "Person",
+      "name": "${post.author}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SWiM AI",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "${baseUrl}/logo.png"
+      }
+    },
+    "datePublished": "${post.publishedAt?.toISOString() || post.createdAt.toISOString()}",
+    "dateModified": "${post.updatedAt.toISOString()}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "${baseUrl}/blog/${post.slug}"
+    },
+    "keywords": "${post.targetKeywords?.join(', ') || ''}",
+    "articleSection": "${post.category}",
+    "wordCount": "${post.content.split(' ').length}",
+    "timeRequired": "PT${post.readingTime}M"
+  }
+  </script>
+  
+  <link rel="stylesheet" href="/src/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>`;
+
+      res.status(200).set({ "Content-Type": "text/html" }).send(html);
+    } catch (error) {
+      console.error('Error rendering blog post:', error);
+      next(); // Continue to SPA fallback
+    }
   });
 
   // Serve uploaded images

@@ -42,65 +42,14 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      const isDevelopment = import.meta.env.DEV;
-      
-      // In development, always use database for real-time updates
-      if (isDevelopment) {
-        try {
-          const response = await fetch('/api/blog/posts/database/all');
-          if (response.ok) {
-            let dbPosts = await response.json();
-            
-            // Apply filters on client side for database posts
-            if (selectedCategory !== 'all') {
-              dbPosts = dbPosts.filter((post: BlogPost) => 
-                post.category.toLowerCase() === selectedCategory.toLowerCase()
-              );
-            }
-            
-            if (selectedTag !== 'all') {
-              dbPosts = dbPosts.filter((post: BlogPost) => 
-                post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
-              );
-            }
-            
-            if (searchQuery) {
-              const query = searchQuery.toLowerCase();
-              dbPosts = dbPosts.filter((post: BlogPost) =>
-                post.title.toLowerCase().includes(query) ||
-                post.content.toLowerCase().includes(query) ||
-                post.excerpt.toLowerCase().includes(query) ||
-                post.tags.some(tag => tag.toLowerCase().includes(query))
-              );
-            }
-            return dbPosts;
-          }
-        } catch (dbError) {
-          console.error('Database API failed in development:', dbError);
-        }
-      }
-      
-      // In production, try static files first, then fallback to database
-      try {
-        const filteredPosts = await staticBlogService.getAllPosts({
-          search: searchQuery || undefined,
-          category: selectedCategory !== 'all' ? selectedCategory : undefined,
-          tag: selectedTag !== 'all' ? selectedTag : undefined
-        });
-        if (filteredPosts.length > 0) {
-          return filteredPosts;
-        }
-      } catch (staticError) {
-        // Static content not available, try database fallback
-      }
-      
-      // Database fallback for production
+      // Database-first approach for both development and production
+      // This provides real-time updates while maintaining SEO through server-side rendering
       try {
         const response = await fetch('/api/blog/posts/database/all');
         if (response.ok) {
           let dbPosts = await response.json();
           
-          // Apply filters
+          // Apply filters on client side for database posts
           if (selectedCategory !== 'all') {
             dbPosts = dbPosts.filter((post: BlogPost) => 
               post.category.toLowerCase() === selectedCategory.toLowerCase()
@@ -125,7 +74,19 @@ const Blog = () => {
           return dbPosts;
         }
       } catch (dbError) {
-        console.error('Database fallback failed:', dbError);
+        console.error('Database API failed:', dbError);
+      }
+      
+      // Emergency fallback to static files only if database is completely unavailable
+      try {
+        const filteredPosts = await staticBlogService.getAllPosts({
+          search: searchQuery || undefined,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+          tag: selectedTag !== 'all' ? selectedTag : undefined
+        });
+        return filteredPosts;
+      } catch (staticError) {
+        console.error('Static fallback also failed:', staticError);
       }
       
       return [];
