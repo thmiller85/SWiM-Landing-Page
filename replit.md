@@ -9,9 +9,10 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 - React with TypeScript for dynamic interactions
 - Tailwind CSS for responsive, mobile-adaptive styling
 - Framer Motion for advanced animations and transitions
-- WordPress REST API for content management
+- PostgreSQL database for content management
+- Express.js server with server-side rendering
 - TanStack Query for efficient data fetching
-- Static site deployment compatibility
+- Full-stack Node.js deployment
 - Comprehensive mobile layout optimization
 
 ## Project Architecture
@@ -21,10 +22,10 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 - **Blog System**: Public blog with individual post pages, SEO optimization, social sharing, WordPress REST API integration
 
 ### Content Management
-- **WordPress CMS**: Full-featured content management via WordPress admin interface
-- **REST API Integration**: Direct fetching of blog posts, categories, and tags from WordPress
-- **SEO Optimization**: Leverages Yoast SEO plugin for meta tags and search optimization
-- **Analytics Tracking**: Custom WordPress endpoints for engagement tracking (views, leads, shares)
+- **PostgreSQL Database**: Persistent content storage with full CRUD operations
+- **Custom CMS Interface**: Built-in content management at `/cms/login`
+- **Server-Side Rendering**: Blog posts rendered with complete HTML and meta tags
+- **Analytics Tracking**: Database-tracked engagement metrics (views, leads, shares)
 
 ## Recent Changes
 
