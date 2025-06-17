@@ -211,14 +211,18 @@ export class WordPressAPI {
 
   private convertWordPressComPosts(posts: any[]): WordPressPost[] {
     return posts.map(post => {
-      // Clean HTML content function specifically for WordPress.com
+      // Enhanced HTML content cleaning specifically for WordPress.com
       const cleanHtmlContent = (htmlContent: string): string => {
         if (!htmlContent) return '';
         
         return htmlContent
-          // Remove WordPress block wrappers
+          // Remove WordPress.com specific block wrappers first
+          .replace(/<div class="wp-block-jetpack-markdown">/g, '')
           .replace(/<div class="wp-block-[^"]*">/g, '')
           .replace(/<\/div>/g, '')
+          // Remove paragraph tags but keep content
+          .replace(/<p>/g, '')
+          .replace(/<\/p>/g, ' ')
           // Remove all other HTML tags
           .replace(/<[^>]*>/g, '')
           // Replace HTML entities
@@ -232,13 +236,15 @@ export class WordPressAPI {
           .replace(/&#8221;/g, '"')
           .replace(/&#8211;/g, '–')
           .replace(/&#8212;/g, '—')
-          // Clean up whitespace
+          // Clean up multiple spaces and newlines
+          .replace(/\n+/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
       };
 
       // Generate a clean excerpt from content since WordPress.com often has empty excerpts
-      const contentText = cleanHtmlContent(post.content || '');
+      const rawContent = post.content || post.excerpt || '';
+      const contentText = cleanHtmlContent(rawContent);
       const cleanExcerpt = contentText.length > 200 
         ? contentText.substring(0, 200) + '...' 
         : contentText;
