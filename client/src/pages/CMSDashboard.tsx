@@ -488,14 +488,14 @@ function PostEditor({
           {/* Featured Image */}
           <div>
             <Label className="text-white">Featured Image</Label>
-            <Select value={formData.featuredImage || ''} onValueChange={(value) => setFormData(prev => ({ ...prev, featuredImage: value || '' }))}>
+            <Select value={formData.featuredImage || 'none'} onValueChange={(value) => setFormData(prev => ({ ...prev, featuredImage: value === 'none' ? '' : value }))}>
               <SelectTrigger className="bg-white/10 border-white/20 text-white">
                 <SelectValue placeholder="Select an image" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No image</SelectItem>
+                <SelectItem value="none">No image</SelectItem>
                 {images.map((image) => (
-                  <SelectItem key={image.id} value={image.url || ''}>
+                  <SelectItem key={image.id} value={image.url || 'none'}>
                     {image.originalName}
                   </SelectItem>
                 ))}

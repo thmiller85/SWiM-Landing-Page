@@ -1,0 +1,86 @@
+chunk-RPCDYKBN.js?v=3cbbcbaf:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+cms/login:1 <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes">
+@radix-ui_react-select.js?v=3cbbcbaf:1945 Uncaught Error: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+    at @radix-ui_react-select.js?v=3cbbcbaf:1945:13
+    at renderWithHooks (chunk-RPCDYKBN.js?v=3cbbcbaf:11548:26)
+    at updateForwardRef (chunk-RPCDYKBN.js?v=3cbbcbaf:14325:28)
+    at beginWork (chunk-RPCDYKBN.js?v=3cbbcbaf:15946:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=3cbbcbaf:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=3cbbcbaf:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=3cbbcbaf:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=3cbbcbaf:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=3cbbcbaf:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=3cbbcbaf:19137:13)
+@radix-ui_react-select.js?v=3cbbcbaf:1945 Uncaught Error: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+    at @radix-ui_react-select.js?v=3cbbcbaf:1945:13
+    at renderWithHooks (chunk-RPCDYKBN.js?v=3cbbcbaf:11548:26)
+    at updateForwardRef (chunk-RPCDYKBN.js?v=3cbbcbaf:14325:28)
+    at beginWork (chunk-RPCDYKBN.js?v=3cbbcbaf:15946:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=3cbbcbaf:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=3cbbcbaf:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=3cbbcbaf:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=3cbbcbaf:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=3cbbcbaf:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=3cbbcbaf:19137:13)
+chunk-RPCDYKBN.js?v=3cbbcbaf:14032 The above error occurred in the <SelectItem> component:
+
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=3cbbcbaf:1918:7
+    at _c11 (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/components/ui/select.tsx:207:13)
+    at div
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-KYDO7B72.js?v=3cbbcbaf:42:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:79:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:56:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-C2CN5PZR.js?v=3cbbcbaf:39:15
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=3cbbcbaf:1829:13
+    at div
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:79:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:56:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-C2CN5PZR.js?v=3cbbcbaf:39:15
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=3cbbcbaf:1372:58
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:79:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-EVLBUYTV.js?v=3cbbcbaf:56:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-KYDO7B72.js?v=3cbbcbaf:42:13
+    at https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-XVXZMJTV.js?v=3cbbcbaf:258:22
+    at SelectPortal
+    at _c7 (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/components/ui/select.tsx:122:12)
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at CollectionProvider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-C2CN5PZR.js?v=3cbbcbaf:29:13)
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at Popper (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RYUNO7A4.js?v=3cbbcbaf:1931:11)
+    at Select (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=3cbbcbaf:1160:5)
+    at div
+    at form
+    at div
+    at _c9 (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/components/ui/card.tsx:114:12)
+    at div
+    at _c (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/components/ui/card.tsx:20:11)
+    at PostEditor (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/pages/CMSDashboard.tsx:544:3)
+    at PostsTab (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/pages/CMSDashboard.tsx:299:3)
+    at div
+    at div
+    at CMSDashboard (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/pages/CMSDashboard.tsx:33:24)
+    at Route (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=3cbbcbaf:323:16)
+    at Switch (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=3cbbcbaf:379:17)
+    at Provider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-LYFAO6LD.js?v=3cbbcbaf:22:15)
+    at TooltipProvider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=3cbbcbaf:55:5)
+    at NavigationProvider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/src/context/NavigationContext.tsx:21:38)
+    at App
+    at QueryClientProvider (https://de019c1a-b4cd-429d-ba98-5c4343836100-00-2xecl0qkwj3ll.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=3cbbcbaf:2805:3)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=3cbbcbaf:14032
+chunk-RPCDYKBN.js?v=3cbbcbaf:9129 Uncaught Error: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+    at @radix-ui_react-select.js?v=3cbbcbaf:1945:13
+    at renderWithHooks (chunk-RPCDYKBN.js?v=3cbbcbaf:11548:26)
+    at updateForwardRef (chunk-RPCDYKBN.js?v=3cbbcbaf:14325:28)
+    at beginWork (chunk-RPCDYKBN.js?v=3cbbcbaf:15946:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=3cbbcbaf:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=3cbbcbaf:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=3cbbcbaf:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=3cbbcbaf:19116:15)
+    at recoverFromConcurrentError (chunk-RPCDYKBN.js?v=3cbbcbaf:18736:28)
+    at performSyncWorkOnRoot (chunk-RPCDYKBN.js?v=3cbbcbaf:18879:28)
