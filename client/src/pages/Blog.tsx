@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
 import SEOHead from '@/components/SEOHead';
+import BlogNavbar from '@/components/BlogNavbar';
+import BlogFooter from '@/components/BlogFooter';
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,6 +127,7 @@ const Blog = () => {
         description="Expert insights on AI implementation, workflow automation, and business intelligence. Learn how to transform your business with cutting-edge AI solutions."
         url={`${window.location.origin}/blog`}
       />
+      <BlogNavbar />
       <div className="gradient-bg">
         {/* Hero Section */}
         <section className="pt-24 pb-16">
@@ -288,6 +291,7 @@ const Blog = () => {
           </div>
         </section>
       </div>
+      <BlogFooter />
     </div>
   );
 };

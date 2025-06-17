@@ -174,6 +174,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
         type="article"
         url={`${window.location.origin}/blog/${slug}`}
       />
+      <BlogNavbar showBackButton={true} backHref="/blog" backText="Back to Blog" />
       <div className="gradient-bg">
         {/* Header */}
         <header className="pt-24 pb-12">
@@ -184,12 +185,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
               animate="visible"
               className="max-w-4xl mx-auto"
             >
-              <motion.div variants={fadeIn} className="mb-6">
-                <Link href="/blog" className="inline-flex items-center text-accent hover:text-highlight transition-colors">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Blog
-                </Link>
-              </motion.div>
+
 
               <motion.div variants={slideUp} className="mb-6">
                 <Badge variant="secondary" className="bg-accent/20 text-accent border-accent/30 mb-4">
@@ -427,6 +423,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
           </div>
         </main>
       </div>
+      <BlogFooter />
     </div>
   );
 };
