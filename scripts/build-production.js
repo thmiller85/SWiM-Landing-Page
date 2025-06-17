@@ -61,6 +61,11 @@ fs.writeFileSync('dist/Dockerfile', dockerfile);
 
 // Run prerender (now includes sitemap generation)
 console.log('Running prerender with sitemap generation...');
-execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
+try {
+  execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
+} catch (error) {
+  console.warn('⚠️ Prerender step failed, continuing build...');
+  console.warn('The site will work as a Single Page Application');
+}
 
 console.log('Production build complete!');

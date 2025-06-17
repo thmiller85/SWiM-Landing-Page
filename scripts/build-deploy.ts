@@ -18,7 +18,12 @@ async function buildForDeployment() {
     
     // Step 2: Run prerender which now includes sitemap generation
     console.log('📝 Running prerender (includes sitemap generation)...');
-    execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
+    try {
+      execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
+    } catch (error) {
+      console.warn('⚠️ Prerender step failed, continuing deployment...');
+      console.warn('The site will work as a Single Page Application');
+    }
     
     // Step 3: Verify blog pages exist
     const blogDir = path.join(process.cwd(), 'client/dist/blog');
