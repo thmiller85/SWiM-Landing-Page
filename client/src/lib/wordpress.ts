@@ -181,15 +181,29 @@ export class WordPressAPI {
       
       // Handle the response structure correctly
       if (response && typeof response === 'object') {
+        // Check if response has posts array (standard WordPress.com format)
         if (response.posts && Array.isArray(response.posts)) {
+          console.log('Found posts array with length:', response.posts.length);
           return this.convertWordPressComPosts(response.posts);
-        } else if (Array.isArray(response)) {
-          // Sometimes the response is directly an array
+        }
+        // Check if response is directly an array of posts
+        else if (Array.isArray(response)) {
+          console.log('Response is direct array with length:', response.length);
           return this.convertWordPressComPosts(response);
+        }
+        // Check if response has a 'found' count indicating posts structure
+        else if (response.found !== undefined) {
+          console.log('WordPress.com response has found count:', response.found);
+          // Try to extract posts from different possible locations
+          const postsArray = response.posts || response.data || [];
+          if (Array.isArray(postsArray)) {
+            return this.convertWordPressComPosts(postsArray);
+          }
         }
       }
       
       console.warn('Unexpected WordPress.com API response structure:', response);
+      console.warn('Available keys:', Object.keys(response || {}));
       return [];
     } else {
       // Standard WordPress REST API
