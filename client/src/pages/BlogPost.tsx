@@ -195,7 +195,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
       />
       <div className="gradient-bg">
         {/* Header */}
-        <header className="pt-24 pb-12">
+        <header className="pt-32 pb-12">
           <div className="container mx-auto px-4">
             <motion.div
               variants={staggerContainer}

@@ -147,7 +147,7 @@ const Blog = () => {
       />
       <div className="gradient-bg">
         {/* Hero Section */}
-        <section className="pt-24 pb-16">
+        <section className="pt-32 pb-16">
           <div className="container mx-auto px-4">
             <motion.div
               variants={staggerContainer}
