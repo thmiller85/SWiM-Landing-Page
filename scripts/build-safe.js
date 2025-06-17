@@ -5,9 +5,9 @@
  * This script handles all the build steps with proper error handling
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
 async function safeBuild() {
   console.log('🚀 Starting safe build process...');
@@ -15,7 +15,7 @@ async function safeBuild() {
   try {
     // Step 1: Build Vite frontend
     console.log('📦 Building frontend with Vite...');
-    execSync('vite build', { stdio: 'inherit' });
+    execSync('npx vite build', { stdio: 'inherit' });
     console.log('✅ Vite build completed');
     
     // Step 2: Build server

@@ -27,6 +27,8 @@ import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
 import SEOHead from '@/components/SEOHead';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import BlogNavbar from '@/components/BlogNavbar';
+import BlogFooter from '@/components/BlogFooter';
 
 // Utility functions
 const formatDate = (dateString: string) => {
