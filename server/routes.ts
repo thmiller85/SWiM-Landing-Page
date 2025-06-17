@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import { blogService } from "./blog";
@@ -53,6 +54,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve sitemap.xml
   app.get('/sitemap.xml', (req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'client/public/sitemap.xml'));
+  });
+
+  // Serve uploaded images
+  app.use('/images', (req, res, next) => {
+    const imagePath = path.join(process.cwd(), 'public', req.url);
+    res.sendFile(imagePath, (err) => {
+      if (err) {
+        res.status(404).json({ error: 'Image not found' });
+      }
+    });
   });
   
   // Blog API routes
