@@ -308,7 +308,11 @@ const Blog = () => {
           </div>
         </section>
       </div>
-      <BlogFooter />
+      <Footer 
+        onServicesClick={() => navigateAndScroll(servicesRef)}
+        onAboutClick={() => navigateAndScroll(aboutRef)}
+        onContactClick={() => navigateAndScroll(contactRef)}
+      />
     </div>
   );
 };
