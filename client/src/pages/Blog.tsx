@@ -23,20 +23,10 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      try {
-        console.log('Fetching WordPress posts...');
-        if (searchQuery) {
-          const result = await wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
-          console.log('Search result:', result);
-          return result;
-        }
-        const result = await wordpressAPI.getPosts({ per_page: 20 });
-        console.log('Posts result:', result);
-        return result;
-      } catch (err) {
-        console.error('WordPress API error:', err);
-        throw err;
+      if (searchQuery) {
+        return wordpressAPI.searchPosts(searchQuery, { per_page: 20 });
       }
+      return wordpressAPI.getPosts({ per_page: 20 });
     },
     retry: 1,
     retryDelay: 1000,

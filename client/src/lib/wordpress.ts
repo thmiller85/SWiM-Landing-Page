@@ -133,25 +133,18 @@ export class WordPressAPI {
       headers['Authorization'] = `Bearer ${this.apiKey}`;
     }
 
-    console.log('WordPress API Request:', url.toString());
-
     try {
       const response = await fetch(url.toString(), {
         headers,
         mode: 'cors',
       });
 
-      console.log('WordPress API Response Status:', response.status, response.statusText);
-
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('WordPress API Error Response:', errorText);
         throw new Error(`WordPress API error: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
-      const data = await response.json();
-      console.log('WordPress API Success:', data);
-      return data;
+      return await response.json();
     } catch (error) {
       console.error('WordPress API Request Failed:', error);
       throw error;
@@ -369,11 +362,7 @@ export class WordPressAPI {
 const WORDPRESS_URL = 'https://tom945f442029a8.wordpress.com';
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY;
 
-console.log('WordPress Configuration Updated:', {
-  WORDPRESS_URL,
-  isWordPressCom: WORDPRESS_URL.includes('.wordpress.com'),
-  timestamp: new Date().toISOString()
-});
+// WordPress API configured for WordPress.com site
 
 export const wordpressAPI = new WordPressAPI(WORDPRESS_URL, WORDPRESS_API_KEY);
 
@@ -421,15 +410,39 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     ctaType = 'demo';
   }
 
+  // Clean HTML content for excerpt
+  const cleanExcerpt = wpPost.excerpt.rendered
+    .replace(/<[^>]*>/g, '') // Strip HTML tags
+    .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
+    .replace(/&amp;/g, '&') // Replace HTML entities
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .trim();
+
+  // Generate excerpt from content if WordPress excerpt is empty or too short
+  let finalExcerpt = cleanExcerpt;
+  if (!finalExcerpt || finalExcerpt.length < 50) {
+    const contentText = wpPost.content.rendered
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim();
+    finalExcerpt = contentText.substring(0, 200) + (contentText.length > 200 ? '...' : '');
+  }
+
   return {
     id: wpPost.id,
     title: wpPost.title.rendered,
     slug: wpPost.slug,
-    excerpt: wpPost.excerpt.rendered.replace(/<[^>]*>/g, ''), // Strip HTML tags
+    excerpt: finalExcerpt,
     content: wpPost.content.rendered,
     featuredImage: wpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url,
     seoTitle: wpPost.yoast_head_json?.title || wpPost.title.rendered,
-    metaDescription: wpPost.yoast_head_json?.description || wpPost.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),
+    metaDescription: wpPost.yoast_head_json?.description || finalExcerpt.substring(0, 160),
     author: wpPost._embedded?.author?.[0]?.name || 'Admin',
     publishedAt: wpPost.date,
     createdAt: wpPost.date,
@@ -437,11 +450,11 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     status: wpPost.status,
     category: categories[0]?.name || 'Uncategorized',
     tags: tags.map(tag => tag.name) || [],
-    ctaType: (wpPost.meta?.cta_type as ConvertedBlogPost['ctaType']) || ctaType, // Use smart detection for WordPress.com
-    downloadableResource: wpPost.meta?.downloadable_resource || null, // May not be available on free plans
-    views: parseInt(wpPost.meta?.views || '0') || 0, // Basic analytics
-    leads: parseInt(wpPost.meta?.leads || '0') || 0, // Basic analytics
-    shares: parseInt(wpPost.meta?.shares || '0') || 0, // Basic analytics
+    ctaType: (wpPost.meta?.cta_type as ConvertedBlogPost['ctaType']) || ctaType,
+    downloadableResource: wpPost.meta?.downloadable_resource || null,
+    views: parseInt(wpPost.meta?.views || '0') || 0,
+    leads: parseInt(wpPost.meta?.leads || '0') || 0,
+    shares: parseInt(wpPost.meta?.shares || '0') || 0,
   };
 };
 
