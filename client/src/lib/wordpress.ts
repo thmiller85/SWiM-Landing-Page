@@ -263,14 +263,7 @@ export class WordPressAPI {
 
       // WordPress.com returns content in the 'content' field, no separate excerpt
       const rawContent = post.content || '';
-      
-      // DEBUG: Let's see the actual HTML structure
-      console.log('Raw WordPress.com HTML:', rawContent.substring(0, 500));
-      
       const contentText = cleanHtmlContent(rawContent);
-      
-      // DEBUG: Let's see what our cleaning produces
-      console.log('Cleaned content:', contentText.substring(0, 500));
       
       // Generate excerpt from cleaned content
       const cleanExcerpt = contentText.length > 200 
@@ -348,18 +341,7 @@ export class WordPressAPI {
   }
 
   async getPostById(id: number): Promise<WordPressPost> {
-    if (this.isWordPressCom) {
-      const response = await this.request<any>(`/posts/${id}`, { 
-        content: 'html',
-        content_width: 9999,
-        fields: 'ID,author,date,modified,title,URL,short_URL,content,status,slug,categories,tags,featured_image,metadata'
-      });
-      
-      const convertedPosts = this.convertWordPressComPosts([response]);
-      return convertedPosts[0];
-    } else {
-      return this.request<WordPressPost>(`/posts/${id}`);
-    }
+    return this.request<WordPressPost>(`/posts/${id}`, { _embed: true });
   }
 
   async getCategories(): Promise<WordPressCategory[]> {
