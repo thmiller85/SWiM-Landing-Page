@@ -42,11 +42,8 @@ CMD ["npm", "start"]`;
 
 fs.writeFileSync('dist/Dockerfile', dockerfile);
 
-// Run prerender and sitemap
-console.log('Running prerender...');
+// Run prerender (now includes sitemap generation)
+console.log('Running prerender with sitemap generation...');
 execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
-
-console.log('Generating sitemap...');
-execSync('tsx scripts/generate-sitemap.ts', { stdio: 'inherit' });
 
 console.log('Production build complete!');

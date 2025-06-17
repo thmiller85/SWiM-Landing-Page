@@ -16,9 +16,9 @@ async function buildForDeployment() {
     console.log('📦 Building frontend...');
     execSync('vite build', { stdio: 'inherit' });
     
-    // Step 2: Generate static blog pages and sitemap
-    console.log('📝 Generating blog pages and sitemap...');
-    execSync('tsx scripts/generate-sitemap.ts', { stdio: 'inherit' });
+    // Step 2: Run prerender which now includes sitemap generation
+    console.log('📝 Running prerender (includes sitemap generation)...');
+    execSync('tsx scripts/prerender.ts', { stdio: 'inherit' });
     
     // Step 3: Verify blog pages exist
     const blogDir = path.join(process.cwd(), 'client/dist/blog');

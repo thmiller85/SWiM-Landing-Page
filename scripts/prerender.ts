@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
+import { generateSitemap } from './generate-sitemap.js';
 
 // Define routes that need to be pre-rendered for SEO (marketing pages only)
 const routes = [
@@ -78,6 +79,11 @@ async function prerenderRoutes() {
   console.log(`\n🎉 Successfully pre-rendered ${routes.length} marketing pages`);
   console.log(`✓ Created ${adminRoutes.length} admin route fallbacks`);
   console.log('💡 Contact form and interactive features remain client-side');
+  
+  // Generate sitemap after prerendering
+  console.log('\n🗺️ Generating sitemap...');
+  await generateSitemap();
+  console.log('✅ Sitemap generation complete');
 }
 
 function addRouteSpecificContent(html: string, route: string): string {
