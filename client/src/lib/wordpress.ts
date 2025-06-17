@@ -176,9 +176,13 @@ export class WordPressAPI {
 
       const response = await this.request<any>('/posts', queryParams);
       
+      // DEBUG: Log the actual response to see what we're getting
+      console.log('FULL WordPress.com API Response:', JSON.stringify(response, null, 2));
+      
       // Handle WordPress.com API response structure
       if (response && typeof response === 'object') {
         if (response.posts && Array.isArray(response.posts)) {
+          console.log('First post data:', JSON.stringify(response.posts[0], null, 2));
           return this.convertWordPressComPosts(response.posts);
         }
         if (Array.isArray(response)) {
