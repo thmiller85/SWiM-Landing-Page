@@ -512,20 +512,20 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     // Handle lists first to preserve nested content
     cleaned = cleaned.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/g, (match, listContent) => {
       const items = listContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
-      const cleanItems = items.map(item => {
+      const cleanItems = items.map((item: string) => {
         const content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1').replace(/<[^>]*>/g, '').trim();
         return `• ${content}`;
       });
-      return `\n\n${cleanItems.join('\n\n')}\n\n`;
+      return `\n\n${cleanItems.join('\n')}\n\n`;
     });
     
     cleaned = cleaned.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/g, (match, listContent) => {
       const items = listContent.match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
-      const cleanItems = items.map((item, index) => {
+      const cleanItems = items.map((item: string, index: number) => {
         const content = item.replace(/<li[^>]*>([\s\S]*?)<\/li>/, '$1').replace(/<[^>]*>/g, '').trim();
         return `${index + 1}. ${content}`;
       });
-      return `\n\n${cleanItems.join('\n\n')}\n\n`;
+      return `\n\n${cleanItems.join('\n')}\n\n`;
     });
     
     // Convert paragraphs with better spacing
