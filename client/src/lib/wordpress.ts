@@ -109,9 +109,8 @@ export class WordPressAPI {
     let url: URL;
     
     if (this.isWordPressCom) {
-      // Use WordPress.com public API
-      const siteDomain = this.baseUrl.replace('https://', '').replace('http://', '');
-      url = new URL(`https://public-api.wordpress.com/rest/v1.1/sites/${siteDomain}${endpoint}`);
+      // Use WordPress.com public API with site ID for better reliability
+      url = new URL(`https://public-api.wordpress.com/rest/v1.1/sites/245590138${endpoint}`);
     } else {
       // Use standard WordPress REST API
       url = new URL(`${this.baseUrl}/wp-json/wp/v2${endpoint}`);
@@ -176,7 +175,8 @@ export class WordPressAPI {
       }
 
       const response = await this.request<{ posts: any[] }>('/posts', queryParams);
-      return this.convertWordPressComPosts(response.posts);
+      console.log('WordPress.com API response:', response);
+      return this.convertWordPressComPosts(response.posts || []);
     } else {
       // Standard WordPress REST API
       const queryParams: Record<string, any> = {
