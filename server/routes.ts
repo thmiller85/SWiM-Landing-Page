@@ -457,15 +457,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Update blog routes to use database when available
-  app.get('/api/blog/posts/database', async (req, res) => {
+  // Database blog routes - specific routes first to avoid conflicts
+  app.get('/api/blog/posts/database/all', async (req, res) => {
     try {
+      console.log('Fetching published posts from database...');
       const posts = await storage.getPublishedPosts();
+      console.log(`Found ${posts.length} published posts`);
       const convertedPosts = posts.map(post => storage.convertToClientFormat(post));
       res.json(convertedPosts);
     } catch (error) {
       console.error('Error fetching database posts:', error);
-      res.status(500).json({ error: 'Failed to fetch posts from database' });
+      res.status(500).json({ error: 'Failed to fetch posts from database', details: error.message });
     }
   });
 
