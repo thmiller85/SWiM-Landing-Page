@@ -97,17 +97,26 @@ export interface WordPressTag {
 export class WordPressAPI {
   private baseUrl: string;
   private apiKey?: string;
+  private isWordPressCom: boolean;
 
   constructor(baseUrl: string, apiKey?: string) {
     this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash
     this.apiKey = apiKey;
+    this.isWordPressCom = baseUrl.includes('.wordpress.com');
   }
 
   private async request<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
-    const url = new URL(`${this.baseUrl}/wp-json/wp/v2${endpoint}`);
+    let url: URL;
     
-    // Add common parameters
-    params._embed = 'true'; // Include embedded data (author, featured media, etc.)
+    if (this.isWordPressCom) {
+      // Use WordPress.com public API
+      const siteDomain = this.baseUrl.replace('https://', '').replace('http://', '');
+      url = new URL(`https://public-api.wordpress.com/rest/v1.1/sites/${siteDomain}${endpoint}`);
+    } else {
+      // Use standard WordPress REST API
+      url = new URL(`${this.baseUrl}/wp-json/wp/v2${endpoint}`);
+      params._embed = 'true'; // Include embedded data for self-hosted sites
+    }
     
     // Add query parameters
     Object.entries(params).forEach(([key, value]) => {
@@ -145,36 +154,126 @@ export class WordPressAPI {
     orderby?: string;
     order?: 'asc' | 'desc';
   } = {}): Promise<WordPressPost[]> {
-    const queryParams: Record<string, any> = {
-      status: 'publish',
-      orderby: 'date',
-      order: 'desc',
-      per_page: 10,
-      ...params,
-    };
+    if (this.isWordPressCom) {
+      // WordPress.com API parameters
+      const queryParams: Record<string, any> = {
+        status: 'publish',
+        order_by: 'date',
+        order: 'DESC',
+        number: params.per_page || 10,
+        offset: params.page ? (params.page - 1) * (params.per_page || 10) : 0,
+      };
 
-    if (params.categories?.length) {
-      queryParams.categories = params.categories.join(',');
+      if (params.search) {
+        queryParams.search = params.search;
+      }
+
+      const response = await this.request<{ posts: any[] }>('/posts', queryParams);
+      return this.convertWordPressComPosts(response.posts);
+    } else {
+      // Standard WordPress REST API
+      const queryParams: Record<string, any> = {
+        status: 'publish',
+        orderby: 'date',
+        order: 'desc',
+        per_page: 10,
+        ...params,
+      };
+
+      if (params.categories?.length) {
+        queryParams.categories = params.categories.join(',');
+      }
+
+      if (params.tags?.length) {
+        queryParams.tags = params.tags.join(',');
+      }
+
+      return this.request<WordPressPost[]>('/posts', queryParams);
     }
+  }
 
-    if (params.tags?.length) {
-      queryParams.tags = params.tags.join(',');
-    }
-
-    return this.request<WordPressPost[]>('/posts', queryParams);
+  private convertWordPressComPosts(posts: any[]): WordPressPost[] {
+    return posts.map(post => ({
+      id: post.ID,
+      date: post.date,
+      date_gmt: post.date,
+      guid: { rendered: post.URL },
+      modified: post.modified,
+      modified_gmt: post.modified,
+      slug: post.slug,
+      status: post.status,
+      type: post.type || 'post',
+      link: post.URL,
+      title: { rendered: post.title },
+      content: { rendered: post.content, protected: false },
+      excerpt: { rendered: post.excerpt, protected: false },
+      author: post.author?.ID || 1,
+      featured_media: post.featured_image ? parseInt(post.featured_image) : 0,
+      comment_status: post.comment_status || 'open',
+      ping_status: 'open',
+      sticky: post.sticky || false,
+      template: '',
+      format: 'standard',
+      meta: post.metadata || {},
+      categories: post.categories ? Object.keys(post.categories).map(id => parseInt(id)) : [],
+      tags: post.tags ? Object.keys(post.tags).map(id => parseInt(id)) : [],
+      _embedded: {
+        author: post.author ? [{
+          id: post.author.ID,
+          name: post.author.name,
+          slug: post.author.login,
+          avatar_urls: { '96': post.author.avatar_URL }
+        }] : [],
+        'wp:featuredmedia': post.featured_image ? [{
+          id: parseInt(post.featured_image),
+          source_url: post.featured_image,
+          alt_text: '',
+          media_details: { width: 0, height: 0, sizes: {} }
+        }] : [],
+        'wp:term': [
+          post.categories ? Object.values(post.categories).map((cat: any) => ({
+            id: cat.ID,
+            name: cat.name,
+            slug: cat.slug,
+            taxonomy: 'category'
+          })) : [],
+          post.tags ? Object.values(post.tags).map((tag: any) => ({
+            id: tag.ID,
+            name: tag.name,
+            slug: tag.slug,
+            taxonomy: 'post_tag'
+          })) : []
+        ]
+      }
+    }));
   }
 
   async getPost(slug: string): Promise<WordPressPost> {
-    const posts = await this.request<WordPressPost[]>('/posts', { 
-      slug,
-      status: 'publish'
-    });
-    
-    if (!posts.length) {
-      throw new Error('Post not found');
+    if (this.isWordPressCom) {
+      const response = await this.request<{ posts: any[] }>('/posts', { 
+        slug,
+        status: 'publish',
+        number: 1
+      });
+      
+      if (!response.posts.length) {
+        throw new Error('Post not found');
+      }
+      
+      const convertedPosts = this.convertWordPressComPosts(response.posts);
+      return convertedPosts[0];
+    } else {
+      const posts = await this.request<WordPressPost[]>('/posts', { 
+        slug,
+        status: 'publish'
+      });
+      
+      if (!posts.length) {
+        throw new Error('Post not found');
+      }
+      
+      return posts[0];
     }
-    
-    return posts[0];
   }
 
   async getPostById(id: number): Promise<WordPressPost> {
