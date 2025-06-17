@@ -23,6 +23,21 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
+
+// Utility functions
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+const getReadingTime = (content: string) => {
+  const wordsPerMinute = 200;
+  const words = content.split(/\s+/).length;
+  return Math.ceil(words / wordsPerMinute);
+};
 import SEOHead from '@/components/SEOHead';
 
 interface BlogPostProps {
@@ -43,29 +58,21 @@ const BlogPost = ({ slug }: BlogPostProps) => {
     queryFn: () => blogService.getRecentPosts(5),
   });
 
-  const shareMutation = useMutation({
-    mutationFn: () => wordpressAPI.trackShare(post?.id || 0),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['wordpress-post', slug] });
-    }
-  });
-
-  const leadMutation = useMutation({
-    mutationFn: () => wordpressAPI.trackLead(post?.id || 0),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['wordpress-post', slug] });
-    }
-  });
+  // Analytics tracking for markdown blog system
+  const handleAnalytics = (action: string) => {
+    console.log(`Blog analytics: ${action}`, post?.title);
+    // Add your analytics tracking service here
+  };
 
   // Track view when post loads
   useEffect(() => {
-    if (post?.id) {
-      wordpressAPI.trackView(post.id);
+    if (post?.slug) {
+      handleAnalytics('view');
     }
-  }, [post?.id]);
+  }, [post?.slug]);
 
   const handleShare = async () => {
-    shareMutation.mutate();
+    handleAnalytics('share');
     
     if (navigator.share) {
       try {
@@ -84,15 +91,13 @@ const BlogPost = ({ slug }: BlogPostProps) => {
   };
 
   const handleDownload = () => {
-    leadMutation.mutate();
-    // In a real implementation, this would download the resource
-    if (post?.downloadableResource) {
-      window.open(`/downloads/${post.downloadableResource}`, '_blank');
-    }
+    handleAnalytics('download');
+    // Download functionality would be implemented here
+    console.log('Download requested for post:', post?.title);
   };
 
   const handleCTAClick = () => {
-    leadMutation.mutate();
+    handleAnalytics('cta-click');
     
     switch (post?.ctaType) {
       case 'consultation':
@@ -207,7 +212,7 @@ const BlogPost = ({ slug }: BlogPostProps) => {
                 </div>
                 <div className="flex items-center">
                   <Eye className="h-4 w-4 mr-2" />
-                  {post.views || 0} views
+                  {post.readingTime} min read
                 </div>
               </motion.div>
             </motion.div>
