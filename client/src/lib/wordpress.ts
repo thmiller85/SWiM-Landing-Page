@@ -564,15 +564,46 @@ export const convertWordPressPost = (wpPost: WordPressPost): ConvertedBlogPost =
     cleaned = cleaned.replace(/&#8211;/g, '–');
     cleaned = cleaned.replace(/&#8212;/g, '—');
     
-    // Handle specific patterns where bullet points got concatenated
-    // Split on year patterns (e.g., "2020: text • 2022: text")
+    // Handle specific patterns based on original markdown structure
+    
+    // Split year-based timeline entries (2020: text • 2022: text)
     cleaned = cleaned.replace(/(\d{4}:\s*[^•]*?)•\s*(\d{4}:)/g, '$1\n\n• $2');
     
-    // Split on patterns like "Process mapping tools • Integration engines"
-    cleaned = cleaned.replace(/([a-z])\s*•\s*([A-Z])/g, '$1\n\n• $2');
+    // Split capitalized list items that got concatenated
+    cleaned = cleaned.replace(/([a-z])\s*•\s*([A-Z][^•]*?)(?=•|$)/g, '$1\n\n• $2');
     
-    // Split on sentence endings followed by bullet points
+    // Handle list patterns from original markdown
+    cleaned = cleaned.replace(/(Key steps include:)\s*-\s*/g, '$1\n\n• ');
+    cleaned = cleaned.replace(/(\*\*Solutions:\*\*)\s*-\s*/g, '$1\n\n• ');
+    cleaned = cleaned.replace(/(include:)\s*-\s*/g, '$1\n\n• ');
+    
+    // Split dash-separated list items that got concatenated
+    cleaned = cleaned.replace(/([a-z).])\s*-\s*([A-Z])/g, '$1\n\n• $2');
+    
+    // Handle specific challenge/solution patterns
+    cleaned = cleaned.replace(/(training and ongoing support)\s*-\s*(Highlight)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(access controls and audit trails)\s*-\s*(Regularly)/g, '$1\n\n• $2');
+    
+    // Split on sentence endings followed by bullet points  
     cleaned = cleaned.replace(/([.!?])\s*•\s*/g, '$1\n\n• ');
+    
+    // Handle specific terminology patterns from the blog content
+    cleaned = cleaned.replace(/(Process mapping tools)\s*•\s*(Integration engines)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(AI modules)\s*•\s*(Real-time analytics)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(API-driven connectors)\s*•\s*(middleware)/g, '$1\n\n• $2');
+    
+    // Handle key milestones and components patterns
+    cleaned = cleaned.replace(/(gains traction)\s*•\s*(\d{4}:)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(remote collaboration)\s*•\s*(\d{4}:)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(process optimization)\s*•\s*(\d{4}:)/g, '$1\n\n• $2');
+    
+    // Split percentage/statistic patterns
+    cleaned = cleaned.replace(/(\d+%[^•]*?)•\s*/g, '$1\n\n• ');
+    cleaned = cleaned.replace(/(\d+–\d+%[^•]*?)•\s*/g, '$1\n\n• ');
+    
+    // Handle specific workflow terms
+    cleaned = cleaned.replace(/(for visualizing workflows)\s*•\s*(Integration)/g, '$1\n\n• $2');
+    cleaned = cleaned.replace(/(decision support)\s*•\s*(Real-time)/g, '$1\n\n• $2');
     
     // Clean up excessive line breaks but preserve structure
     cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n');
