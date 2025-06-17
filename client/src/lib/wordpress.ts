@@ -168,6 +168,7 @@ export class WordPressAPI {
         order: 'DESC',
         number: params.per_page || 10,
         offset: params.page ? (params.page - 1) * (params.per_page || 10) : 0,
+        content: 'html', // Request full HTML content instead of truncated
       };
 
       if (params.search) {
@@ -348,7 +349,8 @@ export class WordPressAPI {
       const response = await this.request<{ posts: any[] }>('/posts', { 
         slug,
         status: 'publish',
-        number: 1
+        number: 1,
+        content: 'html'
       });
       
       if (!response.posts.length) {
@@ -372,7 +374,16 @@ export class WordPressAPI {
   }
 
   async getPostById(id: number): Promise<WordPressPost> {
-    return this.request<WordPressPost>(`/posts/${id}`);
+    if (this.isWordPressCom) {
+      const response = await this.request<any>(`/posts/${id}`, { 
+        content: 'html'
+      });
+      
+      const convertedPosts = this.convertWordPressComPosts([response]);
+      return convertedPosts[0];
+    } else {
+      return this.request<WordPressPost>(`/posts/${id}`);
+    }
   }
 
   async getCategories(): Promise<WordPressCategory[]> {
