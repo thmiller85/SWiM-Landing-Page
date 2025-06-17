@@ -211,8 +211,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/cms/posts/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const validatedData = insertPostSchema.partial().parse(req.body);
-      const post = await storage.updatePost(id, validatedData);
+      
+      // Create update schema that matches the create schema
+      const updatePostSchema = z.object({
+        title: z.string().min(1).optional(),
+        slug: z.string().min(1).optional(),
+        content: z.string().optional(),
+        metaTitle: z.string().optional(),
+        metaDescription: z.string().optional(),
+        excerpt: z.string().optional(),
+        featuredImage: z.string().optional(),
+        author: z.string().min(1).optional(),
+        status: z.enum(['draft', 'published']).optional(),
+        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).optional(),
+        category: z.string().min(1).optional(),
+        tags: z.array(z.string()).optional(),
+        targetKeywords: z.array(z.string()).optional(),
+        readingTime: z.number().optional(),
+        publishedAt: z.string().nullable().optional(),
+      });
+
+      const validatedData = updatePostSchema.parse(req.body);
+      
+      // Convert publishedAt string to Date if provided
+      const updateData: any = {
+        ...validatedData,
+        publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : undefined
+      };
+
+      const post = await storage.updatePost(id, updateData);
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
       }
