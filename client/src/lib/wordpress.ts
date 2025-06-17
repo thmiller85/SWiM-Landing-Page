@@ -273,7 +273,14 @@ export class WordPressAPI {
 
       // WordPress.com returns content in the 'content' field, no separate excerpt
       const rawContent = post.content || '';
+      
+      // DEBUG: Let's see the actual HTML structure
+      console.log('Raw WordPress.com HTML:', rawContent.substring(0, 500));
+      
       const contentText = cleanHtmlContent(rawContent);
+      
+      // DEBUG: Let's see what our cleaning produces
+      console.log('Cleaned content:', contentText.substring(0, 500));
       
       // Generate excerpt from cleaned content
       const cleanExcerpt = contentText.length > 200 
