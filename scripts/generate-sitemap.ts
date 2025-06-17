@@ -39,4 +39,23 @@ ${routes.map(route => `  <url>
   console.log('✓ Generated sitemap.xml');
 }
 
-generateSitemap();
+async function main() {
+  console.log('🚀 Generating sitemap and blog pages...');
+  
+  try {
+    // Generate static blog pages first
+    console.log('📝 Generating static blog pages...');
+    await generateBlogPages();
+    
+    // Then generate sitemap
+    console.log('🗺️ Generating sitemap...');
+    generateSitemap();
+    
+    console.log('✅ All generation complete!');
+  } catch (error) {
+    console.error('❌ Error during generation:', error);
+    process.exit(1);
+  }
+}
+
+main();

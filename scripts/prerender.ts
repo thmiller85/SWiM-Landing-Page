@@ -2,7 +2,6 @@
 import fs from 'fs';
 import path from 'path';
 import { JSDOM } from 'jsdom';
-import { generateBlogPages } from './generate-blog-pages';
 
 // Define routes that need to be pre-rendered for SEO (marketing pages only)
 const routes = [
@@ -226,23 +225,4 @@ function addRouteSpecificContent(html: string, route: string): string {
   return html;
 }
 
-async function main() {
-  console.log('🚀 Starting prerender and blog generation...');
-  
-  try {
-    // Generate static blog pages first
-    console.log('📝 Generating static blog pages...');
-    await generateBlogPages();
-    
-    // Then run the regular prerendering
-    console.log('📄 Prerendering marketing pages...');
-    await prerenderRoutes();
-    
-    console.log('✅ All static generation complete!');
-  } catch (error) {
-    console.error('❌ Error during static generation:', error);
-    process.exit(1);
-  }
-}
-
-main();
+prerenderRoutes().catch(console.error);

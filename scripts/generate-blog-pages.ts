@@ -16,7 +16,6 @@ async function generateBlogPages() {
     console.log(`📝 Found ${posts.length} published posts`);
     
     // Create blog directory in the correct dist location
-    const syncFs = await import('fs');
     const distDir = syncFs.existsSync(path.join(process.cwd(), 'dist/public')) 
       ? path.join(process.cwd(), 'dist/public') 
       : path.join(process.cwd(), 'client/dist');
