@@ -26,15 +26,31 @@ interface PostEditorProps {
 
 export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorProps) {
   const { toast } = useToast();
-  const [metaTitleLength, setMetaTitleLength] = useState(post.metaTitle?.length || 0);
-  const [metaDescLength, setMetaDescLength] = useState(post.metaDescription?.length || 0);
-  const [showImagePicker, setShowImagePicker] = useState(false);
-  const [featuredImagePreview, setFeaturedImagePreview] = useState(post.featuredImage || '');
-  const [seoPreviewData, setSeoPreviewData] = useState({
+  const [formData, setFormData] = useState({
     title: post.title || '',
+    slug: post.slug || '',
     metaTitle: post.metaTitle || '',
     metaDescription: post.metaDescription || '',
-    slug: post.slug || '',
+    canonicalUrl: post.canonicalUrl || '',
+    featuredImage: post.featuredImage || '',
+    featuredImageAlt: post.featuredImageAlt || '',
+    author: post.author || '',
+    status: post.status || 'draft',
+    ctaType: post.ctaType || 'consultation',
+    category: post.category || '',
+    tags: post.tags?.join(', ') || '',
+    targetKeywords: post.targetKeywords?.join(', ') || '',
+    readingTime: post.readingTime || 5,
+  });
+  const [metaTitleLength, setMetaTitleLength] = useState(formData.metaTitle.length);
+  const [metaDescLength, setMetaDescLength] = useState(formData.metaDescription.length);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [featuredImagePreview, setFeaturedImagePreview] = useState(formData.featuredImage);
+  const [seoPreviewData, setSeoPreviewData] = useState({
+    title: formData.title,
+    metaTitle: formData.metaTitle,
+    metaDescription: formData.metaDescription,
+    slug: formData.slug,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [autoSlug, setAutoSlug] = useState(!post.slug);
@@ -53,6 +69,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
       .replace(/(^-|-$)/g, '');
   };
 
+  const updateFormData = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handlePasteMarkdown = async () => {
     try {
       const text = await navigator.clipboard.readText();
@@ -61,20 +81,14 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
         
         // Extract title from first H1
         const titleMatch = text.match(/^#\s+(.+)$/m);
-        if (titleMatch && !document.getElementById('title')?.value) {
+        if (titleMatch && !formData.title) {
           const title = titleMatch[1];
-          const titleInput = document.getElementById('title') as HTMLInputElement;
-          if (titleInput) {
-            titleInput.value = title;
-            setSeoPreviewData(prev => ({ ...prev, title }));
-            if (autoSlug) {
-              const slug = generateSlug(title);
-              const slugInput = document.getElementById('slug') as HTMLInputElement;
-              if (slugInput) {
-                slugInput.value = slug;
-                setSeoPreviewData(prev => ({ ...prev, slug }));
-              }
-            }
+          updateFormData('title', title);
+          setSeoPreviewData(prev => ({ ...prev, title }));
+          if (autoSlug) {
+            const slug = generateSlug(title);
+            updateFormData('slug', slug);
+            setSeoPreviewData(prev => ({ ...prev, slug }));
           }
         }
         
@@ -100,15 +114,13 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
+    updateFormData('title', title);
     setSeoPreviewData(prev => ({ ...prev, title }));
     
     if (autoSlug) {
       const slug = generateSlug(title);
-      const slugInput = document.getElementById('slug') as HTMLInputElement;
-      if (slugInput) {
-        slugInput.value = slug;
-        setSeoPreviewData(prev => ({ ...prev, slug }));
-      }
+      updateFormData('slug', slug);
+      setSeoPreviewData(prev => ({ ...prev, slug }));
     }
   };
 
@@ -126,14 +138,28 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
+    const submitData = new FormData();
     
-    // Replace textarea content with markdown editor content
-    formData.set('content', content);
-    formData.set('excerpt', excerpt);
+    // Add all form data from state
+    submitData.set('title', formData.title);
+    submitData.set('slug', formData.slug);
+    submitData.set('metaTitle', formData.metaTitle);
+    submitData.set('metaDescription', formData.metaDescription);
+    submitData.set('canonicalUrl', formData.canonicalUrl);
+    submitData.set('excerpt', excerpt);
+    submitData.set('content', content);
+    submitData.set('featuredImage', formData.featuredImage);
+    submitData.set('featuredImageAlt', formData.featuredImageAlt);
+    submitData.set('author', formData.author);
+    submitData.set('status', formData.status);
+    submitData.set('ctaType', formData.ctaType);
+    submitData.set('category', formData.category);
+    submitData.set('tags', formData.tags);
+    submitData.set('targetKeywords', formData.targetKeywords);
+    submitData.set('readingTime', formData.readingTime.toString());
     
-    if (validateForm(formData)) {
-      onSave(formData);
+    if (validateForm(submitData)) {
+      onSave(submitData);
     } else {
       toast({
         title: "Validation Error",
@@ -179,7 +205,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                   <Input
                     id="title"
                     name="title"
-                    defaultValue={post.title}
+                    value={formData.title}
                     className={`bg-gray-700 border-gray-600 text-white ${errors.title ? 'border-red-500' : ''}`}
                     required
                     onChange={handleTitleChange}
@@ -195,11 +221,12 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="slug"
                       name="slug"
-                      defaultValue={post.slug}
+                      value={formData.slug}
                       className={`bg-gray-700 border-gray-600 text-white flex-1 ${errors.slug ? 'border-red-500' : ''}`}
                       required
                       onChange={(e) => {
                         setAutoSlug(false);
+                        updateFormData('slug', e.target.value);
                         setSeoPreviewData(prev => ({ ...prev, slug: e.target.value }));
                       }}
                     />
@@ -208,14 +235,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        const title = (document.getElementById('title') as HTMLInputElement)?.value;
-                        if (title) {
-                          const slug = generateSlug(title);
-                          const slugInput = document.getElementById('slug') as HTMLInputElement;
-                          if (slugInput) {
-                            slugInput.value = slug;
-                            setSeoPreviewData(prev => ({ ...prev, slug }));
-                          }
+                        if (formData.title) {
+                          const slug = generateSlug(formData.title);
+                          updateFormData('slug', slug);
+                          setSeoPreviewData(prev => ({ ...prev, slug }));
                         }
                       }}
                     >
@@ -395,11 +418,12 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                   <Input
                     id="metaTitle"
                     name="metaTitle"
-                    defaultValue={post.metaTitle || ''}
+                    value={formData.metaTitle}
                     className="bg-gray-700 border-gray-600 text-white"
                     placeholder="Page title for search engines (leave empty to use post title)"
                     maxLength={60}
                     onChange={(e) => {
+                      updateFormData('metaTitle', e.target.value);
                       setMetaTitleLength(e.target.value.length);
                       setSeoPreviewData(prev => ({ ...prev, metaTitle: e.target.value }));
                     }}
@@ -414,11 +438,12 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                   <Textarea
                     id="metaDescription"
                     name="metaDescription"
-                    defaultValue={post.metaDescription || ''}
+                    value={formData.metaDescription}
                     className="bg-gray-700 border-gray-600 text-white h-20"
                     placeholder="Page description for search engines"
                     maxLength={160}
                     onChange={(e) => {
+                      updateFormData('metaDescription', e.target.value);
                       setMetaDescLength(e.target.value.length);
                       setSeoPreviewData(prev => ({ ...prev, metaDescription: e.target.value }));
                     }}
@@ -433,9 +458,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                   <Input
                     id="canonicalUrl"
                     name="canonicalUrl"
-                    defaultValue={post.canonicalUrl || ''}
+                    value={formData.canonicalUrl}
                     className="bg-gray-700 border-gray-600 text-white"
                     placeholder="https://example.com/original-post (leave empty for default)"
+                    onChange={(e) => updateFormData('canonicalUrl', e.target.value)}
                   />
                   <p className="text-xs text-gray-400 mt-1">
                     Use this if the content exists elsewhere to avoid duplicate content issues
@@ -448,9 +474,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="tags"
                       name="tags"
-                      defaultValue={post.tags.join(', ')}
+                      value={formData.tags}
                       className="bg-gray-700 border-gray-600 text-white"
                       placeholder="ai, marketing, automation"
+                      onChange={(e) => updateFormData('tags', e.target.value)}
                     />
                     <p className="text-xs text-gray-400 mt-1">Comma-separated list</p>
                   </div>
@@ -459,9 +486,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="targetKeywords"
                       name="targetKeywords"
-                      defaultValue={post.targetKeywords.join(', ')}
+                      value={formData.targetKeywords}
                       className="bg-gray-700 border-gray-600 text-white"
                       placeholder="ai marketing, workflow automation"
+                      onChange={(e) => updateFormData('targetKeywords', e.target.value)}
                     />
                     <p className="text-xs text-gray-400 mt-1">Keywords to optimize for</p>
                   </div>
@@ -471,10 +499,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                 <div className="mt-6">
                   <h4 className="text-white font-medium mb-3">Search Engine Preview</h4>
                   <SEOPreview
-                    title={seoPreviewData.title || post.title}
-                    metaTitle={seoPreviewData.metaTitle || post.metaTitle}
-                    metaDescription={seoPreviewData.metaDescription || post.metaDescription}
-                    slug={seoPreviewData.slug || post.slug}
+                    title={formData.title}
+                    metaTitle={formData.metaTitle}
+                    metaDescription={formData.metaDescription}
+                    slug={formData.slug}
                   />
                 </div>
               </TabsContent>
@@ -487,10 +515,13 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="featuredImage"
                       name="featuredImage"
-                      defaultValue={post.featuredImage || ''}
+                      value={formData.featuredImage}
                       className="bg-gray-700 border-gray-600 text-white flex-1"
                       placeholder="/images/blog/image.jpg"
-                      onChange={(e) => setFeaturedImagePreview(e.target.value)}
+                      onChange={(e) => {
+                        updateFormData('featuredImage', e.target.value);
+                        setFeaturedImagePreview(e.target.value);
+                      }}
                     />
                     <Button
                       type="button"
@@ -517,9 +548,8 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                         size="sm"
                         className="absolute top-2 right-2"
                         onClick={() => {
+                          updateFormData('featuredImage', '');
                           setFeaturedImagePreview('');
-                          const input = document.getElementById('featuredImage') as HTMLInputElement;
-                          if (input) input.value = '';
                         }}
                       >
                         <X className="h-4 w-4" />
@@ -530,9 +560,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                       <Input
                         id="featuredImageAlt"
                         name="featuredImageAlt"
-                        defaultValue={post.featuredImageAlt || ''}
+                        value={formData.featuredImageAlt}
                         className="bg-gray-700 border-gray-600 text-white"
                         placeholder="Descriptive text for accessibility and SEO"
+                        onChange={(e) => updateFormData('featuredImageAlt', e.target.value)}
                       />
                       <p className="text-xs text-gray-400 mt-1">
                         Describe what's in the image for screen readers
@@ -547,7 +578,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="status" className="text-white">Status</Label>
-                    <Select name="status" defaultValue={post.status}>
+                    <Select name="status" value={formData.status} onValueChange={(value) => updateFormData('status', value)}>
                       <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                         <SelectValue />
                       </SelectTrigger>
@@ -562,9 +593,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="author"
                       name="author"
-                      defaultValue={post.author}
+                      value={formData.author}
                       className="bg-gray-700 border-gray-600 text-white"
                       required
+                      onChange={(e) => updateFormData('author', e.target.value)}
                     />
                   </div>
                 </div>
@@ -577,16 +609,17 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     <Input
                       id="category"
                       name="category"
-                      defaultValue={post.category}
+                      value={formData.category}
                       className={`bg-gray-700 border-gray-600 text-white ${errors.category ? 'border-red-500' : ''}`}
                       required
                       placeholder="e.g., AI Tools, Marketing"
+                      onChange={(e) => updateFormData('category', e.target.value)}
                     />
                     {errors.category && <p className="text-red-400 text-sm mt-1">{errors.category}</p>}
                   </div>
                   <div>
                     <Label htmlFor="ctaType" className="text-white">Call-to-Action Type</Label>
-                    <Select name="ctaType" defaultValue={post.ctaType}>
+                    <Select name="ctaType" value={formData.ctaType} onValueChange={(value) => updateFormData('ctaType', value)}>
                       <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                         <SelectValue />
                       </SelectTrigger>
@@ -606,9 +639,10 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     id="readingTime"
                     name="readingTime"
                     type="number"
-                    defaultValue={post.readingTime}
+                    value={formData.readingTime}
                     className="bg-gray-700 border-gray-600 text-white"
                     min="1"
+                    onChange={(e) => updateFormData('readingTime', parseInt(e.target.value) || 5)}
                   />
                   <p className="text-xs text-gray-400 mt-1">
                     Estimated time to read the post
@@ -620,24 +654,24 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                   <h4 className="text-white font-medium mb-3">Publishing Checklist</h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      {post.title ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
-                      <span className={post.title ? "text-green-400" : "text-gray-400"}>Title added</span>
+                      {formData.title ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
+                      <span className={formData.title ? "text-green-400" : "text-gray-400"}>Title added</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {post.content ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
-                      <span className={post.content ? "text-green-400" : "text-gray-400"}>Content written</span>
+                      {content ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
+                      <span className={content ? "text-green-400" : "text-gray-400"}>Content written</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {post.featuredImage ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
-                      <span className={post.featuredImage ? "text-green-400" : "text-gray-400"}>Featured image added</span>
+                      {formData.featuredImage ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
+                      <span className={formData.featuredImage ? "text-green-400" : "text-gray-400"}>Featured image added</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {post.metaDescription ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
-                      <span className={post.metaDescription ? "text-green-400" : "text-gray-400"}>Meta description added</span>
+                      {formData.metaDescription ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
+                      <span className={formData.metaDescription ? "text-green-400" : "text-gray-400"}>Meta description added</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {post.tags.length > 0 ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
-                      <span className={post.tags.length > 0 ? "text-green-400" : "text-gray-400"}>Tags added</span>
+                      {formData.tags.trim().length > 0 ? <Check className="h-4 w-4 text-green-400" /> : <X className="h-4 w-4 text-gray-400" />}
+                      <span className={formData.tags.trim().length > 0 ? "text-green-400" : "text-gray-400"}>Tags added</span>
                     </div>
                   </div>
                 </div>
@@ -677,11 +711,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
         isOpen={showImagePicker}
         onClose={() => setShowImagePicker(false)}
         onSelect={(imageUrl) => {
-          const featuredImageInput = document.getElementById('featuredImage') as HTMLInputElement;
-          if (featuredImageInput) {
-            featuredImageInput.value = imageUrl;
-            featuredImageInput.dispatchEvent(new Event('change', { bubbles: true }));
-          }
+          updateFormData('featuredImage', imageUrl);
           setFeaturedImagePreview(imageUrl);
           setShowImagePicker(false);
           toast({
@@ -696,20 +726,20 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
       {showPostPreview && (
         <PostPreview
           post={{
-            title: (document.getElementById('title') as HTMLInputElement)?.value || post.title,
-            slug: (document.getElementById('slug') as HTMLInputElement)?.value || post.slug,
-            metaTitle: (document.getElementById('metaTitle') as HTMLInputElement)?.value || post.metaTitle,
-            metaDescription: (document.getElementById('metaDescription') as HTMLTextAreaElement)?.value || post.metaDescription,
+            title: formData.title,
+            slug: formData.slug,
+            metaTitle: formData.metaTitle,
+            metaDescription: formData.metaDescription,
             excerpt: excerpt,
             content: content,
-            featuredImage: (document.getElementById('featuredImage') as HTMLInputElement)?.value || post.featuredImage,
-            featuredImageAlt: (document.getElementById('featuredImageAlt') as HTMLInputElement)?.value || post.featuredImageAlt,
-            author: (document.getElementById('author') as HTMLInputElement)?.value || post.author,
-            category: (document.getElementById('category') as HTMLInputElement)?.value || post.category,
-            tags: ((document.getElementById('tags') as HTMLInputElement)?.value || '').split(',').map(tag => tag.trim()).filter(Boolean),
-            readingTime: parseInt((document.getElementById('readingTime') as HTMLInputElement)?.value || '5'),
-            status: (document.querySelector('[name="status"]') as HTMLSelectElement)?.value || post.status,
-            ctaType: (document.querySelector('[name="ctaType"]') as HTMLSelectElement)?.value || post.ctaType,
+            featuredImage: formData.featuredImage,
+            featuredImageAlt: formData.featuredImageAlt,
+            author: formData.author,
+            category: formData.category,
+            tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+            readingTime: formData.readingTime,
+            status: formData.status,
+            ctaType: formData.ctaType,
             publishedAt: post.publishedAt || new Date(),
           }}
           isOpen={showPostPreview}
