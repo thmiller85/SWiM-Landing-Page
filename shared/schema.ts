@@ -80,24 +80,4 @@ export type InsertImage = z.infer<typeof insertImageSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
-// Blog post with calculated fields (for compatibility with existing frontend)
-export interface BlogPost {
-  title: string;
-  metaTitle: string;
-  metaDescription: string;
-  slug: string;
-  publishedAt: string;
-  updatedAt: string;
-  author: string;
-  status: 'draft' | 'published';
-  ctaType: 'consultation' | 'download' | 'newsletter' | 'demo';
-  targetKeywords: string[];
-  excerpt: string;
-  featuredImage?: string;
-  category: string;
-  tags: string[];
-  readingTime: number;
-  content: string;
-  publishedDate: Date;
-  updatedDate: Date;
-}
+// Note: BlogPost interface moved to client-only types to avoid drizzle-orm imports in client bundle
