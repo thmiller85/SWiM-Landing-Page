@@ -1,4 +1,4 @@
-import { blogService } from './blog';
+// Removed blogService import to eliminate drizzle-orm dependency
 import { staticBlogService } from './static-blog';
 import { BlogPost } from '@/blog-types';
 
@@ -11,22 +11,8 @@ class BlogServiceAdapter {
   private isStaticMode: boolean | null = null;
 
   private async detectMode(): Promise<boolean> {
-    if (this.isStaticMode !== null) {
-      return this.isStaticMode;
-    }
-
-    try {
-      // Try to make an API call to detect if server is available
-      const response = await fetch('/api/blog/posts', { 
-        method: 'HEAD',
-        signal: AbortSignal.timeout(2000) // 2 second timeout
-      });
-      this.isStaticMode = !response.ok;
-    } catch (error) {
-      // If API call fails, we're in static mode
-      this.isStaticMode = true;
-    }
-
+    // Always use static mode to avoid drizzle-orm imports
+    this.isStaticMode = true;
     return this.isStaticMode;
   }
 
@@ -35,63 +21,27 @@ class BlogServiceAdapter {
     category?: string;
     tag?: string;
   } = {}): Promise<BlogPost[]> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.getAllPosts(options);
-    } else {
-      return blogService.getAllPosts(options);
-    }
+    return staticBlogService.getAllPosts(options);
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.getPostBySlug(slug);
-    } else {
-      return blogService.getPostBySlug(slug);
-    }
+    return staticBlogService.getPostBySlug(slug);
   }
 
   async getRecentPosts(limit: number = 5): Promise<BlogPost[]> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.getRecentPosts(limit);
-    } else {
-      return blogService.getRecentPosts(limit);
-    }
+    return staticBlogService.getRecentPosts(limit);
   }
 
   async getPostsByCategory(category: string): Promise<BlogPost[]> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.getPostsByCategory(category);
-    } else {
-      return blogService.getPostsByCategory(category);
-    }
+    return staticBlogService.getPostsByCategory(category);
   }
 
   async getPostsByTag(tag: string): Promise<BlogPost[]> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.getPostsByTag(tag);
-    } else {
-      return blogService.getPostsByTag(tag);
-    }
+    return staticBlogService.getPostsByTag(tag);
   }
 
   async searchPosts(query: string): Promise<BlogPost[]> {
-    const isStatic = await this.detectMode();
-    
-    if (isStatic) {
-      return staticBlogService.searchPosts(query);
-    } else {
-      return blogService.searchPosts(query);
-    }
+    return staticBlogService.searchPosts(query);
   }
 
   formatDate(dateString: string): string {

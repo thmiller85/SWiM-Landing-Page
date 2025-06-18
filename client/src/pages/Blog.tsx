@@ -42,42 +42,7 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      // Database-first approach for both development and production
-      // This provides real-time updates while maintaining SEO through server-side rendering
-      try {
-        const response = await fetch('/api/blog/posts/database/all');
-        if (response.ok) {
-          let dbPosts = await response.json();
-          
-          // Apply filters on client side for database posts
-          if (selectedCategory !== 'all') {
-            dbPosts = dbPosts.filter((post: BlogPost) => 
-              post.category.toLowerCase() === selectedCategory.toLowerCase()
-            );
-          }
-          
-          if (selectedTag !== 'all') {
-            dbPosts = dbPosts.filter((post: BlogPost) => 
-              post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
-            );
-          }
-          
-          if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            dbPosts = dbPosts.filter((post: BlogPost) =>
-              post.title.toLowerCase().includes(query) ||
-              post.content.toLowerCase().includes(query) ||
-              post.excerpt.toLowerCase().includes(query) ||
-              post.tags.some(tag => tag.toLowerCase().includes(query))
-            );
-          }
-          return dbPosts;
-        }
-      } catch (dbError) {
-        console.error('Database API failed:', dbError);
-      }
-      
-      // Emergency fallback to static files only if database is completely unavailable
+      // Use static blog service only to avoid drizzle-orm imports in client bundle
       try {
         const filteredPosts = await staticBlogService.getAllPosts({
           search: searchQuery || undefined,
@@ -85,11 +50,10 @@ const Blog = () => {
           tag: selectedTag !== 'all' ? selectedTag : undefined
         });
         return filteredPosts;
-      } catch (staticError) {
-        console.error('Static fallback also failed:', staticError);
+      } catch (error) {
+        console.error('Static blog service failed:', error);
+        return [];
       }
-      
-      return [];
     },
     retry: 1,
     retryDelay: 1000,

@@ -91,16 +91,6 @@ const BlogPost = () => {
         // Continue to database fallback
       }
       
-      // Fall back to database API
-      try {
-        const response = await fetch(`/api/blog/posts/database/${slug}`);
-        if (response.ok) {
-          return await response.json();
-        }
-      } catch (dbError) {
-        // Continue to error handling
-      }
-      
       throw new Error('Post not found');
     },
   }) as { data: BlogPostType | undefined, isLoading: boolean, error: any };
