@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useNavigation } from '@/context/NavigationContext';
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -33,6 +34,11 @@ const formatDate = (dateString: string) => {
 const BlogPost = () => {
   const params = useParams();
   const slug = params.slug as string;
+  const { servicesRef, aiSolutionsRef, workflowRef, caseStudiesRef, aboutRef, contactRef, navigateAndScroll } = useNavigation();
+
+  const handleNavClick = (ref: React.RefObject<HTMLElement>) => {
+    navigateAndScroll(ref);
+  };
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['/api/blog/posts/database/slug', slug],
@@ -57,7 +63,14 @@ const BlogPost = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <Navbar />
+        <Navbar 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+          onWorkflowClick={() => handleNavClick(workflowRef)}
+          onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
         <div className="pt-40 pb-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
@@ -73,7 +86,11 @@ const BlogPost = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <Footer 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
       </div>
     );
   }
@@ -81,7 +98,14 @@ const BlogPost = () => {
   if (error || !post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <Navbar />
+        <Navbar 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+          onWorkflowClick={() => handleNavClick(workflowRef)}
+          onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
         <div className="pt-40 pb-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
@@ -96,7 +120,11 @@ const BlogPost = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <Footer 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
       </div>
     );
   }
@@ -123,7 +151,14 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-      <Navbar />
+      <Navbar 
+        onServicesClick={() => handleNavClick(servicesRef)}
+        onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+        onWorkflowClick={() => handleNavClick(workflowRef)}
+        onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+        onAboutClick={() => handleNavClick(aboutRef)}
+        onContactClick={() => handleNavClick(contactRef)}
+      />
       
       <main className="pt-40 pb-20">
         <div className="container mx-auto px-4">

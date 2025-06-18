@@ -79,6 +79,48 @@ class BlogAPIService {
     return this.getAllPosts({ search: query });
   }
 
+  async trackView(slug: string): Promise<void> {
+    try {
+      await fetch(`${this.baseUrl}/track/view`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ slug }),
+      });
+    } catch (error) {
+      console.error('Failed to track view:', error);
+    }
+  }
+
+  async trackLead(slug: string): Promise<void> {
+    try {
+      await fetch(`${this.baseUrl}/track/lead`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ slug }),
+      });
+    } catch (error) {
+      console.error('Failed to track lead:', error);
+    }
+  }
+
+  async trackShare(slug: string): Promise<void> {
+    try {
+      await fetch(`${this.baseUrl}/track/share`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ slug }),
+      });
+    } catch (error) {
+      console.error('Failed to track share:', error);
+    }
+  }
+
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
