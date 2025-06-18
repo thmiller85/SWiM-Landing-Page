@@ -280,6 +280,67 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // Blog tracking endpoints
+  app.post('/api/blog/track/view', async (req, res) => {
+    try {
+      const { slug } = req.body;
+      if (!slug) {
+        return res.status(400).json({ error: 'Missing slug parameter' });
+      }
+      
+      const post = await storage.getPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      await storage.trackView(post.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error tracking blog view:', error);
+      res.status(500).json({ error: 'Failed to track view' });
+    }
+  });
+
+  app.post('/api/blog/track/lead', async (req, res) => {
+    try {
+      const { slug } = req.body;
+      if (!slug) {
+        return res.status(400).json({ error: 'Missing slug parameter' });
+      }
+      
+      const post = await storage.getPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      await storage.trackLead(post.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error tracking blog lead:', error);
+      res.status(500).json({ error: 'Failed to track lead' });
+    }
+  });
+
+  app.post('/api/blog/track/share', async (req, res) => {
+    try {
+      const { slug } = req.body;
+      if (!slug) {
+        return res.status(400).json({ error: 'Missing slug parameter' });
+      }
+      
+      const post = await storage.getPostBySlug(slug);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      await storage.trackShare(post.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error tracking blog share:', error);
+      res.status(500).json({ error: 'Failed to track share' });
+    }
+  });
+
   // =============================================================================
   // CMS API Routes - Database-backed content management
   // =============================================================================
@@ -508,22 +569,33 @@ ${posts.map(post => `  <url>
   app.post('/api/analytics/session', async (req, res) => {
     try {
       const sessionData = req.body;
-      const ipAddress = req.ip || req.connection.remoteAddress;
+      // Handle different ways to get IP address
+      const ipAddress = req.ip || 
+                       req.headers['x-forwarded-for'] || 
+                       req.headers['x-real-ip'] ||
+                       (req.socket && req.socket.remoteAddress) ||
+                       'unknown';
       
       // Parse user agent for device info
       const userAgent = sessionData.userAgent || req.headers['user-agent'] || '';
       const deviceInfo = parseUserAgent(userAgent);
       
+      // Ensure required fields are present
+      if (!sessionData.sessionId || !sessionData.visitorId) {
+        return res.status(400).json({ error: 'Missing required session data' });
+      }
+      
       const session = await storage.createOrUpdateSession({
         ...sessionData,
-        ipAddress,
+        ipAddress: typeof ipAddress === 'string' ? ipAddress : ipAddress?.toString() || 'unknown',
+        userAgent,
         ...deviceInfo,
       });
       
       res.json({ success: true, sessionId: session.sessionId });
     } catch (error) {
       console.error('Error creating analytics session:', error);
-      res.status(500).json({ error: 'Failed to create session' });
+      res.status(500).json({ error: 'Failed to create session', details: (error as Error).message });
     }
   });
 
