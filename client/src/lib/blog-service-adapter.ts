@@ -1,6 +1,6 @@
 import { blogService } from './blog';
 import { staticBlogService } from './static-blog';
-import { BlogPost } from '@shared/blog';
+import { BlogPost } from '@shared/types';
 
 /**
  * Adaptive blog service that automatically chooses between:

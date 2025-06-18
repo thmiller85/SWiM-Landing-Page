@@ -49,12 +49,8 @@ const BlogPost = () => {
   const params = useParams();
   const slug = params.slug as string;
   
-  // Debug logging
-  console.log('BlogPost component loaded', { params, slug });
-  
   // Early return if no slug
   if (!slug) {
-    console.error('No slug provided to BlogPost component');
     return <div>Error: No blog post slug provided</div>;
   }
   
@@ -79,13 +75,10 @@ const BlogPost = () => {
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blog-post', slug],
     queryFn: async () => {
-      console.log('Fetching blog post for slug:', slug);
-      
       // Check if we have preloaded data from static HTML
       if (typeof window !== 'undefined' && (window as any).__BLOG_POST_DATA__) {
         const preloadedPost = (window as any).__BLOG_POST_DATA__;
         if (preloadedPost.slug === slug) {
-          console.log('Using preloaded data');
           return preloadedPost;
         }
       }
@@ -93,27 +86,19 @@ const BlogPost = () => {
       // Try static JSON files first (for static deployment)
       try {
         const result = await staticBlogService.getPostBySlug(slug);
-        if (result) {
-          console.log('Found post in static files');
-          return result;
-        }
+        if (result) return result;
       } catch (staticError) {
-        console.log('Static content not available, trying database...');
+        // Continue to database fallback
       }
       
       // Fall back to database API
       try {
-        console.log('Fetching from database API...');
         const response = await fetch(`/api/blog/posts/database/${slug}`);
         if (response.ok) {
-          const data = await response.json();
-          console.log('Successfully fetched from database:', data.title);
-          return data;
-        } else {
-          console.error('Database API returned error:', response.status);
+          return await response.json();
         }
       } catch (dbError) {
-        console.error('Database request failed:', dbError);
+        // Continue to error handling
       }
       
       throw new Error('Post not found');
@@ -201,11 +186,7 @@ const BlogPost = () => {
     }, 100);
   };
 
-  // Debug logging for render states
-  console.log('BlogPost render state:', { isLoading, error, hasPost: !!post, slug });
-
   if (error) {
-    console.error('BlogPost error state:', error);
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
         <div className="text-center">
@@ -223,7 +204,6 @@ const BlogPost = () => {
   }
 
   if (isLoading) {
-    console.log('BlogPost loading state');
     return (
       <div className="min-h-screen bg-primary">
         <div className="gradient-bg">
@@ -248,13 +228,10 @@ const BlogPost = () => {
   }
 
   if (!post) {
-    console.log('BlogPost: No post data available');
     return <div className="min-h-screen bg-primary flex items-center justify-center">
       <div className="text-white">Loading post...</div>
     </div>;
   }
-
-  console.log('BlogPost: Rendering post content:', post.title);
 
   return (
     <div className="min-h-screen bg-primary">
