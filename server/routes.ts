@@ -179,6 +179,10 @@ ${posts.map(post => `  <url>
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // Preload blog post data to avoid client-side API call
+    window.__BLOG_POST_DATA__ = ${JSON.stringify(storage.convertToClientFormat(post))};
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>`;

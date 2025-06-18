@@ -18,7 +18,7 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { staticBlogService } from '@/lib/static-blog';
+import { blogAPIService } from '@/lib/blog-api';
 import { BlogPost as BlogPostType } from '@/blog-types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -83,15 +83,9 @@ const BlogPost = () => {
         }
       }
       
-      // Fall back to database API for real-time content
-      try {
-        const response = await fetch(`/api/blog/posts/database/${slug}`);
-        if (response.ok) {
-          return await response.json();
-        }
-      } catch (dbError) {
-        console.error('Database API failed:', dbError);
-      }
+      // Fetch from database API for real-time content
+      const post = await blogAPIService.getPostBySlug(slug);
+      if (post) return post;
       
       throw new Error('Post not found');
     },
@@ -99,7 +93,7 @@ const BlogPost = () => {
 
   const { data: recentPosts = [] } = useQuery({
     queryKey: ['blog-recent-posts'],
-    queryFn: () => staticBlogService.getRecentPosts(5),
+    queryFn: () => blogAPIService.getRecentPosts(5),
   }) as { data: BlogPostType[] };
 
   // Analytics tracking for markdown blog system

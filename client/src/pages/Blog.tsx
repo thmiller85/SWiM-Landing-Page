@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import ReactMarkdown from 'react-markdown';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
-import { staticBlogService } from '@/lib/static-blog';
+import { blogAPIService } from '@/lib/blog-api';
 import { BlogPost } from '@/blog-types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -41,43 +41,11 @@ const Blog = () => {
       tag: selectedTag,
       search: searchQuery,
     }],
-    queryFn: async () => {
-      // Database-first approach for real-time updates
-      try {
-        const response = await fetch('/api/blog/posts/database/all');
-        if (response.ok) {
-          let dbPosts = await response.json();
-          
-          // Apply filters on client side for database posts
-          if (selectedCategory !== 'all') {
-            dbPosts = dbPosts.filter((post: BlogPost) => 
-              post.category.toLowerCase() === selectedCategory.toLowerCase()
-            );
-          }
-          
-          if (selectedTag !== 'all') {
-            dbPosts = dbPosts.filter((post: BlogPost) => 
-              post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
-            );
-          }
-          
-          if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            dbPosts = dbPosts.filter((post: BlogPost) =>
-              post.title.toLowerCase().includes(query) ||
-              post.content.toLowerCase().includes(query) ||
-              post.excerpt.toLowerCase().includes(query) ||
-              post.tags.some(tag => tag.toLowerCase().includes(query))
-            );
-          }
-          return dbPosts;
-        }
-      } catch (dbError) {
-        console.error('Database API failed:', dbError);
-      }
-      
-      return [];
-    },
+    queryFn: () => blogAPIService.getAllPosts({
+      search: searchQuery || undefined,
+      category: selectedCategory !== 'all' ? selectedCategory : undefined,
+      tag: selectedTag !== 'all' ? selectedTag : undefined
+    }),
     retry: 1,
     retryDelay: 1000,
     staleTime: 30 * 1000, // 30 seconds cache for real-time updates
