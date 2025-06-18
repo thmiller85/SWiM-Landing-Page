@@ -195,22 +195,22 @@ export default function CMSDashboardClean() {
 
   const handleSavePost = (formData: FormData) => {
     const data = {
-      title: formData.get('title'),
-      slug: formData.get('slug'),
-      metaTitle: formData.get('metaTitle') || null,
-      metaDescription: formData.get('metaDescription') || null,
-      canonicalUrl: formData.get('canonicalUrl') || null,
-      excerpt: formData.get('excerpt') || null,
-      content: formData.get('content'),
-      featuredImage: formData.get('featuredImage') || null,
-      featuredImageAlt: formData.get('featuredImageAlt') || null,
-      author: formData.get('author'),
-      status: formData.get('status'),
-      ctaType: formData.get('ctaType'),
-      category: formData.get('category'),
-      tags: (formData.get('tags') as string || '').split(',').map(tag => tag.trim()).filter(Boolean),
-      targetKeywords: (formData.get('targetKeywords') as string || '').split(',').map(kw => kw.trim()).filter(Boolean),
-      readingTime: parseInt(formData.get('readingTime') as string || '5'),
+      title: formData.get('title') as string,
+      slug: formData.get('slug') as string,
+      metaTitle: (formData.get('metaTitle') as string) || undefined,
+      metaDescription: (formData.get('metaDescription') as string) || undefined,
+      canonicalUrl: (formData.get('canonicalUrl') as string) || undefined,
+      excerpt: (formData.get('excerpt') as string) || undefined,
+      content: formData.get('content') as string,
+      featuredImage: (formData.get('featuredImage') as string) || null,
+      featuredImageAlt: (formData.get('featuredImageAlt') as string) || undefined,
+      author: formData.get('author') as string,
+      status: formData.get('status') as string,
+      ctaType: formData.get('ctaType') as string,
+      category: formData.get('category') as string,
+      tags: ((formData.get('tags') as string) || '').split(',').map(tag => tag.trim()).filter(Boolean),
+      targetKeywords: ((formData.get('targetKeywords') as string) || '').split(',').map(kw => kw.trim()).filter(Boolean),
+      readingTime: parseInt((formData.get('readingTime') as string) || '5'),
     };
 
     if (editingPost?.id) {

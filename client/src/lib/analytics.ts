@@ -46,8 +46,8 @@ class AnalyticsTracker {
     const sessionId = this.generateId();
     sessionStorage.setItem('analytics_session', JSON.stringify({ id: sessionId, lastActivity: Date.now() }));
     
-    // Track new session
-    this.createSession();
+    // Track new session after sessionId is set
+    setTimeout(() => this.createSession(), 0);
     
     return sessionId;
   }
