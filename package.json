@@ -5,8 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && npm run prerender && npm run sitemap",
+    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && npm run prerender:no-blog",
     "prerender": "tsx scripts/prerender.ts",
+    "prerender:no-blog": "tsx scripts/prerender-no-blog.ts",
     "sitemap": "tsx scripts/generate-sitemap.ts",
     "build:static": "vite build && npm run prerender && npm run sitemap",
     "start": "NODE_ENV=production node dist/index.js",

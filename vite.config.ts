@@ -27,5 +27,20 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      external: ['drizzle-orm', 'drizzle-orm/pg-core', 'drizzle-zod', '@neondatabase/serverless', 'pg', 'bcrypt'],
+      output: {
+        manualChunks: (id) => {
+          // Ensure server-only modules are never bundled
+          if (id.includes('drizzle-orm') || id.includes('drizzle-zod') || id.includes('@neondatabase/serverless')) {
+            console.warn(`Warning: Attempting to bundle server-only module: ${id}`);
+            return 'server-only';
+          }
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    exclude: ['drizzle-orm', 'drizzle-orm/pg-core', 'drizzle-zod', '@neondatabase/serverless', 'pg', 'bcrypt'],
   },
 });
