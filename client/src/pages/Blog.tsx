@@ -82,7 +82,7 @@ const Blog = () => {
             </Badge>
             <div className="flex items-center text-white/60 text-sm">
               <Calendar className="h-4 w-4 mr-1" />
-              {staticBlogService.formatDate(post.publishedAt)}
+              {blogAPIService.formatDate(post.publishedAt)}
             </div>
             <div className="flex items-center text-white/60 text-sm">
               <Clock className="h-4 w-4 mr-1" />
