@@ -1,4 +1,4 @@
-import { BlogPost } from '@shared/types';
+import { BlogPost } from '@/blog-types';
 
 /**
  * Static blog service that reads from exported JSON files

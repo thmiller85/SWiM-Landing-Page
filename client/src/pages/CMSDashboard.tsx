@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Plus, Edit, Trash2, Image, Save, Eye, BarChart3, Upload, X } from 'lucide-react';
-import { Post, Image as ImageType } from '@shared/types';
+import { Post, Image as ImageType } from '@/blog-types';
 
 export default function CMSDashboard() {
   const [, navigate] = useLocation();

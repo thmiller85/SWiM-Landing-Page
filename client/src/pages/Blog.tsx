@@ -5,7 +5,7 @@ import { Link } from 'wouter';
 import ReactMarkdown from 'react-markdown';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
 import { staticBlogService } from '@/lib/static-blog';
-import { BlogPost } from '@shared/types';
+import { BlogPost } from '@/blog-types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
