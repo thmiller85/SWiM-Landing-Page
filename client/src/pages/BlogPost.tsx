@@ -240,13 +240,14 @@ const BlogPost = () => {
 
             {/* Article Content */}
             <article className="prose prose-lg prose-invert max-w-none mb-12">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeHighlight]}
-                className="text-gray-200"
-              >
-                {post.content}
-              </ReactMarkdown>
+              <div className="text-gray-200">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeHighlight]}
+                >
+                  {post.content}
+                </ReactMarkdown>
+              </div>
             </article>
 
             {/* CTA Section */}
