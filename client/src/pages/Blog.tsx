@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Search, Calendar, Clock, User, ArrowRight, Filter } from 'lucide-react';
 import { blogAPIService } from '@/lib/blog-api';
 import { BlogPost } from '@/types/blog';
@@ -96,11 +97,23 @@ const Blog = () => {
 
           <div className="text-white/80 mb-4 line-clamp-3">
             <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
               components={{
                 p: ({ children }) => <>{children}</>,
                 strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
                 em: ({ children }) => <em className="italic text-white/90">{children}</em>,
-                a: ({ children, href }) => <a href={href} className="text-accent hover:text-highlight underline transition-colors">{children}</a>
+                a: ({ children, href }) => <a href={href} className="text-accent hover:text-highlight underline transition-colors">{children}</a>,
+                code: ({ children, className }) => {
+                  const isInline = !className;
+                  return isInline ? (
+                    <code className="bg-white/10 px-1 py-0.5 rounded text-sm text-white/90">{children}</code>
+                  ) : (
+                    <code className={className}>{children}</code>
+                  );
+                },
+                ul: ({ children }) => <ul className="list-disc list-inside text-white/80">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside text-white/80">{children}</ol>,
+                li: ({ children }) => <li className="text-white/80">{children}</li>
               }}
             >
               {post.excerpt}

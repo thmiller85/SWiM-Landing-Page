@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -315,7 +317,20 @@ export default function CMSDashboardClean() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-300 text-sm">{post.excerpt}</p>
+                      <div className="text-gray-300 text-sm line-clamp-2">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            p: ({ children }) => <>{children}</>,
+                            strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                            em: ({ children }) => <em className="italic">{children}</em>,
+                            code: ({ children }) => <code className="bg-gray-800 px-1 py-0.5 rounded text-xs">{children}</code>,
+                            a: ({ children }) => <span className="text-blue-400">{children}</span>
+                          }}
+                        >
+                          {post.excerpt || ''}
+                        </ReactMarkdown>
+                      </div>
                       <div className="flex flex-wrap gap-2 mt-2">
                         <Badge variant="secondary">{post.category}</Badge>
                         {post.tags.map((tag, index) => (

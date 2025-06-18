@@ -211,9 +211,30 @@ const BlogPost = () => {
                   {post.title}
                 </h1>
 
-                <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                  {post.excerpt}
-                </p>
+                <div className="text-xl text-gray-300 mb-8 leading-relaxed">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({ children }) => <p className="mb-2">{children}</p>,
+                      strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                      em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+                      a: ({ children, href }) => <a href={href} className="text-accent hover:text-highlight underline transition-colors">{children}</a>,
+                      code: ({ children, className }) => {
+                        const isInline = !className;
+                        return isInline ? (
+                          <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm text-gray-200">{children}</code>
+                        ) : (
+                          <code className={className}>{children}</code>
+                        );
+                      },
+                      ul: ({ children }) => <ul className="list-disc list-inside text-gray-300 mb-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside text-gray-300 mb-2">{children}</ol>,
+                      li: ({ children }) => <li className="text-gray-300">{children}</li>
+                    }}
+                  >
+                    {post.excerpt}
+                  </ReactMarkdown>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-8">
                   <div className="flex items-center gap-2">
