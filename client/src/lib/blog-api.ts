@@ -1,5 +1,5 @@
 // Direct blog API service - makes API calls to server endpoints only
-import { BlogPost } from '@/blog-types';
+import { BlogPost } from '@/types/blog';
 
 /**
  * Blog service that uses only API calls to avoid any server-side imports

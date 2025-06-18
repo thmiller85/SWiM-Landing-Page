@@ -15,7 +15,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { blogAPIService } from '@/lib/blog-api';
-import { BlogPost as BlogPostType } from '@/blog-types';
+import { BlogPost as BlogPostType } from '@/types/blog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
