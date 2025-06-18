@@ -44,6 +44,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
   const [excerpt, setExcerpt] = useState(post.excerpt || '');
   const [excerptMarkdownMode, setExcerptMarkdownMode] = useState(false);
   const [showExcerptPreview, setShowExcerptPreview] = useState(false);
+  const [showPostPreview, setShowPostPreview] = useState(false);
 
   const generateSlug = (title: string) => {
     return title
