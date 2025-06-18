@@ -83,12 +83,14 @@ const BlogPost = () => {
         }
       }
       
-      // Try static JSON files first (for static deployment)
+      // Fall back to database API for real-time content
       try {
-        const result = await staticBlogService.getPostBySlug(slug);
-        if (result) return result;
-      } catch (staticError) {
-        // Continue to database fallback
+        const response = await fetch(`/api/blog/posts/database/${slug}`);
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (dbError) {
+        console.error('Database API failed:', dbError);
       }
       
       throw new Error('Post not found');

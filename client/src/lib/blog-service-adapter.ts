@@ -1,20 +1,11 @@
-// Removed blogService import to eliminate drizzle-orm dependency
+// Client-only blog service adapter - uses static files only to avoid server dependencies
 import { staticBlogService } from './static-blog';
 import { BlogPost } from '@/blog-types';
 
 /**
- * Adaptive blog service that automatically chooses between:
- * - Database service (development/full-stack deployment)
- * - Static file service (static deployment)
+ * Blog service adapter that uses only static files to avoid drizzle-orm imports
  */
 class BlogServiceAdapter {
-  private isStaticMode: boolean | null = null;
-
-  private async detectMode(): Promise<boolean> {
-    // Always use static mode to avoid drizzle-orm imports
-    this.isStaticMode = true;
-    return this.isStaticMode;
-  }
 
   async getAllPosts(options: {
     search?: string;

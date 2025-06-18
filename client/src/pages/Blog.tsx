@@ -42,18 +42,41 @@ const Blog = () => {
       search: searchQuery,
     }],
     queryFn: async () => {
-      // Use static blog service only to avoid drizzle-orm imports in client bundle
+      // Database-first approach for real-time updates
       try {
-        const filteredPosts = await staticBlogService.getAllPosts({
-          search: searchQuery || undefined,
-          category: selectedCategory !== 'all' ? selectedCategory : undefined,
-          tag: selectedTag !== 'all' ? selectedTag : undefined
-        });
-        return filteredPosts;
-      } catch (error) {
-        console.error('Static blog service failed:', error);
-        return [];
+        const response = await fetch('/api/blog/posts/database/all');
+        if (response.ok) {
+          let dbPosts = await response.json();
+          
+          // Apply filters on client side for database posts
+          if (selectedCategory !== 'all') {
+            dbPosts = dbPosts.filter((post: BlogPost) => 
+              post.category.toLowerCase() === selectedCategory.toLowerCase()
+            );
+          }
+          
+          if (selectedTag !== 'all') {
+            dbPosts = dbPosts.filter((post: BlogPost) => 
+              post.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
+            );
+          }
+          
+          if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            dbPosts = dbPosts.filter((post: BlogPost) =>
+              post.title.toLowerCase().includes(query) ||
+              post.content.toLowerCase().includes(query) ||
+              post.excerpt.toLowerCase().includes(query) ||
+              post.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+          }
+          return dbPosts;
+        }
+      } catch (dbError) {
+        console.error('Database API failed:', dbError);
       }
+      
+      return [];
     },
     retry: 1,
     retryDelay: 1000,
