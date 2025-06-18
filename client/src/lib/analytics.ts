@@ -1,5 +1,6 @@
 // Client-side analytics tracking library
 import { apiRequest } from './queryClient';
+import { trackEvent as trackGAEvent, trackBlogView, trackScrollDepth as trackGAScroll, trackTimeOnPage } from './google-analytics';
 
 interface TrackingData {
   eventType: string;
@@ -148,6 +149,19 @@ class AnalyticsTracker {
       },
     });
 
+    // Track in Google Analytics if it's a blog post
+    if (postId) {
+      // Extract blog info from page
+      const titleEl = document.querySelector('h1');
+      const title = titleEl?.textContent || document.title;
+      const categoryEl = document.querySelector('[data-category]');
+      const category = categoryEl?.getAttribute('data-category') || 'Uncategorized';
+      const authorEl = document.querySelector('[data-author]');
+      const author = authorEl?.getAttribute('data-author') || 'Unknown';
+      
+      trackBlogView(postId, title, category, author);
+    }
+
     // Start scroll tracking
     if (!this.scrollTracking) {
       this.startScrollTracking();
@@ -176,6 +190,9 @@ class AnalyticsTracker {
               depth: this.maxScrollDepth,
             },
           });
+          
+          // Also track in Google Analytics
+          trackGAScroll(this.maxScrollDepth);
         }
       }
       
@@ -204,6 +221,9 @@ class AnalyticsTracker {
           scrollDepth: this.maxScrollDepth,
         },
       });
+      
+      // Track in Google Analytics
+      trackTimeOnPage(timeOnPage, document.title);
     }
   }
 

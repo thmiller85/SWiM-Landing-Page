@@ -11,6 +11,7 @@ import { Mail, Phone, Clock } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import { useToast } from "@/hooks/use-toast";
+import { trackConversion } from "@/lib/google-analytics";
 
 const Contact = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -111,6 +112,9 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Success response:', responseData);
+        
+        // Track conversion in Google Analytics
+        trackConversion('form_submit', selectedService || 'general_inquiry');
         
         toast({
           title: "Form submitted successfully",

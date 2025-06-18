@@ -18,6 +18,7 @@ import { blogAPIService } from '@/lib/blog-api';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { trackShare as trackGAShare } from '@/lib/google-analytics';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useNavigation } from '@/context/NavigationContext';
@@ -151,6 +152,8 @@ const BlogPost = () => {
         blogAPIService.trackShare(post.slug);
         // New analytics tracking
         trackShare('native', post.id);
+        // Google Analytics tracking
+        trackGAShare('native_share', post.id.toString());
       } catch (err) {
         console.log('Error sharing:', err);
       }
@@ -160,6 +163,8 @@ const BlogPost = () => {
       blogAPIService.trackShare(post.slug);
       // New analytics tracking
       trackShare('clipboard', post.id);
+      // Google Analytics tracking
+      trackGAShare('clipboard_copy', post.id.toString());
     }
   };
 
@@ -197,7 +202,7 @@ const BlogPost = () => {
               {/* Article Header */}
               <header className="mb-12">
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <Badge variant="secondary" className="bg-blue-600/20 text-blue-300 border-blue-600/30">
+                  <Badge variant="secondary" className="bg-blue-600/20 text-blue-300 border-blue-600/30" data-category={post.category}>
                     {post.category}
                   </Badge>
                   {post.tags.map((tag) => (
@@ -239,7 +244,7 @@ const BlogPost = () => {
                 <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-8">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>{post.author}</span>
+                    <span data-author={post.author}>{post.author}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />

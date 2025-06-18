@@ -24,6 +24,7 @@ import WordPressValidator from "./components/WordPressValidator";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NavigationProvider, useNavigation } from "./context/NavigationContext";
+import { GoogleAnalytics } from "./components/GoogleAnalytics";
 
 // Home page component
 const HomePage = () => {
@@ -97,6 +98,7 @@ function App() {
           <Route component={NotFound} />
         </Switch>
         <Toaster />
+        <GoogleAnalytics />
       </TooltipProvider>
     </NavigationProvider>
   );

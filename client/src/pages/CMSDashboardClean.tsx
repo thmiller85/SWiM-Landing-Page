@@ -15,6 +15,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { Plus, Edit, Trash2, Image, Save, Eye, BarChart3, Upload, X, Copy, Check } from 'lucide-react';
 import { ImagePickerModal } from '@/components/ImagePickerModal';
 import { AnalyticsDashboard } from '@/components/AnalyticsDashboard';
+import { GoogleAnalyticsDashboard } from '@/components/GoogleAnalyticsDashboard';
 import { SEOPreview } from '@/components/SEOPreview';
 import { PostEditor } from '@/components/PostEditor';
 import { PostPreview } from '@/components/PostPreview';
@@ -65,7 +66,7 @@ export default function CMSDashboardClean() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'posts' | 'images' | 'analytics'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'images' | 'analytics' | 'google-analytics'>('posts');
   const [editingPost, setEditingPost] = useState<ClientPost | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [copiedImageUrl, setCopiedImageUrl] = useState<string | null>(null);
@@ -256,6 +257,13 @@ export default function CMSDashboardClean() {
           >
             <BarChart3 className="h-4 w-4 mr-2" />
             Analytics
+          </Button>
+          <Button
+            variant={activeTab === 'google-analytics' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('google-analytics')}
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Google Analytics
           </Button>
         </div>
 
@@ -456,6 +464,9 @@ export default function CMSDashboardClean() {
 
         {/* Analytics Tab */}
         {activeTab === 'analytics' && <AnalyticsDashboard />}
+
+        {/* Google Analytics Tab */}
+        {activeTab === 'google-analytics' && <GoogleAnalyticsDashboard />}
 
         {/* Edit/Create Post Modal */}
         {editingPost && (
