@@ -95,7 +95,11 @@ export default function CMSDashboardClean() {
   };
 
   const handleEditPost = (post: ClientPost) => {
-    setEditingPost(post);
+    // Ensure content is properly set for the editor
+    setEditingPost({
+      ...post,
+      content: post.content || ''
+    });
     setIsCreating(false);
   };
 

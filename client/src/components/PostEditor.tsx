@@ -10,7 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ImagePickerModal } from '@/components/ImagePickerModal';
 import { SEOPreview } from '@/components/SEOPreview';
 import { useToast } from '@/hooks/use-toast';
-import { X, Save, Image, AlertCircle, Check } from 'lucide-react';
+import { X, Save, Image, AlertCircle, Check, FileText, Eye, ClipboardPaste } from 'lucide-react';
+import MDEditor from '@uiw/react-md-editor';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import '@/styles/markdown-editor.css';
 
 interface PostEditorProps {
   post: any;
@@ -33,12 +37,63 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [autoSlug, setAutoSlug] = useState(!post.slug);
+  const [markdownMode, setMarkdownMode] = useState(false);
+  const [content, setContent] = useState(post.content || '');
+  const [showPreview, setShowPreview] = useState(false);
 
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
+  };
+
+  const handlePasteMarkdown = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        setContent(text);
+        
+        // Extract title from first H1
+        const titleMatch = text.match(/^#\s+(.+)$/m);
+        if (titleMatch && !document.getElementById('title')?.value) {
+          const title = titleMatch[1];
+          const titleInput = document.getElementById('title') as HTMLInputElement;
+          if (titleInput) {
+            titleInput.value = title;
+            setSeoPreviewData(prev => ({ ...prev, title }));
+            if (autoSlug) {
+              const slug = generateSlug(title);
+              const slugInput = document.getElementById('slug') as HTMLInputElement;
+              if (slugInput) {
+                slugInput.value = slug;
+                setSeoPreviewData(prev => ({ ...prev, slug }));
+              }
+            }
+          }
+        }
+        
+        // Extract first paragraph as excerpt
+        const paragraphMatch = text.match(/^(?!#|\*|-|\d\.|\[|>|```).+$/m);
+        if (paragraphMatch && !document.getElementById('excerpt')?.value) {
+          const excerptInput = document.getElementById('excerpt') as HTMLTextAreaElement;
+          if (excerptInput) {
+            excerptInput.value = paragraphMatch[0].substring(0, 200) + '...';
+          }
+        }
+        
+        toast({
+          title: "Content Pasted",
+          description: "Markdown content has been pasted successfully",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Paste Failed",
+        description: "Unable to paste from clipboard",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +125,9 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+    
+    // Replace textarea content with markdown editor content
+    formData.set('content', content);
     
     if (validateForm(formData)) {
       onSave(formData);
@@ -176,17 +234,83 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                 </div>
 
                 <div>
-                  <Label htmlFor="content" className="text-white">
-                    Content <span className="text-red-400">*</span>
-                  </Label>
-                  <Textarea
-                    id="content"
-                    name="content"
-                    defaultValue={post.content}
-                    className={`bg-gray-700 border-gray-600 text-white h-64 ${errors.content ? 'border-red-500' : ''}`}
-                    required
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="content" className="text-white">
+                      Content <span className="text-red-400">*</span>
+                    </Label>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handlePasteMarkdown}
+                      >
+                        <ClipboardPaste className="h-4 w-4 mr-2" />
+                        Paste Markdown
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={markdownMode ? "default" : "outline"}
+                        onClick={() => setMarkdownMode(!markdownMode)}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        {markdownMode ? 'Markdown' : 'Simple'}
+                      </Button>
+                      {markdownMode && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={showPreview ? "default" : "outline"}
+                          onClick={() => setShowPreview(!showPreview)}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Preview
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {markdownMode ? (
+                    <div className={showPreview ? "grid grid-cols-2 gap-4" : ""}>
+                      <div data-color-mode="dark">
+                        <MDEditor
+                          value={content}
+                          onChange={(val) => setContent(val || '')}
+                          preview={showPreview ? 'edit' : 'edit'}
+                          height={400}
+                          textareaProps={{
+                            placeholder: 'Write your blog post in markdown...\n\n# Heading\n**Bold text**, *italic text*\n\n- List item\n- Another item\n\n[Link text](https://example.com)',
+                          }}
+                        />
+                      </div>
+                      {showPreview && (
+                        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 overflow-y-auto max-h-[400px]">
+                          <article className="prose prose-invert prose-sm max-w-none">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {content}
+                            </ReactMarkdown>
+                          </article>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Textarea
+                      id="content"
+                      name="content"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className={`bg-gray-700 border-gray-600 text-white h-64 font-mono ${errors.content ? 'border-red-500' : ''}`}
+                      placeholder="Paste or write your content here..."
+                      required
+                    />
+                  )}
                   {errors.content && <p className="text-red-400 text-sm mt-1">{errors.content}</p>}
+                  <p className="text-xs text-gray-400 mt-2">
+                    {markdownMode 
+                      ? "Full markdown support with GFM, tables, and syntax highlighting" 
+                      : "Plain text mode - you can still use markdown syntax"}
+                  </p>
                 </div>
               </TabsContent>
 

@@ -1,0 +1,44 @@
+/* Markdown Editor Dark Theme Override */
+.w-md-editor {
+  background-color: rgb(55 65 81) !important;
+  color: white !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: rgb(31 41 55) !important;
+  border-bottom: 1px solid rgb(75 85 99) !important;
+}
+
+.w-md-editor-toolbar button {
+  color: rgb(209 213 219) !important;
+}
+
+.w-md-editor-toolbar button:hover {
+  background-color: rgb(75 85 99) !important;
+}
+
+.w-md-editor-toolbar button.active {
+  background-color: rgb(75 85 99) !important;
+}
+
+.w-md-editor-text-pre {
+  color: white !important;
+  background-color: rgb(55 65 81) !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-pre .token.title {
+  color: white !important;
+}
+
+.w-md-editor-preview {
+  background-color: rgb(17 24 39) !important;
+}
+
+.w-md-editor.w-md-editor-focus {
+  border-color: rgb(99 102 241) !important;
+}
+
+.w-md-editor-toolbar-divider {
+  background-color: rgb(75 85 99) !important;
+}
