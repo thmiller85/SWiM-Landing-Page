@@ -33,7 +33,8 @@ const formatDate = (dateString: string) => {
 
 const BlogPost = () => {
   const params = useParams();
-  const slug = params.slug as string;
+  // Get slug from URL params or from SSR preloaded data
+  const slug = params.slug as string || (typeof window !== 'undefined' && (window as any).__BLOG_POST_SLUG__);
   const { servicesRef, aiSolutionsRef, workflowRef, caseStudiesRef, aboutRef, contactRef, navigateAndScroll } = useNavigation();
 
   const handleNavClick = (ref: React.RefObject<HTMLElement>) => {

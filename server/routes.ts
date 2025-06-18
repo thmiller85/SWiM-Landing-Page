@@ -180,8 +180,8 @@ ${posts.map(post => `  <url>
 <body>
   <div id="root"></div>
   <script>
-    // Preload blog post data to avoid client-side API call
-    window.__BLOG_POST_DATA__ = ${JSON.stringify(storage.convertToClientFormat(post))};
+    // Set the blog post slug for client-side fetching
+    window.__BLOG_POST_SLUG__ = "${slug}";
   </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
