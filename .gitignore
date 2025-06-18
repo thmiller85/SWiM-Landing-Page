@@ -1,6 +1,67 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+dist/
+build/
+client/dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+.replit
+.upm/
+
+# OS files
 .DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Database
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+
+# Replit specific
+.config/
+.breakpoints
+replit.nix
+
+# Deployment
+vercel.json
+.vercel/
+
+# Cache
+.cache/
+.npm/
+.yarn/
+
+# Test coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
