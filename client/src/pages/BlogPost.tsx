@@ -21,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useNavigation } from '@/context/NavigationContext';
+import { trackPageView, trackShare } from '@/lib/analytics';
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -53,10 +54,13 @@ const BlogPost = () => {
     }
   }, [post]);
 
-  // Track view
+  // Track view with new analytics
   useEffect(() => {
     if (post) {
+      // Legacy tracking
       blogAPIService.trackView(post.slug);
+      // New analytics tracking
+      trackPageView(post.id);
     }
   }, [post]);
 
@@ -143,13 +147,19 @@ const BlogPost = () => {
           text: post.excerpt,
           url: shareUrl,
         });
+        // Legacy tracking
         blogAPIService.trackShare(post.slug);
+        // New analytics tracking
+        trackShare('native', post.id);
       } catch (err) {
         console.log('Error sharing:', err);
       }
     } else {
       navigator.clipboard.writeText(shareUrl);
+      // Legacy tracking
       blogAPIService.trackShare(post.slug);
+      // New analytics tracking
+      trackShare('clipboard', post.id);
     }
   };
 

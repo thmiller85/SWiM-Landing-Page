@@ -4,8 +4,16 @@ import { createServer, type Server } from "http";
 import path from "path";
 import { blogService } from "./blog";
 import { storage } from "./storage";
-import { insertPostSchema, insertImageSchema, insertUserSchema } from "../shared/schema";
-import z from "zod";
+// Import server-only validation schemas to avoid drizzle-orm in client bundle
+import { 
+  createPostSchema, 
+  updatePostSchema, 
+  createImageSchema, 
+  updateImageSchema, 
+  createUserSchema,
+  type CreatePostInput,
+  type UpdatePostInput
+} from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
 
@@ -41,6 +49,39 @@ const upload = multer({
     }
   }
 });
+
+// Simple user agent parser
+function parseUserAgent(userAgent: string): {
+  deviceType: string;
+  browser: string;
+  os: string;
+} {
+  const ua = userAgent.toLowerCase();
+  
+  // Detect device type
+  let deviceType = 'desktop';
+  if (/mobile|android|iphone|ipad|tablet/.test(ua)) {
+    deviceType = /tablet|ipad/.test(ua) ? 'tablet' : 'mobile';
+  }
+  
+  // Detect browser
+  let browser = 'unknown';
+  if (ua.includes('chrome')) browser = 'chrome';
+  else if (ua.includes('firefox')) browser = 'firefox';
+  else if (ua.includes('safari')) browser = 'safari';
+  else if (ua.includes('edge')) browser = 'edge';
+  else if (ua.includes('opera')) browser = 'opera';
+  
+  // Detect OS
+  let os = 'unknown';
+  if (ua.includes('windows')) os = 'windows';
+  else if (ua.includes('mac')) os = 'macos';
+  else if (ua.includes('linux')) os = 'linux';
+  else if (ua.includes('android')) os = 'android';
+  else if (ua.includes('ios') || ua.includes('iphone') || ua.includes('ipad')) os = 'ios';
+  
+  return { deviceType, browser, os };
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
@@ -95,104 +136,8 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Server-side rendered blog post pages for SEO optimization
-  app.get('/blog/:slug', async (req, res, next) => {
-    try {
-      const slug = req.params.slug;
-      const post = await storage.getPostBySlug(slug);
-      
-      if (!post) {
-        // If post not found, continue to SPA fallback
-        return next();
-      }
-      
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://your-domain.com' 
-        : 'http://localhost:5000';
-      
-      // Generate server-side rendered HTML with complete meta tags
-      const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${post.metaTitle || post.title}</title>
-  <meta name="description" content="${post.metaDescription || post.excerpt || ''}">
-  <meta name="keywords" content="${post.targetKeywords?.join(', ') || ''}">
-  <meta name="author" content="${post.author}">
-  <link rel="canonical" href="${baseUrl}/blog/${post.slug}">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="${baseUrl}/blog/${post.slug}">
-  <meta property="og:title" content="${post.metaTitle || post.title}">
-  <meta property="og:description" content="${post.metaDescription || post.excerpt || ''}">
-  ${post.featuredImage ? `<meta property="og:image" content="${baseUrl}${post.featuredImage}">` : ''}
-  <meta property="og:site_name" content="SWiM AI">
-  <meta property="article:author" content="${post.author}">
-  <meta property="article:published_time" content="${post.publishedAt?.toISOString() || post.createdAt.toISOString()}">
-  <meta property="article:modified_time" content="${post.updatedAt.toISOString()}">
-  <meta property="article:section" content="${post.category}">
-  ${post.tags?.map(tag => `<meta property="article:tag" content="${tag}">`).join('\n  ') || ''}
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="${baseUrl}/blog/${post.slug}">
-  <meta property="twitter:title" content="${post.metaTitle || post.title}">
-  <meta property="twitter:description" content="${post.metaDescription || post.excerpt || ''}">
-  ${post.featuredImage ? `<meta property="twitter:image" content="${baseUrl}${post.featuredImage}">` : ''}
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "${post.title}",
-    "description": "${post.metaDescription || post.excerpt || ''}",
-    "image": "${post.featuredImage ? baseUrl + post.featuredImage : ''}",
-    "author": {
-      "@type": "Person",
-      "name": "${post.author}"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "SWiM AI",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "${baseUrl}/logo.png"
-      }
-    },
-    "datePublished": "${post.publishedAt?.toISOString() || post.createdAt.toISOString()}",
-    "dateModified": "${post.updatedAt.toISOString()}",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "${baseUrl}/blog/${post.slug}"
-    },
-    "keywords": "${post.targetKeywords?.join(', ') || ''}",
-    "articleSection": "${post.category}",
-    "wordCount": "${post.content.split(' ').length}",
-    "timeRequired": "PT${post.readingTime}M"
-  }
-  </script>
-  
-  <link rel="stylesheet" href="/src/index.css">
-</head>
-<body>
-  <div id="root"></div>
-  <script>
-    // Set the blog post slug for client-side fetching
-    window.__BLOG_POST_SLUG__ = "${slug}";
-  </script>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-</html>`;
-
-      res.status(200).set({ "Content-Type": "text/html" }).send(html);
-    } catch (error) {
-      console.error('Error rendering blog post:', error);
-      next(); // Continue to SPA fallback
-    }
-  });
+  // Note: Server-side rendering for blog posts is handled in server/index.ts
+  // This ensures proper isolation from drizzle-orm dependencies
 
   // Serve uploaded images
   app.get('/images/*', (req, res) => {
@@ -366,29 +311,10 @@ ${posts.map(post => `  <url>
 
   app.post('/api/cms/posts', async (req, res) => {
     try {
-      // Create a custom validation schema for the API request
-      const createPostSchema = z.object({
-        title: z.string().min(1),
-        slug: z.string().min(1),
-        content: z.string(),
-        metaTitle: z.string().optional(),
-        metaDescription: z.string().optional(),
-        excerpt: z.string().optional(),
-        featuredImage: z.string().nullable().optional(),
-        author: z.string().min(1),
-        status: z.enum(['draft', 'published']).default('draft'),
-        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).default('consultation'),
-        category: z.string().min(1),
-        tags: z.array(z.string()).default([]),
-        targetKeywords: z.array(z.string()).default([]),
-        readingTime: z.number().optional().default(0),
-        publishedAt: z.string().nullable().optional(),
-      });
-
       const validatedData = createPostSchema.parse(req.body);
       
       // Convert publishedAt string to Date if provided
-      const postData: any = {
+      const postData = {
         ...validatedData,
         publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null
       };
@@ -405,29 +331,10 @@ ${posts.map(post => `  <url>
     try {
       const id = parseInt(req.params.id);
       
-      // Create update schema that matches the create schema
-      const updatePostSchema = z.object({
-        title: z.string().min(1).optional(),
-        slug: z.string().min(1).optional(),
-        content: z.string().optional(),
-        metaTitle: z.string().optional(),
-        metaDescription: z.string().optional(),
-        excerpt: z.string().optional(),
-        featuredImage: z.string().nullable().optional(),
-        author: z.string().min(1).optional(),
-        status: z.enum(['draft', 'published']).optional(),
-        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).optional(),
-        category: z.string().min(1).optional(),
-        tags: z.array(z.string()).optional(),
-        targetKeywords: z.array(z.string()).optional(),
-        readingTime: z.number().optional(),
-        publishedAt: z.string().nullable().optional(),
-      });
-
       const validatedData = updatePostSchema.parse(req.body);
       
       // Convert publishedAt string to Date if provided
-      const updateData: any = {
+      const updateData = {
         ...validatedData,
         publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : undefined
       };
@@ -593,10 +500,228 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // =============================================================================
+  // New Analytics System - Event Tracking
+  // =============================================================================
+
+  // Track analytics session
+  app.post('/api/analytics/session', async (req, res) => {
+    try {
+      const sessionData = req.body;
+      const ipAddress = req.ip || req.connection.remoteAddress;
+      
+      // Parse user agent for device info
+      const userAgent = sessionData.userAgent || req.headers['user-agent'] || '';
+      const deviceInfo = parseUserAgent(userAgent);
+      
+      const session = await storage.createOrUpdateSession({
+        ...sessionData,
+        ipAddress,
+        ...deviceInfo,
+      });
+      
+      res.json({ success: true, sessionId: session.sessionId });
+    } catch (error) {
+      console.error('Error creating analytics session:', error);
+      res.status(500).json({ error: 'Failed to create session' });
+    }
+  });
+
+  // Track analytics event
+  app.post('/api/analytics/event', async (req, res) => {
+    try {
+      const eventData = req.body;
+      const ipAddress = req.ip || req.connection.remoteAddress;
+      
+      await storage.trackAnalyticsEvent({
+        ...eventData,
+        ipAddress,
+        userAgent: req.headers['user-agent'] || '',
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error tracking analytics event:', error);
+      res.status(500).json({ error: 'Failed to track event' });
+    }
+  });
+
+  // Get real-time analytics
+  app.get('/api/analytics/realtime', async (req, res) => {
+    try {
+      const realtime = await storage.getRealtimeAnalytics();
+      res.json(realtime);
+    } catch (error) {
+      console.error('Error fetching realtime analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch realtime analytics' });
+    }
+  });
+
+  // Get analytics for date range
+  app.get('/api/analytics/range', async (req, res) => {
+    try {
+      const { start, end, postId } = req.query;
+      const analytics = await storage.getAnalyticsForRange(
+        start as string,
+        end as string,
+        postId ? parseInt(postId as string) : undefined
+      );
+      res.json(analytics);
+    } catch (error) {
+      console.error('Error fetching analytics range:', error);
+      res.status(500).json({ error: 'Failed to fetch analytics' });
+    }
+  });
+
+  // Advanced analytics endpoints
+  app.get('/api/cms/analytics/overview', async (req, res) => {
+    try {
+      const posts = await storage.getAllPosts();
+      const publishedPosts = posts.filter(p => p.status === 'published');
+      
+      const overview = {
+        totalPosts: posts.length,
+        publishedPosts: publishedPosts.length,
+        draftPosts: posts.filter(p => p.status === 'draft').length,
+        totalViews: posts.reduce((sum, post) => sum + post.views, 0),
+        totalLeads: posts.reduce((sum, post) => sum + post.leads, 0),
+        totalShares: posts.reduce((sum, post) => sum + post.shares, 0),
+        averageViews: publishedPosts.length > 0 
+          ? Math.round(publishedPosts.reduce((sum, post) => sum + post.views, 0) / publishedPosts.length)
+          : 0,
+        conversionRate: posts.reduce((sum, post) => sum + post.views, 0) > 0
+          ? ((posts.reduce((sum, post) => sum + post.leads, 0) / posts.reduce((sum, post) => sum + post.views, 0)) * 100).toFixed(2)
+          : '0.00',
+      };
+      
+      res.json(overview);
+    } catch (error) {
+      console.error('Error fetching analytics overview:', error);
+      res.status(500).json({ error: 'Failed to fetch analytics overview' });
+    }
+  });
+
+  app.get('/api/cms/analytics/top-posts', async (req, res) => {
+    try {
+      const { limit = 10, metric = 'views' } = req.query;
+      const posts = await storage.getPublishedPosts();
+      
+      // Sort by the specified metric
+      const sortedPosts = posts.sort((a, b) => {
+        switch (metric) {
+          case 'leads':
+            return b.leads - a.leads;
+          case 'shares':
+            return b.shares - a.shares;
+          case 'conversion':
+            const aConversion = a.views > 0 ? a.leads / a.views : 0;
+            const bConversion = b.views > 0 ? b.leads / b.views : 0;
+            return bConversion - aConversion;
+          default:
+            return b.views - a.views;
+        }
+      });
+      
+      const topPosts = sortedPosts.slice(0, parseInt(limit as string)).map(post => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        views: post.views,
+        leads: post.leads,
+        shares: post.shares,
+        conversionRate: post.views > 0 ? ((post.leads / post.views) * 100).toFixed(2) : '0.00',
+        category: post.category,
+        publishedAt: post.publishedAt,
+      }));
+      
+      res.json(topPosts);
+    } catch (error) {
+      console.error('Error fetching top posts:', error);
+      res.status(500).json({ error: 'Failed to fetch top posts' });
+    }
+  });
+
+  app.get('/api/cms/analytics/by-category', async (req, res) => {
+    try {
+      const posts = await storage.getPublishedPosts();
+      
+      const categoryStats = posts.reduce((acc, post) => {
+        const category = post.category || 'Uncategorized';
+        if (!acc[category]) {
+          acc[category] = {
+            posts: 0,
+            views: 0,
+            leads: 0,
+            shares: 0,
+          };
+        }
+        
+        acc[category].posts++;
+        acc[category].views += post.views;
+        acc[category].leads += post.leads;
+        acc[category].shares += post.shares;
+        
+        return acc;
+      }, {} as Record<string, any>);
+      
+      // Calculate conversion rates and format response
+      const formattedStats = Object.entries(categoryStats).map(([category, stats]) => ({
+        category,
+        ...stats,
+        conversionRate: stats.views > 0 ? ((stats.leads / stats.views) * 100).toFixed(2) : '0.00',
+        averageViews: stats.posts > 0 ? Math.round(stats.views / stats.posts) : 0,
+      }));
+      
+      res.json(formattedStats);
+    } catch (error) {
+      console.error('Error fetching category analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch category analytics' });
+    }
+  });
+
+  app.get('/api/cms/analytics/by-tag', async (req, res) => {
+    try {
+      const posts = await storage.getPublishedPosts();
+      
+      const tagStats: Record<string, any> = {};
+      
+      posts.forEach(post => {
+        post.tags.forEach(tag => {
+          if (!tagStats[tag]) {
+            tagStats[tag] = {
+              posts: 0,
+              views: 0,
+              leads: 0,
+              shares: 0,
+            };
+          }
+          
+          tagStats[tag].posts++;
+          tagStats[tag].views += post.views;
+          tagStats[tag].leads += post.leads;
+          tagStats[tag].shares += post.shares;
+        });
+      });
+      
+      // Calculate conversion rates and format response
+      const formattedStats = Object.entries(tagStats).map(([tag, stats]) => ({
+        tag,
+        ...stats,
+        conversionRate: stats.views > 0 ? ((stats.leads / stats.views) * 100).toFixed(2) : '0.00',
+        averageViews: stats.posts > 0 ? Math.round(stats.views / stats.posts) : 0,
+      }));
+      
+      res.json(formattedStats);
+    } catch (error) {
+      console.error('Error fetching tag analytics:', error);
+      res.status(500).json({ error: 'Failed to fetch tag analytics' });
+    }
+  });
+
   // User management
   app.post('/api/cms/users', async (req, res) => {
     try {
-      const validatedData = insertUserSchema.parse(req.body);
+      const validatedData = createUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(validatedData.username);
       if (existingUser) {
         return res.status(400).json({ error: 'Username already exists' });

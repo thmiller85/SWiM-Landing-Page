@@ -1,6 +1,11 @@
 import { db } from './db';
-import { posts, images, users, type Post, type InsertPost, type Image, type InsertImage, type User, type InsertUser } from '../shared/schema';
-import { eq, desc, like, and, or, sql } from 'drizzle-orm';
+import { 
+  posts, images, users, analyticsEvents, visitorSessions, pageViews, conversions,
+  type Post, type InsertPost, type Image, type InsertImage, type User, type InsertUser,
+  type AnalyticsEvent, type InsertAnalyticsEvent, type VisitorSession, type InsertVisitorSession,
+  type PageView, type InsertPageView, type Conversion, type InsertConversion
+} from '../shared/schema';
+import { eq, desc, like, and, or, sql, gte, lte } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 
 export interface IStorage {
@@ -37,6 +42,12 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   validateUser(username: string, password: string): Promise<User | null>;
+  
+  // New Analytics System
+  createOrUpdateSession(sessionData: any): Promise<VisitorSession>;
+  trackAnalyticsEvent(eventData: any): Promise<void>;
+  getRealtimeAnalytics(): Promise<any>;
+  getAnalyticsForRange(start: string, end: string, postId?: number): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -234,6 +245,221 @@ export class DatabaseStorage implements IStorage {
       content: post.content,
       publishedDate: post.publishedAt || post.createdAt,
       updatedDate: post.updatedAt,
+    };
+  }
+
+  // New Analytics System Implementation
+  async createOrUpdateSession(sessionData: any): Promise<VisitorSession> {
+    const { sessionId, visitorId, landingPage, referrer, userAgent, ipAddress } = sessionData;
+    
+    // Check if session exists
+    const [existingSession] = await db.select().from(visitorSessions)
+      .where(eq(visitorSessions.sessionId, sessionId));
+    
+    if (existingSession) {
+      // Update existing session
+      const [updated] = await db.update(visitorSessions)
+        .set({ 
+          pageViews: sql`${visitorSessions.pageViews} + 1`,
+          updatedAt: new Date()
+        })
+        .where(eq(visitorSessions.sessionId, sessionId))
+        .returning();
+      return updated;
+    }
+    
+    // Create new session
+    const [newSession] = await db.insert(visitorSessions).values({
+      sessionId,
+      visitorId,
+      ipAddress,
+      userAgent,
+      deviceType: sessionData.deviceType || 'unknown',
+      browser: sessionData.browser || 'unknown',
+      os: sessionData.os || 'unknown',
+      landingPage,
+      pageViews: 1,
+    }).returning();
+    
+    return newSession;
+  }
+
+  async trackAnalyticsEvent(eventData: any): Promise<void> {
+    const { eventType, postId, sessionId, visitorId, eventData: data, ipAddress, userAgent, referrer } = eventData;
+    
+    // Track the event
+    await db.insert(analyticsEvents).values({
+      eventType,
+      eventData: data,
+      postId: postId || null,
+      sessionId,
+      visitorId,
+      ipAddress,
+      userAgent,
+      referrer,
+      utmSource: eventData.utmSource,
+      utmMedium: eventData.utmMedium,
+      utmCampaign: eventData.utmCampaign,
+      utmTerm: eventData.utmTerm,
+      utmContent: eventData.utmContent,
+    });
+    
+    // Update session activity
+    await db.update(visitorSessions)
+      .set({ updatedAt: new Date() })
+      .where(eq(visitorSessions.sessionId, sessionId));
+    
+    // Handle specific event types
+    switch (eventType) {
+      case 'page_view':
+        if (postId) {
+          await db.insert(pageViews).values({
+            postId,
+            sessionId,
+            visitorId,
+          });
+          // Also increment the legacy view counter
+          await this.trackView(postId);
+        }
+        break;
+        
+      case 'conversion':
+        if (data?.conversionType) {
+          await db.insert(conversions).values({
+            conversionType: data.conversionType,
+            postId: postId || null,
+            sessionId,
+            visitorId,
+            attributionSource: referrer ? 'referral' : 'direct',
+            attributionData: data,
+          });
+          // Also increment the legacy lead counter if applicable
+          if (postId && data.conversionType === 'lead') {
+            await this.trackLead(postId);
+          }
+        }
+        break;
+        
+      case 'share':
+        if (postId) {
+          await this.trackShare(postId);
+        }
+        break;
+        
+      case 'time_on_page':
+        if (postId && data?.duration) {
+          // Update the page view record with time on page
+          await db.update(pageViews)
+            .set({ 
+              timeOnPage: data.duration,
+              scrollDepth: data.scrollDepth || 0
+            })
+            .where(and(
+              eq(pageViews.postId, postId),
+              eq(pageViews.sessionId, sessionId)
+            ));
+        }
+        break;
+    }
+  }
+
+  async getRealtimeAnalytics(): Promise<any> {
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    
+    // Get active visitors
+    const activeSessions = await db.select().from(visitorSessions)
+      .where(gte(visitorSessions.updatedAt, fiveMinutesAgo));
+    
+    // Get recent events
+    const recentEvents = await db.select().from(analyticsEvents)
+      .where(gte(analyticsEvents.createdAt, fiveMinutesAgo))
+      .orderBy(desc(analyticsEvents.createdAt))
+      .limit(50);
+    
+    // Get current page views by post
+    const pageViewsByPost = await db.select({
+      postId: pageViews.postId,
+      count: sql<number>`count(*)`,
+      title: posts.title,
+    })
+      .from(pageViews)
+      .leftJoin(posts, eq(pageViews.postId, posts.id))
+      .where(gte(pageViews.createdAt, fiveMinutesAgo))
+      .groupBy(pageViews.postId, posts.title);
+    
+    return {
+      activeVisitors: activeSessions.length,
+      recentEvents: recentEvents.map(event => ({
+        ...event,
+        eventData: event.eventData || {},
+      })),
+      topPages: pageViewsByPost,
+      timestamp: new Date(),
+    };
+  }
+
+  async getAnalyticsForRange(start: string, end: string, postId?: number): Promise<any> {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    
+    // Build conditions
+    const eventConditions = [
+      gte(analyticsEvents.createdAt, startDate),
+      lte(analyticsEvents.createdAt, endDate),
+    ];
+    
+    if (postId) {
+      eventConditions.push(eq(analyticsEvents.postId, postId));
+    }
+    
+    // Get all events in range
+    const events = await db.select().from(analyticsEvents)
+      .where(and(...eventConditions));
+    
+    // Get unique visitors
+    const uniqueVisitors = new Set(events.map(e => e.visitorId)).size;
+    const uniqueSessions = new Set(events.map(e => e.sessionId)).size;
+    
+    // Calculate metrics
+    const pageViews = events.filter(e => e.eventType === 'page_view').length;
+    const conversionsCount = events.filter(e => e.eventType === 'conversion').length;
+    const shares = events.filter(e => e.eventType === 'share').length;
+    
+    // Get time-based data for charts
+    const hourlyData = await db.select({
+      hour: sql<string>`date_trunc('hour', created_at)`,
+      views: sql<number>`count(*) filter (where event_type = 'page_view')`,
+      conversions: sql<number>`count(*) filter (where event_type = 'conversion')`,
+    })
+      .from(analyticsEvents)
+      .where(and(...eventConditions))
+      .groupBy(sql`date_trunc('hour', created_at)`)
+      .orderBy(sql`date_trunc('hour', created_at)`);
+    
+    // Get device breakdown
+    const deviceBreakdown = await db.select({
+      deviceType: visitorSessions.deviceType,
+      count: sql<number>`count(distinct ${visitorSessions.visitorId})`,
+    })
+      .from(visitorSessions)
+      .where(and(
+        gte(visitorSessions.createdAt, startDate),
+        lte(visitorSessions.createdAt, endDate)
+      ))
+      .groupBy(visitorSessions.deviceType);
+    
+    return {
+      overview: {
+        pageViews,
+        uniqueVisitors,
+        uniqueSessions,
+        conversions: conversionsCount,
+        shares,
+        conversionRate: pageViews > 0 ? (conversionsCount / pageViews * 100).toFixed(2) : '0.00',
+      },
+      hourlyData,
+      deviceBreakdown,
+      dateRange: { start, end },
     };
   }
 }
