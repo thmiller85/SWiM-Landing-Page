@@ -16,7 +16,7 @@ import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CMSLogin from "./pages/CMSLogin";
-// import CMSDashboard from "./pages/CMSDashboard";
+import CMSDashboardClean from "./pages/CMSDashboardClean";
 import NotFound from "./pages/not-found";
 import WordPressValidator from "./components/WordPressValidator";
 import { Toaster } from "@/components/ui/toaster";
@@ -80,7 +80,7 @@ function App() {
             {params => <ServicePage id={params.id} />}
           </Route>
           <Route path="/cms/login" component={CMSLogin} />
-          {/* <Route path="/cms" component={CMSDashboard} /> */}
+          <Route path="/cms" component={CMSDashboardClean} />
           <Route path="/wordpress-setup" component={WordPressValidator} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
