@@ -4,8 +4,16 @@ import { createServer, type Server } from "http";
 import path from "path";
 import { blogService } from "./blog";
 import { storage } from "./storage";
-import { insertPostSchema, insertImageSchema, insertUserSchema } from "../shared/schema";
-import z from "zod";
+// Import server-only validation schemas to avoid drizzle-orm in client bundle
+import { 
+  createPostSchema, 
+  updatePostSchema, 
+  createImageSchema, 
+  updateImageSchema, 
+  createUserSchema,
+  type CreatePostInput,
+  type UpdatePostInput
+} from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
 
@@ -95,104 +103,8 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Server-side rendered blog post pages for SEO optimization
-  app.get('/blog/:slug', async (req, res, next) => {
-    try {
-      const slug = req.params.slug;
-      const post = await storage.getPostBySlug(slug);
-      
-      if (!post) {
-        // If post not found, continue to SPA fallback
-        return next();
-      }
-      
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://your-domain.com' 
-        : 'http://localhost:5000';
-      
-      // Generate server-side rendered HTML with complete meta tags
-      const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${post.metaTitle || post.title}</title>
-  <meta name="description" content="${post.metaDescription || post.excerpt || ''}">
-  <meta name="keywords" content="${post.targetKeywords?.join(', ') || ''}">
-  <meta name="author" content="${post.author}">
-  <link rel="canonical" href="${baseUrl}/blog/${post.slug}">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="${baseUrl}/blog/${post.slug}">
-  <meta property="og:title" content="${post.metaTitle || post.title}">
-  <meta property="og:description" content="${post.metaDescription || post.excerpt || ''}">
-  ${post.featuredImage ? `<meta property="og:image" content="${baseUrl}${post.featuredImage}">` : ''}
-  <meta property="og:site_name" content="SWiM AI">
-  <meta property="article:author" content="${post.author}">
-  <meta property="article:published_time" content="${post.publishedAt?.toISOString() || post.createdAt.toISOString()}">
-  <meta property="article:modified_time" content="${post.updatedAt.toISOString()}">
-  <meta property="article:section" content="${post.category}">
-  ${post.tags?.map(tag => `<meta property="article:tag" content="${tag}">`).join('\n  ') || ''}
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="${baseUrl}/blog/${post.slug}">
-  <meta property="twitter:title" content="${post.metaTitle || post.title}">
-  <meta property="twitter:description" content="${post.metaDescription || post.excerpt || ''}">
-  ${post.featuredImage ? `<meta property="twitter:image" content="${baseUrl}${post.featuredImage}">` : ''}
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "${post.title}",
-    "description": "${post.metaDescription || post.excerpt || ''}",
-    "image": "${post.featuredImage ? baseUrl + post.featuredImage : ''}",
-    "author": {
-      "@type": "Person",
-      "name": "${post.author}"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "SWiM AI",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "${baseUrl}/logo.png"
-      }
-    },
-    "datePublished": "${post.publishedAt?.toISOString() || post.createdAt.toISOString()}",
-    "dateModified": "${post.updatedAt.toISOString()}",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "${baseUrl}/blog/${post.slug}"
-    },
-    "keywords": "${post.targetKeywords?.join(', ') || ''}",
-    "articleSection": "${post.category}",
-    "wordCount": "${post.content.split(' ').length}",
-    "timeRequired": "PT${post.readingTime}M"
-  }
-  </script>
-  
-  <link rel="stylesheet" href="/src/index.css">
-</head>
-<body>
-  <div id="root"></div>
-  <script>
-    // Set the blog post slug for client-side fetching
-    window.__BLOG_POST_SLUG__ = "${slug}";
-  </script>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-</html>`;
-
-      res.status(200).set({ "Content-Type": "text/html" }).send(html);
-    } catch (error) {
-      console.error('Error rendering blog post:', error);
-      next(); // Continue to SPA fallback
-    }
-  });
+  // Note: Server-side rendering for blog posts is handled in server/index.ts
+  // This ensures proper isolation from drizzle-orm dependencies
 
   // Serve uploaded images
   app.get('/images/*', (req, res) => {
@@ -366,29 +278,10 @@ ${posts.map(post => `  <url>
 
   app.post('/api/cms/posts', async (req, res) => {
     try {
-      // Create a custom validation schema for the API request
-      const createPostSchema = z.object({
-        title: z.string().min(1),
-        slug: z.string().min(1),
-        content: z.string(),
-        metaTitle: z.string().optional(),
-        metaDescription: z.string().optional(),
-        excerpt: z.string().optional(),
-        featuredImage: z.string().nullable().optional(),
-        author: z.string().min(1),
-        status: z.enum(['draft', 'published']).default('draft'),
-        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).default('consultation'),
-        category: z.string().min(1),
-        tags: z.array(z.string()).default([]),
-        targetKeywords: z.array(z.string()).default([]),
-        readingTime: z.number().optional().default(0),
-        publishedAt: z.string().nullable().optional(),
-      });
-
       const validatedData = createPostSchema.parse(req.body);
       
       // Convert publishedAt string to Date if provided
-      const postData: any = {
+      const postData = {
         ...validatedData,
         publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null
       };
@@ -405,29 +298,10 @@ ${posts.map(post => `  <url>
     try {
       const id = parseInt(req.params.id);
       
-      // Create update schema that matches the create schema
-      const updatePostSchema = z.object({
-        title: z.string().min(1).optional(),
-        slug: z.string().min(1).optional(),
-        content: z.string().optional(),
-        metaTitle: z.string().optional(),
-        metaDescription: z.string().optional(),
-        excerpt: z.string().optional(),
-        featuredImage: z.string().nullable().optional(),
-        author: z.string().min(1).optional(),
-        status: z.enum(['draft', 'published']).optional(),
-        ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).optional(),
-        category: z.string().min(1).optional(),
-        tags: z.array(z.string()).optional(),
-        targetKeywords: z.array(z.string()).optional(),
-        readingTime: z.number().optional(),
-        publishedAt: z.string().nullable().optional(),
-      });
-
       const validatedData = updatePostSchema.parse(req.body);
       
       // Convert publishedAt string to Date if provided
-      const updateData: any = {
+      const updateData = {
         ...validatedData,
         publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : undefined
       };
@@ -596,7 +470,7 @@ ${posts.map(post => `  <url>
   // User management
   app.post('/api/cms/users', async (req, res) => {
     try {
-      const validatedData = insertUserSchema.parse(req.body);
+      const validatedData = createUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(validatedData.username);
       if (existingUser) {
         return res.status(400).json({ error: 'Username already exists' });
