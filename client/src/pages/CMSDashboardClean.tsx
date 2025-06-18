@@ -15,6 +15,7 @@ import { ImagePickerModal } from '@/components/ImagePickerModal';
 import { AnalyticsDashboard } from '@/components/AnalyticsDashboard';
 import { SEOPreview } from '@/components/SEOPreview';
 import { PostEditor } from '@/components/PostEditor';
+import { PostPreview } from '@/components/PostPreview';
 
 // Client-only types to avoid server-side imports
 interface ClientPost {
@@ -66,6 +67,7 @@ export default function CMSDashboardClean() {
   const [editingPost, setEditingPost] = useState<ClientPost | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [copiedImageUrl, setCopiedImageUrl] = useState<string | null>(null);
+  const [previewPost, setPreviewPost] = useState<ClientPost | null>(null);
 
   // Check authentication
   useEffect(() => {
@@ -291,6 +293,13 @@ export default function CMSDashboardClean() {
                           <Button
                             size="sm"
                             variant="outline"
+                            onClick={() => setPreviewPost(post)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
                             onClick={() => handleEditPost(post)}
                           >
                             <Edit className="h-4 w-4" />
@@ -443,6 +452,15 @@ export default function CMSDashboardClean() {
               setEditingPost(null);
               setIsCreating(false);
             }}
+          />
+        )}
+
+        {/* Post Preview Modal */}
+        {previewPost && (
+          <PostPreview
+            post={previewPost}
+            isOpen={!!previewPost}
+            onClose={() => setPreviewPost(null)}
           />
         )}
       </div>

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ImagePickerModal } from '@/components/ImagePickerModal';
 import { SEOPreview } from '@/components/SEOPreview';
+import { PostPreview } from '@/components/PostPreview';
 import { useToast } from '@/hooks/use-toast';
 import { X, Save, Image, AlertCircle, Check, FileText, Eye, ClipboardPaste } from 'lucide-react';
 import MDEditor from '@uiw/react-md-editor';
@@ -40,6 +41,9 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
   const [markdownMode, setMarkdownMode] = useState(false);
   const [content, setContent] = useState(post.content || '');
   const [showPreview, setShowPreview] = useState(false);
+  const [excerpt, setExcerpt] = useState(post.excerpt || '');
+  const [excerptMarkdownMode, setExcerptMarkdownMode] = useState(false);
+  const [showExcerptPreview, setShowExcerptPreview] = useState(false);
 
   const generateSlug = (title: string) => {
     return title
@@ -75,11 +79,8 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
         
         // Extract first paragraph as excerpt
         const paragraphMatch = text.match(/^(?!#|\*|-|\d\.|\[|>|```).+$/m);
-        if (paragraphMatch && !document.getElementById('excerpt')?.value) {
-          const excerptInput = document.getElementById('excerpt') as HTMLTextAreaElement;
-          if (excerptInput) {
-            excerptInput.value = paragraphMatch[0].substring(0, 200) + '...';
-          }
+        if (paragraphMatch && !excerpt) {
+          setExcerpt(paragraphMatch[0].substring(0, 200) + '...');
         }
         
         toast({
@@ -128,6 +129,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
     
     // Replace textarea content with markdown editor content
     formData.set('content', content);
+    formData.set('excerpt', excerpt);
     
     if (validateForm(formData)) {
       onSave(formData);
@@ -223,14 +225,70 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                 </div>
 
                 <div>
-                  <Label htmlFor="excerpt" className="text-white">Excerpt</Label>
-                  <Textarea
-                    id="excerpt"
-                    name="excerpt"
-                    defaultValue={post.excerpt || ''}
-                    className="bg-gray-700 border-gray-600 text-white h-20"
-                    placeholder="Brief summary of the post (appears in post listings)"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="excerpt" className="text-white">Excerpt</Label>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={excerptMarkdownMode ? "default" : "outline"}
+                        onClick={() => setExcerptMarkdownMode(!excerptMarkdownMode)}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        {excerptMarkdownMode ? 'Markdown' : 'Simple'}
+                      </Button>
+                      {excerptMarkdownMode && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={showExcerptPreview ? "default" : "outline"}
+                          onClick={() => setShowExcerptPreview(!showExcerptPreview)}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          Preview
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {excerptMarkdownMode ? (
+                    <div className={showExcerptPreview ? "grid grid-cols-2 gap-4" : ""}>
+                      <div data-color-mode="dark">
+                        <MDEditor
+                          value={excerpt}
+                          onChange={(val) => setExcerpt(val || '')}
+                          preview={showExcerptPreview ? 'edit' : 'edit'}
+                          height={150}
+                          textareaProps={{
+                            placeholder: 'Brief summary of the post (appears in post listings)\n\nSupports **markdown** formatting',
+                          }}
+                        />
+                      </div>
+                      {showExcerptPreview && (
+                        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 overflow-y-auto max-h-[150px]">
+                          <article className="prose prose-invert prose-sm max-w-none">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {excerpt}
+                            </ReactMarkdown>
+                          </article>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Textarea
+                      id="excerpt"
+                      name="excerpt"
+                      value={excerpt}
+                      onChange={(e) => setExcerpt(e.target.value)}
+                      className="bg-gray-700 border-gray-600 text-white h-20"
+                      placeholder="Brief summary of the post (appears in post listings)"
+                    />
+                  )}
+                  <p className="text-xs text-gray-400 mt-2">
+                    {excerptMarkdownMode 
+                      ? "Markdown formatting supported for rich text excerpts" 
+                      : "Plain text mode - you can still use markdown syntax"}
+                  </p>
                 </div>
 
                 <div>
@@ -586,18 +644,28 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
             </Tabs>
 
             {/* Form Actions */}
-            <div className="flex justify-end space-x-2 pt-4 border-t border-gray-700">
+            <div className="flex justify-between pt-4 border-t border-gray-700">
               <Button
                 type="button"
                 variant="outline"
-                onClick={onCancel}
+                onClick={() => setShowPostPreview(true)}
               >
-                Cancel
+                <Eye className="h-4 w-4 mr-2" />
+                Preview Post
               </Button>
-              <Button type="submit">
-                <Save className="h-4 w-4 mr-2" />
-                {isCreating ? 'Create Post' : 'Save Changes'}
-              </Button>
+              <div className="flex space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">
+                  <Save className="h-4 w-4 mr-2" />
+                  {isCreating ? 'Create Post' : 'Save Changes'}
+                </Button>
+              </div>
             </div>
           </form>
         </CardContent>
@@ -622,6 +690,31 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
         }}
         currentImage={post.featuredImage}
       />
+
+      {/* Post Preview Modal */}
+      {showPostPreview && (
+        <PostPreview
+          post={{
+            title: (document.getElementById('title') as HTMLInputElement)?.value || post.title,
+            slug: (document.getElementById('slug') as HTMLInputElement)?.value || post.slug,
+            metaTitle: (document.getElementById('metaTitle') as HTMLInputElement)?.value || post.metaTitle,
+            metaDescription: (document.getElementById('metaDescription') as HTMLTextAreaElement)?.value || post.metaDescription,
+            excerpt: excerpt,
+            content: content,
+            featuredImage: (document.getElementById('featuredImage') as HTMLInputElement)?.value || post.featuredImage,
+            featuredImageAlt: (document.getElementById('featuredImageAlt') as HTMLInputElement)?.value || post.featuredImageAlt,
+            author: (document.getElementById('author') as HTMLInputElement)?.value || post.author,
+            category: (document.getElementById('category') as HTMLInputElement)?.value || post.category,
+            tags: ((document.getElementById('tags') as HTMLInputElement)?.value || '').split(',').map(tag => tag.trim()).filter(Boolean),
+            readingTime: parseInt((document.getElementById('readingTime') as HTMLInputElement)?.value || '5'),
+            status: (document.querySelector('[name="status"]') as HTMLSelectElement)?.value || post.status,
+            ctaType: (document.querySelector('[name="ctaType"]') as HTMLSelectElement)?.value || post.ctaType,
+            publishedAt: post.publishedAt || new Date(),
+          }}
+          isOpen={showPostPreview}
+          onClose={() => setShowPostPreview(false)}
+        />
+      )}
     </div>
   );
 }
