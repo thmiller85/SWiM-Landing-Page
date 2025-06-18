@@ -52,7 +52,27 @@ app.use((req, res, next) => {
       }
 
       console.log(`SSR: Found published post: ${post.title}`);
-      const blogPost = storage.convertToClientFormat(post);
+      
+      // Manual conversion to avoid drizzle-orm dependencies in client bundle
+      const blogPost = {
+        title: post.title,
+        metaTitle: post.metaTitle || post.title,
+        metaDescription: post.metaDescription || post.excerpt || '',
+        slug: post.slug,
+        publishedAt: post.publishedAt?.toISOString() || post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
+        author: post.author,
+        status: post.status,
+        ctaType: post.ctaType,
+        targetKeywords: post.targetKeywords,
+        excerpt: post.excerpt || '',
+        featuredImage: post.featuredImage,
+        category: post.category,
+        tags: post.tags,
+        readingTime: post.readingTime,
+        content: post.content
+      };
+      
       const baseUrl = req.protocol + '://' + req.get('host');
       const postUrl = `${baseUrl}/blog/${slug}`;
       
