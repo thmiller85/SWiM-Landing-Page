@@ -19,7 +19,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { staticBlogService } from '@/lib/static-blog';
-import { BlogPost as BlogPostType } from '@shared/blog';
+import { BlogPost as BlogPostType } from '@shared/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';

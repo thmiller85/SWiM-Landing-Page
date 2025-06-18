@@ -1,5 +1,5 @@
 // Production fallback data system
-import { BlogPost } from '@shared/schema';
+import { BlogPost } from '@shared/types';
 
 // Sample blog posts that match database structure
 export const mockBlogPosts: BlogPost[] = [

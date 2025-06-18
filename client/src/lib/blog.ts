@@ -1,4 +1,4 @@
-import { BlogPost, BlogMetadata } from '@shared/blog';
+import { BlogPost, BlogMetadata } from '@shared/types';
 
 class BlogService {
   private baseUrl = '/api/blog';

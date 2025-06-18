@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BlogPost } from '@shared/blog';
+import { BlogPost } from '@shared/types';
 
 interface SEOHeadProps {
   post?: BlogPost;
