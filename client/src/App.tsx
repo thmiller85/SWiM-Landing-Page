@@ -15,8 +15,10 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
-import CMSLogin from "./pages/CMSLogin";
-import CMSDashboardClean from "./pages/CMSDashboardClean";
+// Lazy load CMS components to avoid bundling server dependencies
+import { lazy, Suspense } from 'react';
+const CMSLogin = lazy(() => import('./pages/CMSLogin'));
+const CMSDashboardClean = lazy(() => import('./pages/CMSDashboardClean'));
 import NotFound from "./pages/not-found";
 import WordPressValidator from "./components/WordPressValidator";
 import { Toaster } from "@/components/ui/toaster";
@@ -79,8 +81,16 @@ function App() {
           <Route path="/services/:id">
             {params => <ServicePage id={params.id} />}
           </Route>
-          <Route path="/cms/login" component={CMSLogin} />
-          <Route path="/cms" component={CMSDashboardClean} />
+          <Route path="/cms/login">
+            <Suspense fallback={<div>Loading...</div>}>
+              <CMSLogin />
+            </Suspense>
+          </Route>
+          <Route path="/cms">
+            <Suspense fallback={<div>Loading...</div>}>
+              <CMSDashboardClean />
+            </Suspense>
+          </Route>
           <Route path="/wordpress-setup" component={WordPressValidator} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
