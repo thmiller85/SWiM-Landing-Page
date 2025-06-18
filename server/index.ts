@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { getClientAssets } from "./html-utils";
 
 const app = express();
 app.use(express.json());
@@ -89,6 +90,9 @@ app.use((req, res, next) => {
       const safeDescription = escapeHtml(blogPost.metaDescription);
       const safeAuthor = escapeHtml(blogPost.author);
       const safeCategory = escapeHtml(blogPost.category);
+      
+      // Get the correct client assets for production
+      const { scripts, styles } = isDev ? { scripts: '', styles: '' } : getClientAssets();
       
       const html = `<!DOCTYPE html>
 <html lang="en">
@@ -191,11 +195,11 @@ window.__vite_plugin_react_preamble_installed__ = true
     }
     </script>
     
-    ${isDev ? '' : '<link rel="stylesheet" href="/index.css" />'}
+    ${isDev ? '' : styles}
   </head>
   <body>
     <div id="root"></div>
-    ${isDev ? '<script type="module" src="/src/main.tsx"></script>' : '<script type="module" crossorigin src="/index.js"></script>'}
+    ${isDev ? '<script type="module" src="/src/main.tsx"></script>' : scripts}
   </body>
 </html>`;
 
