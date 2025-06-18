@@ -1,5 +1,5 @@
 import { db } from './db';
-import { posts, images, users, type Post, type InsertPost, type Image, type InsertImage, type User, type InsertUser, type BlogPost } from '../shared/schema';
+import { posts, images, users, type Post, type InsertPost, type Image, type InsertImage, type User, type InsertUser } from '../shared/schema';
 import { eq, desc, like, and, or, sql } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 
@@ -213,8 +213,8 @@ export class DatabaseStorage implements IStorage {
     return Math.ceil(words / wordsPerMinute);
   }
 
-  // Convert database post to BlogPost format for frontend compatibility
-  convertToClientFormat(post: Post): BlogPost {
+  // Convert database post to client format for frontend compatibility
+  convertToClientFormat(post: Post): any {
     return {
       title: post.title,
       metaTitle: post.metaTitle || post.title,

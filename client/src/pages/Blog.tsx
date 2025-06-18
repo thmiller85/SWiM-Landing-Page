@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
-import SEOHead from '@/components/SEOHead';
+
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useNavigation } from '@/context/NavigationContext';
