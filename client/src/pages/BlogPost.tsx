@@ -256,32 +256,34 @@ const BlogPost = () => {
               </article>
 
               {/* CTA Section */}
-              <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-lg p-8 border border-blue-800/30">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white mb-4">
-                    Ready to Transform Your Business?
-                  </h3>
-                  <p className="text-gray-300 mb-6">
-                    Discover how SWiM AI can revolutionize your workflow automation and drive unprecedented growth.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button 
-                      size="lg" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => blogAPIService.trackLead(post.slug)}
-                    >
-                      Schedule Consultation
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="lg"
-                      className="text-white border-white hover:bg-white hover:text-gray-900"
-                    >
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Case Studies
-                    </Button>
-                  </div>
+              <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-8 md:p-12 text-center border border-white/20">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  Ready to Transform Your Business?
+                </h3>
+                <p className="text-white/80 max-w-2xl mx-auto mb-8">
+                  Discover how SWiM AI can revolutionize your workflow automation and drive unprecedented growth.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    size="lg" 
+                    className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
+                    style={{ 
+                      textShadow: "0 0 5px rgba(0,240,255,0.3)",
+                      boxShadow: "0 0 20px rgba(0,240,255,0.5)"
+                    }}
+                    onClick={() => blogAPIService.trackLead(post.slug)}
+                  >
+                    Schedule Consultation
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    className="text-white border-white hover:bg-white hover:text-gray-900"
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    View Case Studies
+                  </Button>
                 </div>
               </div>
 
