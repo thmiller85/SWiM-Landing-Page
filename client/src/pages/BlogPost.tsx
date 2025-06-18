@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'wouter';
@@ -62,69 +62,73 @@ const BlogPost = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <Navbar 
-          onServicesClick={() => handleNavClick(servicesRef)}
-          onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
-          onWorkflowClick={() => handleNavClick(workflowRef)}
-          onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
-          onAboutClick={() => handleNavClick(aboutRef)}
-          onContactClick={() => handleNavClick(contactRef)}
-        />
-        <div className="pt-40 pb-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="animate-pulse">
-                <div className="h-8 bg-gray-700 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-700 rounded w-1/2 mb-8"></div>
-                <div className="space-y-4">
-                  <div className="h-4 bg-gray-700 rounded"></div>
-                  <div className="h-4 bg-gray-700 rounded w-5/6"></div>
-                  <div className="h-4 bg-gray-700 rounded w-4/6"></div>
+      <div className="relative bg-primary min-h-screen overflow-x-hidden">
+        <div className="gradient-bg">
+          <Navbar 
+            onServicesClick={() => handleNavClick(servicesRef)}
+            onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+            onWorkflowClick={() => handleNavClick(workflowRef)}
+            onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+            onAboutClick={() => handleNavClick(aboutRef)}
+            onContactClick={() => handleNavClick(contactRef)}
+          />
+          <div className="pt-40 pb-20">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-gray-700 rounded w-3/4 mb-4"></div>
+                  <div className="h-4 bg-gray-700 rounded w-1/2 mb-8"></div>
+                  <div className="space-y-4">
+                    <div className="h-4 bg-gray-700 rounded"></div>
+                    <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-700 rounded w-4/6"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <Footer 
+            onServicesClick={() => handleNavClick(servicesRef)}
+            onAboutClick={() => handleNavClick(aboutRef)}
+            onContactClick={() => handleNavClick(contactRef)}
+          />
         </div>
-        <Footer 
-          onServicesClick={() => handleNavClick(servicesRef)}
-          onAboutClick={() => handleNavClick(aboutRef)}
-          onContactClick={() => handleNavClick(contactRef)}
-        />
       </div>
     );
   }
 
   if (error || !post) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <Navbar 
-          onServicesClick={() => handleNavClick(servicesRef)}
-          onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
-          onWorkflowClick={() => handleNavClick(workflowRef)}
-          onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
-          onAboutClick={() => handleNavClick(aboutRef)}
-          onContactClick={() => handleNavClick(contactRef)}
-        />
-        <div className="pt-40 pb-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
-              <p className="text-gray-300 mb-8">The blog post you're looking for doesn't exist.</p>
-              <Link href="/blog">
-                <Button variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Blog
-                </Button>
-              </Link>
+      <div className="relative bg-primary min-h-screen overflow-x-hidden">
+        <div className="gradient-bg">
+          <Navbar 
+            onServicesClick={() => handleNavClick(servicesRef)}
+            onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+            onWorkflowClick={() => handleNavClick(workflowRef)}
+            onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+            onAboutClick={() => handleNavClick(aboutRef)}
+            onContactClick={() => handleNavClick(contactRef)}
+          />
+          <div className="pt-40 pb-20">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto text-center">
+                <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
+                <p className="text-gray-300 mb-8">The blog post you're looking for doesn't exist.</p>
+                <Link href="/blog">
+                  <Button variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Blog
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
+          <Footer 
+            onServicesClick={() => handleNavClick(servicesRef)}
+            onAboutClick={() => handleNavClick(aboutRef)}
+            onContactClick={() => handleNavClick(contactRef)}
+          />
         </div>
-        <Footer 
-          onServicesClick={() => handleNavClick(servicesRef)}
-          onAboutClick={() => handleNavClick(aboutRef)}
-          onContactClick={() => handleNavClick(contactRef)}
-        />
       </div>
     );
   }
@@ -150,154 +154,156 @@ const BlogPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-      <Navbar 
-        onServicesClick={() => handleNavClick(servicesRef)}
-        onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
-        onWorkflowClick={() => handleNavClick(workflowRef)}
-        onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
-        onAboutClick={() => handleNavClick(aboutRef)}
-        onContactClick={() => handleNavClick(contactRef)}
-      />
-      
-      <main className="pt-40 pb-20">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Back Button */}
-            <Link href="/blog">
-              <Button 
-                variant="ghost" 
-                className="text-gray-300 hover:text-white hover:bg-white/10 mb-8"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Blog
-              </Button>
-            </Link>
-
-            {/* Article Header */}
-            <header className="mb-12">
-              <div className="flex flex-wrap gap-2 mb-6">
-                <Badge variant="secondary" className="bg-blue-600/20 text-blue-300 border-blue-600/30">
-                  {post.category}
-                </Badge>
-                {post.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-gray-300 border-gray-600">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                {post.title}
-              </h1>
-
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                {post.excerpt}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-8">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>{post.author}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formatDate(post.publishedAt)}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>{post.readingTime} min read</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleShare}
-                  className="text-gray-400 hover:text-white hover:bg-white/10"
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
-              </div>
-
-              <Separator className="bg-gray-700" />
-            </header>
-
-            {/* Featured Image */}
-            {post.featuredImage && (
-              <div className="mb-12">
-                <img 
-                  src={post.featuredImage} 
-                  alt={post.title}
-                  className="w-full h-64 md:h-96 object-cover rounded-lg"
-                />
-              </div>
-            )}
-
-            {/* Article Content */}
-            <article className="prose prose-lg prose-invert max-w-none mb-12">
-              <div className="text-gray-200">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeHighlight]}
-                >
-                  {post.content}
-                </ReactMarkdown>
-              </div>
-            </article>
-
-            {/* CTA Section */}
-            <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-lg p-8 border border-blue-800/30">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  Ready to Transform Your Business?
-                </h3>
-                <p className="text-gray-300 mb-6">
-                  Discover how SWiM AI can revolutionize your workflow automation and drive unprecedented growth.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    size="lg" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => blogAPIService.trackLead(post.slug)}
-                  >
-                    Schedule Consultation
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="lg"
-                    className="text-white border-white hover:bg-white hover:text-gray-900"
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    View Case Studies
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Back to Blog */}
-            <div className="text-center mt-12">
+    <div className="relative bg-primary min-h-screen overflow-x-hidden">
+      <div className="gradient-bg">
+        <Navbar 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAISolutionsClick={() => handleNavClick(aiSolutionsRef)}
+          onWorkflowClick={() => handleNavClick(workflowRef)}
+          onCaseStudiesClick={() => handleNavClick(caseStudiesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
+        
+        <main className="pt-40 pb-20">
+          <div className="container mx-auto px-4">
+            <motion.div 
+              className="max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {/* Back Button */}
               <Link href="/blog">
-                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-white/10">
+                <Button 
+                  variant="ghost" 
+                  className="text-gray-300 hover:text-white hover:bg-white/10 mb-8"
+                >
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  More Articles
+                  Back to Blog
                 </Button>
               </Link>
-            </div>
-          </motion.div>
-        </div>
-      </main>
 
-      <Footer 
-        onServicesClick={() => handleNavClick(servicesRef)}
-        onAboutClick={() => handleNavClick(aboutRef)}
-        onContactClick={() => handleNavClick(contactRef)}
-      />
+              {/* Article Header */}
+              <header className="mb-12">
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <Badge variant="secondary" className="bg-blue-600/20 text-blue-300 border-blue-600/30">
+                    {post.category}
+                  </Badge>
+                  {post.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-gray-300 border-gray-600">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                  {post.title}
+                </h1>
+
+                <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                  {post.excerpt}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-8">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span>{post.author}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>{formatDate(post.publishedAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>{post.readingTime} min read</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleShare}
+                    className="text-gray-400 hover:text-white hover:bg-white/10"
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                </div>
+
+                <Separator className="bg-gray-700" />
+              </header>
+
+              {/* Featured Image */}
+              {post.featuredImage && (
+                <div className="mb-12">
+                  <img 
+                    src={post.featuredImage} 
+                    alt={post.title}
+                    className="w-full h-64 md:h-96 object-cover rounded-lg"
+                  />
+                </div>
+              )}
+
+              {/* Article Content */}
+              <article className="prose prose-lg prose-invert max-w-none mb-12">
+                <div className="text-gray-200">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeHighlight]}
+                  >
+                    {post.content}
+                  </ReactMarkdown>
+                </div>
+              </article>
+
+              {/* CTA Section */}
+              <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-lg p-8 border border-blue-800/30">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    Ready to Transform Your Business?
+                  </h3>
+                  <p className="text-gray-300 mb-6">
+                    Discover how SWiM AI can revolutionize your workflow automation and drive unprecedented growth.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button 
+                      size="lg" 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => blogAPIService.trackLead(post.slug)}
+                    >
+                      Schedule Consultation
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      className="text-white border-white hover:bg-white hover:text-gray-900"
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      View Case Studies
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Back to Blog */}
+              <div className="text-center mt-12">
+                <Link href="/blog">
+                  <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-white/10">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    More Articles
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </main>
+
+        <Footer 
+          onServicesClick={() => handleNavClick(servicesRef)}
+          onAboutClick={() => handleNavClick(aboutRef)}
+          onContactClick={() => handleNavClick(contactRef)}
+        />
+      </div>
     </div>
   );
 };
