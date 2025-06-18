@@ -292,7 +292,11 @@ const BlogPost = () => {
         </div>
       </main>
 
-      <Footer />
+      <Footer 
+        onServicesClick={() => handleNavClick(servicesRef)}
+        onAboutClick={() => handleNavClick(aboutRef)}
+        onContactClick={() => handleNavClick(contactRef)}
+      />
     </div>
   );
 };
