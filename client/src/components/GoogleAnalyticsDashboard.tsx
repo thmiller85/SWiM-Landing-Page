@@ -56,8 +56,8 @@ const mockGAData = {
 
 export function GoogleAnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
-  const measurementId = import.meta.env.VITE_GA4_MEASUREMENT_ID;
-  const isConfigured = measurementId && measurementId !== 'YOUR_GA4_MEASUREMENT_ID';
+  // GA is now configured directly in index.html with ID: G-YJ9EKPZ80K
+  const isConfigured = true;
 
   if (!isConfigured) {
     return (

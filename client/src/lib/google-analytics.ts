@@ -31,7 +31,7 @@ export const initializeGA = (measurementId: string) => {
 export const trackPageView = (url?: string) => {
   if (typeof window.gtag !== 'function') return;
   
-  window.gtag('config', import.meta.env.VITE_GA4_MEASUREMENT_ID, {
+  window.gtag('config', 'G-YJ9EKPZ80K', {
     page_path: url || window.location.pathname,
   });
 };
