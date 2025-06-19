@@ -80,8 +80,8 @@ export function GoogleAnalyticsDashboard() {
                 <ol className="text-blue-300 text-sm space-y-2 mb-4">
                   <li>1. Create a Google Analytics 4 property</li>
                   <li>2. Get your Measurement ID (G-XXXXXXXXXX)</li>
-                  <li>3. Add VITE_GA4_MEASUREMENT_ID to your .env file</li>
-                  <li>4. Restart the development server</li>
+                  <li>3. Add the GA tags to index.html</li>
+                  <li>4. Rebuild and deploy the application</li>
                 </ol>
                 <Button
                   variant="outline"
