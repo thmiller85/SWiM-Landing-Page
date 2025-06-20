@@ -29,6 +29,16 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 20, 2025 - Reading Time Calculation System Completely Fixed
+- **Root Cause Identified**: Fixed automatic reading time override that was ignoring manual CMS settings and showing uniform 11 minutes for all posts
+- **Manual Settings Respected**: Modified storage layer to prioritize user-set reading times over auto-calculation
+- **Smart Auto-Calculation**: Enhanced logic to only recalculate when content changes if current time appears auto-generated
+- **Improved Calculation Algorithm**: Better markdown parsing removes formatting for accurate word counts (headers, bold, links, code blocks)
+- **CMS Enhancement Added**: New "Auto" button in reading time field allows one-click calculation based on content
+- **Consistent Calculation**: Same algorithm used in both frontend and backend for consistent results
+- **User Experience Improved**: Clear instructions and 200 words/minute standard with tooltip guidance
+- **Verification Complete**: Testing confirms manual settings (6, 8, 9 minutes) now properly display instead of uniform values
+
 ### June 20, 2025 - Image Upload System Completely Fixed & Hardened
 - **Root Cause Identified**: Fixed database-file sync issues where database records were created but physical files were not properly persisted
 - **Upload Verification Added**: Implemented file existence verification immediately after multer saves files to disk
