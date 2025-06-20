@@ -635,17 +635,58 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
 
                 <div>
                   <Label htmlFor="readingTime" className="text-white">Reading Time (minutes)</Label>
-                  <Input
-                    id="readingTime"
-                    name="readingTime"
-                    type="number"
-                    value={formData.readingTime}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    min="1"
-                    onChange={(e) => updateFormData('readingTime', parseInt(e.target.value) || 5)}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="readingTime"
+                      name="readingTime"
+                      type="number"
+                      value={formData.readingTime}
+                      className="bg-gray-700 border-gray-600 text-white flex-1"
+                      min="1"
+                      onChange={(e) => updateFormData('readingTime', parseInt(e.target.value) || 5)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        // Calculate reading time based on content
+                        const calculateReadingTime = (text: string): number => {
+                          if (!text || text.trim().length === 0) return 1;
+                          
+                          // Remove markdown formatting for accurate word count
+                          const plainText = text
+                            .replace(/#{1,6}\s/g, '') // Remove headings
+                            .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+                            .replace(/\*(.*?)\*/g, '$1') // Remove italic
+                            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove links, keep text
+                            .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+                            .replace(/`([^`]+)`/g, '$1') // Remove inline code
+                            .replace(/\n+/g, ' ') // Replace line breaks with spaces
+                            .replace(/\s+/g, ' ') // Normalize whitespace
+                            .trim();
+                          
+                          const words = plainText.split(/\s+/).filter(word => word.length > 0).length;
+                          const wordsPerMinute = 200; // Average reading speed
+                          const readingTime = Math.ceil(words / wordsPerMinute);
+                          
+                          return Math.max(1, readingTime);
+                        };
+                        
+                        const autoCalculated = calculateReadingTime(content);
+                        updateFormData('readingTime', autoCalculated);
+                        
+                        toast({
+                          title: "Reading Time Updated",
+                          description: `Auto-calculated: ${autoCalculated} minute${autoCalculated !== 1 ? 's' : ''}`,
+                        });
+                      }}
+                    >
+                      Auto
+                    </Button>
+                  </div>
                   <p className="text-xs text-gray-400 mt-1">
-                    Estimated time to read the post
+                    Set manually or click "Auto" to calculate from content (200 words/min)
                   </p>
                 </div>
 

@@ -73,7 +73,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createPost(post: InsertPost): Promise<Post> {
-    const readingTime = this.calculateReadingTime(post.content);
+    // Use provided reading time if set, otherwise auto-calculate
+    const readingTime = post.readingTime && post.readingTime > 0 
+      ? post.readingTime 
+      : this.calculateReadingTime(post.content);
+    
     const [newPost] = await db.insert(posts).values({
       ...post,
       readingTime,
@@ -84,8 +88,29 @@ export class DatabaseStorage implements IStorage {
 
   async updatePost(id: number, post: Partial<InsertPost>): Promise<Post | undefined> {
     const updates: any = { ...post, updatedAt: new Date() };
-    if (post.content) {
-      updates.readingTime = this.calculateReadingTime(post.content);
+    
+    // Handle reading time logic:
+    // 1. If readingTime is explicitly provided, use it
+    // 2. If only content is updated but no readingTime provided, auto-calculate
+    // 3. If neither is provided, don't change reading time
+    if (post.readingTime !== undefined) {
+      // Explicit reading time provided - use it (0 means auto-calculate)
+      updates.readingTime = post.readingTime === 0 
+        ? this.calculateReadingTime(post.content || '') 
+        : post.readingTime;
+    } else if (post.content) {
+      // Content updated but no reading time specified - get current post to decide
+      const currentPost = await this.getPostById(id);
+      if (currentPost) {
+        // Only auto-calculate if current reading time appears to be auto-calculated
+        // (assuming manual times are rarely exact multiples that match our calculation)
+        const autoCalculated = this.calculateReadingTime(currentPost.content);
+        if (currentPost.readingTime === autoCalculated) {
+          // Current time appears auto-calculated, so recalculate
+          updates.readingTime = this.calculateReadingTime(post.content);
+        }
+        // Otherwise keep existing manual reading time
+      }
     }
     
     const [updatedPost] = await db.update(posts)
@@ -219,9 +244,26 @@ export class DatabaseStorage implements IStorage {
 
   // Helper methods
   private calculateReadingTime(content: string): number {
-    const wordsPerMinute = 200;
-    const words = content.split(/\s+/).length;
-    return Math.ceil(words / wordsPerMinute);
+    if (!content || content.trim().length === 0) return 1;
+    
+    // Remove markdown formatting for more accurate word count
+    const plainText = content
+      .replace(/#{1,6}\s/g, '') // Remove headings
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+      .replace(/\*(.*?)\*/g, '$1') // Remove italic
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove links, keep text
+      .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+      .replace(/`([^`]+)`/g, '$1') // Remove inline code
+      .replace(/\n+/g, ' ') // Replace line breaks with spaces
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+    
+    const words = plainText.split(/\s+/).filter(word => word.length > 0).length;
+    const wordsPerMinute = 200; // Average reading speed
+    const readingTime = Math.ceil(words / wordsPerMinute);
+    
+    // Ensure minimum 1 minute
+    return Math.max(1, readingTime);
   }
 
   // Convert database post to client format for frontend compatibility
