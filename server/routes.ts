@@ -559,7 +559,7 @@ ${posts.map(post => `  <url>
         checked: 0,
         orphaned: 0,
         repaired: 0,
-        cleaned: []
+        cleaned: [] as Array<{ id: number; filename: string }>
       };
 
       for (const image of images) {
