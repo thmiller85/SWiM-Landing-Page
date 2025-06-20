@@ -38,6 +38,13 @@ class BlogAPIService {
         );
       }
       
+      // Sort posts by publication date (newest first) to ensure chronological order
+      posts.sort((a: BlogPost, b: BlogPost) => {
+        const dateA = new Date(a.publishedAt).getTime();
+        const dateB = new Date(b.publishedAt).getTime();
+        return dateB - dateA; // Descending order (newest first)
+      });
+      
       return posts;
     } catch (error) {
       console.error('Failed to fetch posts:', error);
@@ -64,6 +71,7 @@ class BlogAPIService {
 
   async getRecentPosts(limit: number = 5): Promise<BlogPost[]> {
     const posts = await this.getAllPosts();
+    // Posts are already sorted by publication date (newest first) in getAllPosts
     return posts.slice(0, limit);
   }
 
