@@ -588,6 +588,51 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // Reading time calculation endpoint
+  app.post('/api/cms/calculate-reading-time', async (req, res) => {
+    try {
+      const { content } = req.body;
+      if (!content || typeof content !== 'string') {
+        return res.status(400).json({ error: 'Content is required' });
+      }
+
+      // Use the same calculation logic as server storage
+      const calculateReadingTime = (text: string): number => {
+        if (!text || text.trim().length === 0) return 1;
+        
+        // Remove markdown formatting for accurate word count
+        const plainText = text
+          .replace(/#{1,6}\s/g, '') // Remove headings
+          .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+          .replace(/\*(.*?)\*/g, '$1') // Remove italic
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove links, keep text
+          .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+          .replace(/`([^`]+)`/g, '$1') // Remove inline code
+          .replace(/\n+/g, ' ') // Replace line breaks with spaces
+          .replace(/\s+/g, ' ') // Normalize whitespace
+          .trim();
+        
+        const words = plainText.split(/\s+/).filter(word => word.length > 0).length;
+        const wordsPerMinute = 200; // Average reading speed
+        const readingTime = Math.ceil(words / wordsPerMinute);
+        
+        return Math.max(1, readingTime);
+      };
+
+      const readingTime = calculateReadingTime(content);
+      const wordCount = content.split(/\s+/).filter(word => word.length > 0).length;
+
+      res.json({
+        readingTime,
+        wordCount,
+        wordsPerMinute: 200
+      });
+    } catch (error) {
+      console.error('Error calculating reading time:', error);
+      res.status(500).json({ error: 'Failed to calculate reading time' });
+    }
+  });
+
   // Analytics tracking
   app.post('/api/cms/analytics/:postId/view', async (req, res) => {
     try {
