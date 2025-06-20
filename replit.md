@@ -29,6 +29,16 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 20, 2025 - Deployment-Persistent Image Storage System Complete
+- **Root Cause Identified**: Fixed image disappearance during deployments caused by uploads directory being reset during build process
+- **Automatic Backup System**: Created deployment-safe backup system that preserves uploaded images across all deployments
+- **Server Startup Restoration**: Images automatically restore from persistent backup on every server restart/deployment
+- **Immediate Upload Backup**: Every new image upload is immediately backed up to ensure zero data loss
+- **Deployment-Safe Architecture**: Uses `persistent-uploads/` directory tracked in version control for deployment persistence
+- **Comprehensive Testing**: Verified system works by simulating deployment image wipe and automatic restoration
+- **Zero User Intervention**: System operates transparently - users never lose uploaded images again
+- **Production Ready**: Handles deployment scenarios including Replit redeploys, Vercel deployments, and manual restarts
+
 ### June 20, 2025 - Reading Time Calculation System Completely Fixed
 - **Root Cause Identified**: Fixed automatic reading time override that was ignoring manual CMS settings and showing uniform 11 minutes for all posts
 - **Manual Settings Respected**: Modified storage layer to prioritize user-set reading times over auto-calculation
