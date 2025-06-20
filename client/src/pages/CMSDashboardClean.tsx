@@ -441,18 +441,53 @@ export default function CMSDashboardClean() {
                         <p className="text-gray-500 text-xs">
                           {(image.size / 1024).toFixed(1)} KB
                         </p>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigator.clipboard.writeText(image.url);
-                            setCopiedImageUrl(image.url);
-                            setTimeout(() => setCopiedImageUrl(null), 2000);
-                          }}
-                        >
-                          <Copy className="h-3 w-3" />
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(image.url);
+                              setCopiedImageUrl(image.url);
+                              setTimeout(() => setCopiedImageUrl(null), 2000);
+                            }}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              if (confirm(`Are you sure you want to delete "${image.filename}"?`)) {
+                                try {
+                                  const response = await fetch(`/api/cms/images/${image.id}`, {
+                                    method: 'DELETE',
+                                  });
+                                  
+                                  if (response.ok) {
+                                    queryClient.invalidateQueries({ queryKey: ['cms-images'] });
+                                    toast({
+                                      title: "Success",
+                                      description: "Image deleted successfully",
+                                    });
+                                  } else {
+                                    throw new Error('Failed to delete image');
+                                  }
+                                } catch (error) {
+                                  toast({
+                                    title: "Error",
+                                    description: "Failed to delete image",
+                                    variant: "destructive",
+                                  });
+                                }
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
