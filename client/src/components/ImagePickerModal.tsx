@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Check, Upload, Search } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
@@ -32,6 +32,7 @@ interface ImagePickerModalProps {
 
 export function ImagePickerModal({ isOpen, onClose, onSelect, currentImage }: ImagePickerModalProps) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(currentImage || null);
 
@@ -70,6 +71,8 @@ export function ImagePickerModal({ isOpen, onClose, onSelect, currentImage }: Im
       if (response.ok) {
         const newImage = await response.json();
         setSelectedImage(newImage.url);
+        // Invalidate the images cache to refresh the list
+        queryClient.invalidateQueries({ queryKey: ['cms-images'] });
         toast({
           title: "Success",
           description: "Image uploaded successfully",

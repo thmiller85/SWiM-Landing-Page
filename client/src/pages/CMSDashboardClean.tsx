@@ -460,6 +460,21 @@ export default function CMSDashboardClean() {
                             className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
                             onClick={async (e) => {
                               e.stopPropagation();
+                              
+                              // Check if image is in use by any published posts
+                              const postsUsingImage = posts.filter(post => 
+                                post.status === 'published' && post.featuredImage === image.url
+                              );
+                              
+                              if (postsUsingImage.length > 0) {
+                                toast({
+                                  title: "Cannot Delete",
+                                  description: `This image is used by ${postsUsingImage.length} published post(s). Remove it from those posts first.`,
+                                  variant: "destructive",
+                                });
+                                return;
+                              }
+                              
                               if (confirm(`Are you sure you want to delete "${image.filename}"?`)) {
                                 try {
                                   const response = await fetch(`/api/cms/images/${image.id}`, {
