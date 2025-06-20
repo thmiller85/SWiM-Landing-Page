@@ -16,6 +16,7 @@ import {
 } from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
+import { imagePersistentStorage } from "./storage-persistent";
 
 // Configure multer for image uploads - use persistent uploads directory
 const storage_config = multer.diskStorage({
@@ -85,6 +86,21 @@ function parseUserAgent(userAgent: string): {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
+  
+  // Initialize persistent storage and migrate any existing files
+  console.log('Initializing persistent image storage...');
+  try {
+    await imagePersistentStorage.ensureStorageStructure();
+    const migration = await imagePersistentStorage.migrateFiles();
+    if (migration.migrated > 0) {
+      console.log(`✓ Migrated ${migration.migrated} files to persistent storage`);
+    }
+    if (migration.errors.length > 0) {
+      console.warn(`Migration warnings: ${migration.errors.length} errors`);
+    }
+  } catch (error) {
+    console.error('Error initializing persistent storage:', error);
+  }
   
   // Serve uploaded images statically
   app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
