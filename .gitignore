@@ -66,8 +66,10 @@ coverage/
 # TypeScript
 *.tsbuildinfo
 
-# Image uploads - track uploaded images for deployment persistence
-!uploads/
-!uploads/images/
-!uploads/images/*
-uploads/images/.gitkeep
+# Image uploads - keep directory but ignore contents (files are backed up separately)
+uploads/images/*
+!uploads/images/.gitkeep
+
+# Persistent uploads backup - track these for deployment
+!persistent-uploads/
+!persistent-uploads/*

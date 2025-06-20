@@ -87,10 +87,19 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize persistent storage and migrate any existing files
+  // Initialize persistent storage and restore uploads from backup
   console.log('Initializing persistent image storage...');
   try {
     await imagePersistentStorage.ensureStorageStructure();
+    
+    // Restore uploads from backup on startup (deployment-safe)
+    const { execSync } = await import("child_process");
+    try {
+      execSync("node scripts/backup-uploads.js restore", { stdio: "inherit" });
+    } catch (restoreError) {
+      console.warn('Backup restore failed (this is normal for first deployment)');
+    }
+    
     const migration = await imagePersistentStorage.migrateFiles();
     if (migration.migrated > 0) {
       console.log(`✓ Migrated ${migration.migrated} files to persistent storage`);
@@ -492,6 +501,16 @@ ${posts.map(post => `  <url>
 
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
+      
+      // Backup the uploaded image immediately for deployment persistence
+      try {
+        const { execSync } = await import("child_process");
+        execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
+        console.log(`✓ Image backed up for persistence: ${req.file.filename}`);
+      } catch (backupError) {
+        console.warn('Image backup failed (upload still successful):', backupError);
+      }
+      
       res.status(201).json(image);
     } catch (error) {
       console.error('Error uploading image:', error);
