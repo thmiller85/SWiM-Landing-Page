@@ -1,0 +1,2 @@
+# Keep uploads/images directory in git but ignore uploaded files
+# This ensures the directory structure persists across deployments

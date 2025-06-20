@@ -65,3 +65,7 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+# Image uploads - keep directory but ignore contents except .gitkeep
+uploads/images/*
+!uploads/images/.gitkeep

@@ -528,12 +528,20 @@ ${posts.map(post => `  <url>
         return res.status(404).json({ error: 'Image not found' });
       }
 
-      // Delete physical file
-      const filePath = path.join(process.cwd(), 'public', image.url);
+      // Delete physical file from uploads directory
+      const filename = path.basename(image.url);
+      const filePath = path.join(process.cwd(), 'uploads/images', filename);
       try {
         await fs.unlink(filePath);
       } catch (fileError) {
         console.warn('Could not delete physical file:', fileError);
+        // Try legacy path as fallback
+        const legacyPath = path.join(process.cwd(), 'public', image.url);
+        try {
+          await fs.unlink(legacyPath);
+        } catch (legacyError) {
+          console.warn('Could not delete from legacy path either:', legacyError);
+        }
       }
 
       const success = await storage.deleteImage(id);
