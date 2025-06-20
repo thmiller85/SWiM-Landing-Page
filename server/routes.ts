@@ -86,6 +86,9 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
+  // Serve uploaded images statically
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+  
   // Debug endpoint to test if API routes are working
   app.get('/api/health', (req, res) => {
     console.log('Health check endpoint hit');
@@ -449,30 +452,14 @@ ${posts.map(post => `  <url>
         return res.status(400).json({ error: 'No image file provided' });
       }
 
-      const imageData = {
-        filename: req.file.filename,
-        originalName: req.file.originalname,
-        url: `/uploads/images/${req.file.filename}`,
-        size: req.file.size,
-        mimeType: req.file.mimetype,
-        altText: req.body.altText || '',
-        caption: req.body.caption || '',
-        width: null,
-        height: null,
-      };
-
-      const image = await storage.createImage(imageData);
-      res.status(201).json(image);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      res.status(500).json({ error: 'Failed to upload image' });
-    }
-  });
-
-  app.post('/api/cms/images', upload.single('image'), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ error: 'No image file provided' });
+      // Verify file was actually saved to disk
+      const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
+      try {
+        await fs.access(filePath);
+        console.log(`✓ File successfully saved: ${req.file.filename}`);
+      } catch (fileError) {
+        console.error(`✗ File not found after upload: ${filePath}`, fileError);
+        return res.status(500).json({ error: 'File upload failed - file not saved' });
       }
 
       const imageData = {
@@ -488,9 +475,20 @@ ${posts.map(post => `  <url>
       };
 
       const image = await storage.createImage(imageData);
+      console.log(`✓ Image record created in database: ID ${image.id}`);
       res.status(201).json(image);
     } catch (error) {
       console.error('Error uploading image:', error);
+      // Clean up file if database save failed
+      if (req.file) {
+        const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
+        try {
+          await fs.unlink(filePath);
+          console.log('Cleaned up orphaned file after database error');
+        } catch (cleanupError) {
+          console.warn('Could not clean up orphaned file:', cleanupError);
+        }
+      }
       res.status(500).json({ error: 'Failed to upload image' });
     }
   });
@@ -549,6 +547,44 @@ ${posts.map(post => `  <url>
     } catch (error) {
       console.error('Error deleting image:', error);
       res.status(500).json({ error: 'Failed to delete image' });
+    }
+  });
+
+  // Image consistency check and repair endpoint
+  app.post('/api/cms/images/consistency-check', async (req, res) => {
+    try {
+      const images = await storage.getAllImages();
+      const uploadsDir = path.join(process.cwd(), 'uploads/images');
+      const results = {
+        checked: 0,
+        orphaned: 0,
+        repaired: 0,
+        cleaned: []
+      };
+
+      for (const image of images) {
+        results.checked++;
+        const filename = path.basename(image.url);
+        const filePath = path.join(uploadsDir, filename);
+
+        try {
+          await fs.access(filePath);
+          console.log(`✓ Image file exists: ${filename}`);
+        } catch (error) {
+          console.log(`✗ Orphaned image record found: ${filename} (ID: ${image.id})`);
+          results.orphaned++;
+          
+          // Remove orphaned database record
+          await storage.deleteImage(image.id);
+          results.cleaned.push({ id: image.id, filename });
+          console.log(`  → Removed orphaned database record for ID: ${image.id}`);
+        }
+      }
+
+      res.json(results);
+    } catch (error) {
+      console.error('Error during consistency check:', error);
+      res.status(500).json({ error: 'Failed to perform consistency check' });
     }
   });
 
