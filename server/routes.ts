@@ -17,10 +17,10 @@ import {
 import multer from "multer";
 import fs from "fs/promises";
 
-// Configure multer for image uploads
+// Configure multer for image uploads - use persistent uploads directory
 const storage_config = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = path.join(process.cwd(), 'public/images/blog');
+    const uploadDir = path.join(process.cwd(), 'uploads/images');
     try {
       await fs.mkdir(uploadDir, { recursive: true });
       cb(null, uploadDir);
@@ -139,12 +139,29 @@ ${posts.map(post => `  <url>
   // Note: Server-side rendering for blog posts is handled in server/index.ts
   // This ensures proper isolation from drizzle-orm dependencies
 
-  // Serve uploaded images
-  app.get('/images/*', (req, res) => {
-    const imagePath = path.join(process.cwd(), 'public', req.path);
+  // Serve uploaded images from persistent uploads directory
+  app.get('/uploads/images/*', (req, res) => {
+    const imagePath = path.join(process.cwd(), req.path);
     res.sendFile(imagePath, (err) => {
       if (err && !res.headersSent) {
         res.status(404).json({ error: 'Image not found' });
+      }
+    });
+  });
+
+  // Legacy support for old image paths
+  app.get('/images/blog/*', (req, res) => {
+    const filename = path.basename(req.path);
+    const imagePath = path.join(process.cwd(), 'uploads/images', filename);
+    res.sendFile(imagePath, (err) => {
+      if (err && !res.headersSent) {
+        // Fallback to old location
+        const oldPath = path.join(process.cwd(), 'public', req.path);
+        res.sendFile(oldPath, (fallbackErr) => {
+          if (fallbackErr && !res.headersSent) {
+            res.status(404).json({ error: 'Image not found' });
+          }
+        });
       }
     });
   });
@@ -435,7 +452,7 @@ ${posts.map(post => `  <url>
       const imageData = {
         filename: req.file.filename,
         originalName: req.file.originalname,
-        url: `/images/blog/${req.file.filename}`,
+        url: `/uploads/images/${req.file.filename}`,
         size: req.file.size,
         mimeType: req.file.mimetype,
         altText: req.body.altText || '',
@@ -461,7 +478,7 @@ ${posts.map(post => `  <url>
       const imageData = {
         filename: req.file.filename,
         originalName: req.file.originalname,
-        url: `/images/blog/${req.file.filename}`,
+        url: `/uploads/images/${req.file.filename}`,
         size: req.file.size,
         mimeType: req.file.mimetype,
         altText: req.body.altText || '',
