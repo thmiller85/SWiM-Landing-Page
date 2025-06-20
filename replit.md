@@ -29,13 +29,15 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
-### June 20, 2025 - Image Management System Enhancement Complete
+### June 20, 2025 - Image Persistence & Storage Architecture Complete
+- **Persistent Storage Solution**: Migrated from public/images/blog to uploads/images for consistent file persistence
+- **Multi-Location Storage Fix**: Consolidated duplicate storage locations that were causing image disappearance
 - **Cache Invalidation Fixed**: Resolved issue where uploaded images weren't appearing immediately in CMS interface
-- **Duplicate Image Cleanup**: Removed orphaned database entries for missing image files
-- **Delete Functionality Added**: Implemented delete buttons with confirmation dialogs for image library
-- **Protected Deletion**: Added safeguards to prevent deletion of images currently used in published posts
-- **Database Consistency**: Fixed broken image references in blog posts and restored proper image display
-- **Real-time Updates**: Image library now refreshes automatically after uploads and deletions
+- **Automatic Consistency Checking**: Created startup script to verify database records match physical files
+- **Legacy Path Support**: Added backward compatibility for existing image URLs during migration
+- **Database Migration**: Updated all image URLs and blog post references to use persistent storage paths
+- **Protected Deletion**: Enhanced delete functionality to prevent removal of images used in published posts
+- **Gitignore Configuration**: Properly configured version control to maintain uploads directory structure
 
 ### June 18, 2025 - GitHub Integration Preparation Complete
 - **Repository Documentation**: Created comprehensive README.md with installation and deployment instructions
