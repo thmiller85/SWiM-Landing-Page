@@ -129,7 +129,7 @@ export class PersistentStorage {
       deleted = true;
       console.log(`✓ Deleted from primary location: ${filename}`);
     } catch (error) {
-      console.warn(`Could not delete from primary location: ${error.message}`);
+      console.warn(`Could not delete from primary location: ${error instanceof Error ? error.message : String(error)}`);
     }
     
     // Delete from fallback locations
@@ -193,7 +193,7 @@ export class PersistentStorage {
             migrated++;
             console.log(`✓ Migrated: ${file}`);
           } catch (error) {
-            const errorMsg = `Failed to migrate ${file}: ${error.message}`;
+            const errorMsg = `Failed to migrate ${file}: ${error instanceof Error ? error.message : String(error)}`;
             errors.push(errorMsg);
             console.warn(errorMsg);
           }
@@ -211,9 +211,7 @@ export class PersistentStorage {
 export const imagePersistentStorage = new PersistentStorage({
   localPath: path.join(process.cwd(), 'uploads/images'),
   fallbackPaths: [
-    path.join(process.cwd(), 'public/images/blog'),
-    path.join(process.cwd(), 'client/public/images/blog'),
-    path.join(process.cwd(), '.uploads-backup/images')
+    path.join(process.cwd(), 'persistent-uploads')
   ],
   enableVersioning: false
 });

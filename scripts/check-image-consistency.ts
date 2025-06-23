@@ -31,26 +31,20 @@ async function checkImageConsistency() {
       } catch (error) {
         console.log(`✗ Orphaned image record found: ${filename} (ID: ${image.id})`);
         
-        // Check legacy locations for migration
-        const legacyPaths = [
-          path.join(process.cwd(), 'public/images/blog', filename),
-          path.join(process.cwd(), 'client/public/images/blog', filename)
-        ];
+        // Check persistent backup location for restoration
+        const backupPath = path.join(process.cwd(), 'persistent-uploads', filename);
         
-        let migrated = false;
-        for (const legacyPath of legacyPaths) {
-          try {
-            await fs.access(legacyPath);
-            console.log(`  → Migrating from legacy location: ${legacyPath}`);
-            await fs.copyFile(legacyPath, filePath);
-            migrated = true;
-            break;
-          } catch (legacyError) {
-            // File not found in this legacy location
-          }
+        let restored = false;
+        try {
+          await fs.access(backupPath);
+          console.log(`  → Restoring from backup: ${backupPath}`);
+          await fs.copyFile(backupPath, filePath);
+          restored = true;
+        } catch (backupError) {
+          // File not found in backup location
         }
         
-        if (!migrated) {
+        if (!restored) {
           console.log(`  → Removing orphaned database record for ID: ${image.id}`);
           await db.delete(images).where(eq(images.id, image.id));
         }
