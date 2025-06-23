@@ -216,7 +216,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
               <img 
                 src={n8nLogo} 
                 alt="n8n - Workflow automation platform for business process optimization" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
             </div>
             <div className="hover:scale-110 transition-transform duration-300">
