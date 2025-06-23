@@ -10,9 +10,9 @@ import {
   floatingAnimation,
   pulseAnimation,
 } from "@/lib/animations";
-import rossAvatar from "@assets/Ross Avatar.png";
-import tomAvatar from "@assets/Tom Avatar.png";
-import steveAvatar from "@assets/Steve Avatar.png";
+import rossAvatar from "@/assets/ross-avatar.png";
+import tomAvatar from "@/assets/tom-avatar.png";
+import steveAvatar from "@/assets/steve-avatar.png";
 import openaiLogo from "@/assets/openai-logo.png";
 import anthropicLogo from "@/assets/anthropic-logo.png";
 import pythonLogo from "@/assets/python-logo.png";
