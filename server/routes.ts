@@ -501,9 +501,26 @@ ${posts.map(post => `  <url>
         height: null,
       };
 
+      // Create database record with verification
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
-      console.log(`✓ Image stored directly in persistent location: ${req.file.filename}`);
+      
+      // Verify database record was actually created
+      const verifyImage = await storage.getImageById(image.id);
+      if (!verifyImage) {
+        console.error(`✗ Database verification failed for image ID ${image.id}`);
+        // Clean up physical file if database failed
+        try {
+          await fs.unlink(filePath);
+          console.log('Cleaned up file after database verification failure');
+        } catch (cleanupError) {
+          console.warn('Could not clean up file after verification failure:', cleanupError);
+        }
+        return res.status(500).json({ error: 'Database verification failed' });
+      }
+      
+      console.log(`✓ Database record verified for ID ${image.id}`);
+      console.log(`✓ Upload complete: ${req.file.filename}`);
       
       res.status(201).json(image);
     } catch (error) {
@@ -650,36 +667,56 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Add GET endpoint for easier testing
+  // Updated consistency check for persistent storage architecture
   app.get('/api/cms/images/consistency-check', async (req, res) => {
     try {
       const images = await storage.getAllImages();
-      const uploadsDir = path.join(process.cwd(), 'uploads/images');
-      const backupDir = path.join(process.cwd(), 'persistent-uploads');
-      const missingFiles = [];
-      const existingFiles = [];
+      const persistentDir = path.join(process.cwd(), 'persistent-uploads');
+      const issues = [];
+      const orphanedFiles = [];
       
+      // Check database records have corresponding files
       for (const image of images) {
         const filename = path.basename(image.url);
-        const filePath = path.join(uploadsDir, filename);
-        const backupPath = path.join(backupDir, filename);
+        const filePath = path.join(persistentDir, filename);
         
-        const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
-        const backupExists = await fs.access(backupPath).then(() => true).catch(() => false);
-        
-        if (fileExists) {
-          existingFiles.push({ id: image.id, filename, hasBackup: backupExists });
-        } else {
-          missingFiles.push({ id: image.id, filename, hasBackup: backupExists });
+        try {
+          await fs.access(filePath);
+        } catch (error) {
+          issues.push({
+            type: 'missing_file',
+            imageId: image.id,
+            filename: filename,
+            url: image.url
+          });
         }
+      }
+
+      // Check for orphaned physical files without database records
+      try {
+        const files = await fs.readdir(persistentDir);
+        const imageFiles = files.filter(f => f.match(/\.(png|jpg|jpeg|gif|webp)$/i));
+        
+        for (const file of imageFiles) {
+          const hasRecord = images.some(img => path.basename(img.url) === file);
+          if (!hasRecord) {
+            orphanedFiles.push({
+              type: 'orphaned_file',
+              filename: file,
+              size: await fs.stat(path.join(persistentDir, file)).then(stats => stats.size).catch(() => 0)
+            });
+          }
+        }
+      } catch (dirError) {
+        console.warn('Could not read persistent-uploads directory:', dirError);
       }
       
       res.json({
         totalImages: images.length,
-        existingCount: existingFiles.length,
-        missingCount: missingFiles.length,
-        existingFiles,
-        missingFiles
+        dbRecordsWithoutFiles: issues,
+        orphanedFiles,
+        totalIssues: issues.length + orphanedFiles.length,
+        status: issues.length + orphanedFiles.length === 0 ? 'clean' : 'issues_found'
       });
     } catch (error) {
       console.error('Error checking image consistency:', error);
