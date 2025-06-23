@@ -19,10 +19,11 @@ import fs from "fs/promises";
 import { imagePersistentStorage } from "./storage-persistent";
 import { imagePersistence } from "./image-persistence";
 
-// Configure multer for image uploads - use persistent uploads directory
+// Configure multer for image uploads - use persistent directory directly
 const storage_config = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = path.join(process.cwd(), 'uploads/images');
+    // Store directly in persistent directory - no backup needed
+    const uploadDir = path.join(process.cwd(), 'persistent-uploads');
     try {
       await fs.mkdir(uploadDir, { recursive: true });
       cb(null, uploadDir);
@@ -115,7 +116,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.error('Error initializing persistence systems:', error);
   }
   
-  // Serve uploaded images statically
+  // Serve uploaded images statically from persistent directory
+  app.use('/persistent-uploads', express.static(path.join(process.cwd(), 'persistent-uploads')));
+  
+  // Also serve from legacy uploads path for backward compatibility
   app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
   
   // Debug endpoint to test if API routes are working
@@ -482,7 +486,7 @@ ${posts.map(post => `  <url>
       }
 
       // Verify file was actually saved to disk
-      const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
+      const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
       try {
         await fs.access(filePath);
         console.log(`✓ File successfully saved: ${req.file.filename}`);
@@ -494,7 +498,7 @@ ${posts.map(post => `  <url>
       const imageData = {
         filename: req.file.filename,
         originalName: req.file.originalname,
-        url: `/uploads/images/${req.file.filename}`,
+        url: `/persistent-uploads/${req.file.filename}`,
         size: req.file.size,
         mimeType: req.file.mimetype,
         altText: req.body.altText || '',
@@ -503,31 +507,9 @@ ${posts.map(post => `  <url>
         height: null,
       };
 
-      // Backup immediately from buffer before database operation
-      const fileBuffer = await fs.readFile(filePath);
-      const bufferBackupSuccess = await imagePersistence.backupFileFromBuffer(req.file.filename, fileBuffer);
-      
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
-      
-      // Also attempt file-based backup as secondary measure
-      if (!bufferBackupSuccess) {
-        try {
-          await imagePersistence.backupFile(req.file.filename);
-          console.log(`✓ Secondary file backup successful: ${req.file.filename}`);
-        } catch (backupError) {
-          console.warn('Secondary backup failed, trying legacy backup:', backupError);
-          try {
-            const { execSync } = await import("child_process");
-            execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
-            console.log(`✓ Legacy backup successful: ${req.file.filename}`);
-          } catch (legacyError) {
-            console.error('All backup methods failed - upload may be lost on restart:', legacyError);
-          }
-        }
-      } else {
-        console.log(`✓ Immediate buffer backup successful: ${req.file.filename}`);
-      }
+      console.log(`✓ Image stored directly in persistent location: ${req.file.filename}`);
       
       res.status(201).json(image);
     } catch (error) {
@@ -579,19 +561,21 @@ ${posts.map(post => `  <url>
         return res.status(404).json({ error: 'Image not found' });
       }
 
-      // Delete physical file from uploads directory
+      // Delete physical file from persistent directory
       const filename = path.basename(image.url);
-      const filePath = path.join(process.cwd(), 'uploads/images', filename);
+      const filePath = path.join(process.cwd(), 'persistent-uploads', filename);
       try {
         await fs.unlink(filePath);
+        console.log(`✓ Deleted file: ${filename}`);
       } catch (fileError) {
         console.warn('Could not delete physical file:', fileError);
-        // Try legacy path as fallback
-        const legacyPath = path.join(process.cwd(), 'public', image.url);
+        // Try legacy uploads path as fallback
+        const legacyPath = path.join(process.cwd(), 'uploads/images', filename);
         try {
           await fs.unlink(legacyPath);
+          console.log(`✓ Deleted from legacy path: ${filename}`);
         } catch (legacyError) {
-          console.warn('Could not delete from legacy path either:', legacyError);
+          console.warn('Could not delete from either location:', legacyError);
         }
       }
 
