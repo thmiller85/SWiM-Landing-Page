@@ -215,6 +215,16 @@ window.__vite_plugin_react_preamble_installed__ = true
     }
   });
 
+  // Ensure persistent-uploads directory is served statically for production
+  const path = await import("path");
+  const fs = await import("fs");
+  const persistentUploadsPath = path.join(process.cwd(), "persistent-uploads");
+  
+  if (fs.existsSync(persistentUploadsPath)) {
+    app.use('/persistent-uploads', express.static(persistentUploadsPath));
+    console.log('✓ Static serving configured for /persistent-uploads/');
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
