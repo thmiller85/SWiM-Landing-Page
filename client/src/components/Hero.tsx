@@ -17,6 +17,7 @@ import openaiLogo from "@/assets/openai-logo.png";
 import anthropicLogo from "@/assets/anthropic-logo.png";
 import pythonLogo from "@/assets/python-logo.png";
 import dockerLogo from "@/assets/docker-logo.png";
+import n8nLogo from "@/assets/n8n-logo.png";
 import cursorLogo from "@/assets/cursor-logo.png";
 
 interface HeroProps {
@@ -209,6 +210,13 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 src={dockerLogo} 
                 alt="Docker - Containerization platform for scalable application deployment" 
                 className="h-6 w-auto"
+              />
+            </div>
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={n8nLogo} 
+                alt="n8n - Workflow automation platform for business process optimization" 
+                className="h-8 w-auto"
               />
             </div>
             <div className="hover:scale-110 transition-transform duration-300">
