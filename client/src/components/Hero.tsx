@@ -10,17 +10,9 @@ import {
   floatingAnimation,
   pulseAnimation,
 } from "@/lib/animations";
-import n8nAgentImage from "@assets/n8n_agent.png";
-import rossAvatar from "@assets/Ross Avatar.png";
-import tomAvatar from "@assets/Tom Avatar.png";
-import steveAvatar from "@assets/Steve Avatar.png";
-import davidAvatar from "@assets/David Avatar.png";
-import openaiLogo from "@assets/OpenAI-white-monoblossom_1749125463906.png";
-import anthropicLogo from "@assets/Anthropic Logo_1749125655517.png";
-import pythonLogo from "@assets/Python Logo White_1749127141265.png";
-import dockerLogo from "@assets/docker-logo-white_1749127182963.png";
-import n8nLogo from "@assets/n8n Logo White Text_1749127191325.png";
-import cursorLogo from "@assets/Cursor Logo (1)_1749128455053.png";
+import rossAvatar from "@/assets/ross-avatar.png";
+import tomAvatar from "@/assets/tom-avatar.png";
+import steveAvatar from "@/assets/steve-avatar.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -86,7 +78,6 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                     <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                     <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                     <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                    <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                   </div>
                   <div className="text-white/80 font-inter text-sm">
                     <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
@@ -103,7 +94,6 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                   <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                   <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                   <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                  <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                 </div>
                 <div className="text-white/80 font-inter text-sm">
                   <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
@@ -177,7 +167,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           </motion.div>
         </div>
 
-        {/* Trusted by logos */}
+        {/* Technology stack */}
         <motion.div
           className="mt-24"
           initial={{ opacity: 0, y: 20 }}
@@ -185,50 +175,26 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <p className="text-center text-white/60 font-inter text-sm uppercase tracking-widest mb-8">
-            Built with
+            Built with cutting-edge technology
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={openaiLogo} 
-                alt="OpenAI - Advanced AI language models for natural language processing" 
-                className="h-10 w-auto"
-              />
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8">
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              OpenAI
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={anthropicLogo} 
-                alt="Anthropic - Claude AI for advanced conversational AI solutions" 
-                className="h-6 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              Anthropic
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={pythonLogo} 
-                alt="Python - High-level programming language for AI and data science" 
-                className="h-10 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              Python
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={dockerLogo} 
-                alt="Docker - Containerization platform for scalable application deployment" 
-                className="h-6 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              Docker
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={n8nLogo} 
-                alt="n8n - Workflow automation platform for business process optimization" 
-                className="h-24 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              n8n
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={cursorLogo} 
-                alt="Cursor - AI-powered code editor for enhanced development productivity" 
-                className="h-10 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
+              React
             </div>
           </div>
         </motion.div>
