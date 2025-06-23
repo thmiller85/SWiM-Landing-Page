@@ -29,6 +29,14 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 23, 2025 - Image Directory Structure Simplified
+- **Legacy Directory Cleanup**: Removed unused `/public/images/blog` directory and cleaned up legacy references
+- **Simplified Fallback System**: Updated persistent storage to only use `/persistent-uploads` as fallback instead of multiple legacy paths
+- **Cleaner Architecture**: Reduced from 3 image directories to 2 active directories: `/uploads/images` (working) and `/persistent-uploads` (backup)
+- **Script Updates**: Updated consistency check script to use backup directory instead of legacy paths
+- **TypeScript Fixes**: Resolved error handling type issues in persistent storage module
+- **Documentation Updated**: Clarified current image upload system architecture and removed outdated directory references
+
 ### June 20, 2025 - Deployment-Persistent Image Storage System Complete
 - **Root Cause Identified**: Fixed image disappearance during deployments caused by uploads directory being reset during build process
 - **Automatic Backup System**: Created deployment-safe backup system that preserves uploaded images across all deployments

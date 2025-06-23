@@ -199,7 +199,7 @@ export class PersistentStorage {
           }
         }
       } catch (error) {
-        console.warn(`Could not access fallback path ${fallbackPath}:`, error.message);
+        console.warn(`Could not access fallback path ${fallbackPath}:`, error instanceof Error ? error.message : String(error));
       }
     }
     

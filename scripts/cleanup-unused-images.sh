@@ -6,8 +6,7 @@
 rm "/home/runner/workspace/client/public/apple-touch-icon.svg"
 rm "/home/runner/workspace/client/public/favicon-16x16.svg"
 rm "/home/runner/workspace/client/public/favicon-32x32.svg"
-rm "/home/runner/workspace/client/public/images/blog/image-1750178585894-438339842.png"
-rm "/home/runner/workspace/client/public/images/blog/workflow-automation-hero.jpg"
+# Legacy blog image directory has been cleaned up
 rm "/home/runner/workspace/client/public/og-image-background.jpg"
 rm "/home/runner/workspace/client/public/og-image-clean-final.jpg"
 rm "/home/runner/workspace/client/public/og-image-clean-logo-only.jpg"
