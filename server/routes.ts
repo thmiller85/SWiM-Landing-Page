@@ -167,45 +167,14 @@ ${posts.map(post => `  <url>
   // Note: Server-side rendering for blog posts is handled in server/index.ts
   // This ensures proper isolation from drizzle-orm dependencies
 
-  // Serve uploaded images from persistent uploads directory with better error handling
-  app.get('/uploads/images/*', async (req, res) => {
+  // Serve uploaded images from persistent uploads directory
+  app.get('/uploads/images/*', (req, res) => {
     const imagePath = path.join(process.cwd(), req.path);
-    
-    try {
-      await fs.access(imagePath);
-      res.sendFile(imagePath, (err) => {
-        if (err && !res.headersSent) {
-          console.warn(`Failed to serve image: ${imagePath}`, err.message);
-          res.status(404).json({ error: 'Image file not accessible' });
-        }
-      });
-    } catch (accessError) {
-      console.warn(`Image not found: ${imagePath}`);
-      
-      // Try fallback locations
-      const filename = path.basename(req.path);
-      const fallbackPaths = [
-        path.join(process.cwd(), 'persistent-uploads', filename),
-        path.join(process.cwd(), 'public/uploads/images', filename)
-      ];
-      
-      let served = false;
-      for (const fallbackPath of fallbackPaths) {
-        try {
-          await fs.access(fallbackPath);
-          res.sendFile(fallbackPath);
-          console.log(`✓ Served from fallback: ${fallbackPath}`);
-          served = true;
-          break;
-        } catch (fallbackError) {
-          // Continue to next fallback
-        }
+    res.sendFile(imagePath, (err) => {
+      if (err && !res.headersSent) {
+        res.status(404).json({ error: 'Image not found' });
       }
-      
-      if (!served) {
-        res.status(404).json({ error: 'Image not found in any location' });
-      }
-    }
+    });
   });
 
   // Legacy support for old image paths
@@ -508,40 +477,16 @@ ${posts.map(post => `  <url>
         return res.status(400).json({ error: 'No image file provided' });
       }
 
-      console.log(`📁 Processing upload: ${req.file.originalname} -> ${req.file.filename}`);
-
-      // Verify file was actually saved to disk with retry mechanism
+      // Verify file was actually saved to disk
       const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
-      let fileExists = false;
-      let retryCount = 0;
-      const maxRetries = 3;
-
-      while (!fileExists && retryCount < maxRetries) {
-        try {
-          await fs.access(filePath);
-          const stats = await fs.stat(filePath);
-          if (stats.size === req.file.size) {
-            fileExists = true;
-            console.log(`✓ File verified on disk: ${req.file.filename} (${stats.size} bytes)`);
-          } else {
-            throw new Error(`Size mismatch: expected ${req.file.size}, got ${stats.size}`);
-          }
-        } catch (fileError: unknown) {
-          retryCount++;
-          const errorMessage = fileError instanceof Error ? fileError.message : String(fileError);
-          console.warn(`⚠️ File verification attempt ${retryCount}/${maxRetries} failed:`, errorMessage);
-          if (retryCount < maxRetries) {
-            await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retry
-          }
-        }
+      try {
+        await fs.access(filePath);
+        console.log(`✓ File successfully saved: ${req.file.filename}`);
+      } catch (fileError) {
+        console.error(`✗ File not found after upload: ${filePath}`, fileError);
+        return res.status(500).json({ error: 'File upload failed - file not saved' });
       }
 
-      if (!fileExists) {
-        console.error(`✗ File verification failed after ${maxRetries} attempts: ${filePath}`);
-        return res.status(500).json({ error: 'File upload failed - file not properly saved to disk' });
-      }
-
-      // Create database record only after file verification succeeds
       const imageData = {
         filename: req.file.filename,
         originalName: req.file.originalname,
@@ -554,40 +499,8 @@ ${posts.map(post => `  <url>
         height: null,
       };
 
-      let image;
-      try {
-        image = await storage.createImage(imageData);
-        console.log(`✓ Database record created: ID ${image.id}`);
-      } catch (dbError) {
-        console.error('Database save failed, cleaning up file:', dbError);
-        try {
-          await fs.unlink(filePath);
-          console.log('✓ Orphaned file cleaned up after database error');
-        } catch (cleanupError) {
-          console.warn('Could not clean up orphaned file:', cleanupError);
-        }
-        return res.status(500).json({ error: 'Failed to save image record to database' });
-      }
-
-      // Final verification: ensure both file and database record exist
-      try {
-        await fs.access(filePath);
-        const dbImage = await storage.getImageById(image.id);
-        if (!dbImage) {
-          throw new Error('Database record not found after creation');
-        }
-        console.log(`✓ Final verification successful for image ID ${image.id}`);
-      } catch (verificationError) {
-        console.error('Final verification failed:', verificationError);
-        // Attempt cleanup
-        try {
-          await fs.unlink(filePath);
-          await storage.deleteImage(image.id);
-        } catch (cleanupError) {
-          console.warn('Cleanup after verification failure:', cleanupError);
-        }
-        return res.status(500).json({ error: 'Upload verification failed - inconsistent state detected' });
-      }
+      const image = await storage.createImage(imageData);
+      console.log(`✓ Image record created in database: ID ${image.id}`);
       
       // Backup the uploaded image immediately for deployment persistence
       try {
@@ -598,21 +511,20 @@ ${posts.map(post => `  <url>
         console.warn('Image backup failed (upload still successful):', backupError);
       }
       
-      console.log(`🎉 Upload completed successfully: ${req.file.filename}`);
       res.status(201).json(image);
     } catch (error) {
-      console.error('Critical error in upload process:', error);
-      // Emergency cleanup
+      console.error('Error uploading image:', error);
+      // Clean up file if database save failed
       if (req.file) {
         const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
         try {
           await fs.unlink(filePath);
-          console.log('Emergency cleanup: removed orphaned file');
+          console.log('Cleaned up orphaned file after database error');
         } catch (cleanupError) {
-          console.warn('Emergency cleanup failed:', cleanupError);
+          console.warn('Could not clean up orphaned file:', cleanupError);
         }
       }
-      res.status(500).json({ error: 'Upload process failed completely' });
+      res.status(500).json({ error: 'Failed to upload image' });
     }
   });
 
@@ -673,22 +585,18 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Enhanced image consistency check and repair endpoint
+  // Image consistency check and repair endpoint
   app.post('/api/cms/images/consistency-check', async (req, res) => {
     try {
-      console.log('🔍 Starting comprehensive image consistency check...');
       const images = await storage.getAllImages();
       const uploadsDir = path.join(process.cwd(), 'uploads/images');
       const results = {
         checked: 0,
         orphaned: 0,
         repaired: 0,
-        cleaned: [] as Array<{ id: number; filename: string; reason: string }>,
-        summary: '',
-        issues: [] as string[]
+        cleaned: [] as Array<{ id: number; filename: string }>
       };
 
-      // Check database records against physical files
       for (const image of images) {
         results.checked++;
         const filename = path.basename(image.url);
@@ -696,80 +604,18 @@ ${posts.map(post => `  <url>
 
         try {
           await fs.access(filePath);
-          const stats = await fs.stat(filePath);
-          console.log(`✓ Image file exists: ${filename} (${stats.size} bytes)`);
-          
-          // Verify size matches if recorded
-          if (image.size && image.size !== stats.size) {
-            console.warn(`⚠️ Size mismatch for ${filename}: DB=${image.size}, File=${stats.size}`);
-            results.issues.push(`Size mismatch: ${filename}`);
-          }
+          console.log(`✓ Image file exists: ${filename}`);
         } catch (error) {
-          console.log(`✗ Orphaned database record: ${filename} (ID: ${image.id})`);
+          console.log(`✗ Orphaned image record found: ${filename} (ID: ${image.id})`);
           results.orphaned++;
           
-          // Check fallback locations before deleting
-          const fallbackPaths = [
-            path.join(process.cwd(), 'persistent-uploads', filename),
-            path.join(process.cwd(), 'public/uploads/images', filename)
-          ];
-          
-          let foundInFallback = false;
-          for (const fallbackPath of fallbackPaths) {
-            try {
-              await fs.access(fallbackPath);
-              console.log(`✓ Found in fallback location: ${fallbackPath}`);
-              // Copy to primary location
-              await fs.copyFile(fallbackPath, filePath);
-              console.log(`✓ Restored to primary location: ${filename}`);
-              results.repaired++;
-              foundInFallback = true;
-              break;
-            } catch (fallbackError) {
-              // Continue checking other fallback locations
-            }
-          }
-          
-          if (!foundInFallback) {
-            // Remove orphaned database record
-            await storage.deleteImage(image.id);
-            results.cleaned.push({ 
-              id: image.id, 
-              filename, 
-              reason: 'File not found in any location' 
-            });
-            console.log(`  → Removed orphaned database record for ID: ${image.id}`);
-          }
+          // Remove orphaned database record
+          await storage.deleteImage(image.id);
+          results.cleaned.push({ id: image.id, filename });
+          console.log(`  → Removed orphaned database record for ID: ${image.id}`);
         }
       }
 
-      // Check for orphaned physical files (files without database records)
-      try {
-        const files = await fs.readdir(uploadsDir);
-        const imageFiles = files.filter(file => 
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(file) && !file.startsWith('.')
-        );
-        
-        for (const file of imageFiles) {
-          const matchingRecord = images.find(img => path.basename(img.url) === file);
-          if (!matchingRecord) {
-            console.log(`📁 Orphaned physical file found: ${file}`);
-            results.issues.push(`Orphaned file: ${file} (no database record)`);
-          }
-        }
-      } catch (dirError) {
-        console.warn('Could not read uploads directory:', dirError);
-        results.issues.push('Could not scan uploads directory');
-      }
-
-      // Generate summary
-      if (results.orphaned === 0 && results.repaired === 0 && results.issues.length === 0) {
-        results.summary = `All ${results.checked} images are consistent`;
-      } else {
-        results.summary = `Checked ${results.checked} images: ${results.cleaned.length} cleaned, ${results.repaired} repaired, ${results.issues.length} issues found`;
-      }
-
-      console.log(`🎯 Consistency check completed: ${results.summary}`);
       res.json(results);
     } catch (error) {
       console.error('Error during consistency check:', error);
