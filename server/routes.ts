@@ -503,22 +503,30 @@ ${posts.map(post => `  <url>
         height: null,
       };
 
+      // Backup immediately from buffer before database operation
+      const fileBuffer = await fs.readFile(filePath);
+      const bufferBackupSuccess = await imagePersistence.backupFileFromBuffer(req.file.filename, fileBuffer);
+      
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
       
-      // Backup the uploaded image immediately using enhanced persistence system
-      try {
-        await imagePersistence.backupFile(req.file.filename);
-        console.log(`✓ Image backed up for persistence: ${req.file.filename}`);
-      } catch (backupError) {
-        console.warn('Enhanced backup failed, trying legacy backup:', backupError);
+      // Also attempt file-based backup as secondary measure
+      if (!bufferBackupSuccess) {
         try {
-          const { execSync } = await import("child_process");
-          execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
-          console.log(`✓ Image backed up using legacy system: ${req.file.filename}`);
-        } catch (legacyError) {
-          console.warn('All backup methods failed (upload still successful):', legacyError);
+          await imagePersistence.backupFile(req.file.filename);
+          console.log(`✓ Secondary file backup successful: ${req.file.filename}`);
+        } catch (backupError) {
+          console.warn('Secondary backup failed, trying legacy backup:', backupError);
+          try {
+            const { execSync } = await import("child_process");
+            execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
+            console.log(`✓ Legacy backup successful: ${req.file.filename}`);
+          } catch (legacyError) {
+            console.error('All backup methods failed - upload may be lost on restart:', legacyError);
+          }
         }
+      } else {
+        console.log(`✓ Immediate buffer backup successful: ${req.file.filename}`);
       }
       
       res.status(201).json(image);

@@ -1,28 +1,34 @@
 {
-  "lastBackup": "2025-06-20T20:10:09.301Z",
+  "lastBackup": "2025-06-23T19:27:38.495Z",
   "files": [
     {
       "filename": "image-1750178585894-438339842.png",
       "size": 2332969,
-      "modified": "2025-06-20T15:41:55.323Z",
+      "modified": "2025-06-20T20:10:57.048Z",
       "hash": "iVBORw0KGgoAAAANSUhEUgAABgAAAAQA"
     },
     {
       "filename": "image-1750386708691-976275879.png",
       "size": 2340448,
-      "modified": "2025-06-20T15:41:55.323Z",
+      "modified": "2025-06-20T20:10:57.049Z",
       "hash": "iVBORw0KGgoAAAANSUhEUgAABgAAAAQA"
     },
     {
       "filename": "image-1750435423619-424133630.png",
       "size": 3465382,
-      "modified": "2025-06-20T16:03:43.651Z",
+      "modified": "2025-06-23T11:37:27.532Z",
       "hash": "iVBORw0KGgoAAAANSUhEUgAAC9AAAAes"
+    },
+    {
+      "filename": "upload-metadata.json",
+      "size": 802,
+      "modified": "2025-06-23T12:23:45.977Z",
+      "hash": "ewogICJsYXN0QmFja3VwIjogIjIwMjUt"
     },
     {
       "filename": "workflow-automation-hero.jpg",
       "size": 8980596,
-      "modified": "2025-06-20T15:41:55.326Z",
+      "modified": "2025-06-23T11:37:27.538Z",
       "hash": "iVBORw0KGgoAAAANSUhEUgAAC2AAAAZg"
     }
   ]

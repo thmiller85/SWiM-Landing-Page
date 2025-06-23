@@ -109,18 +109,63 @@ export class ImagePersistenceManager {
   }
 
   /**
-   * Backup a single file immediately
+   * Backup a single file immediately with verification
    */
   async backupFile(filename: string): Promise<boolean> {
     try {
+      await this.ensureDirectories();
+      
       const sourcePath = path.join(this.uploadsDir, filename);
       const destPath = path.join(this.backupDir, filename);
       
+      // Verify source exists
+      try {
+        await fs.access(sourcePath);
+      } catch {
+        throw new Error(`Source file does not exist: ${sourcePath}`);
+      }
+      
+      // Copy to backup location
       await fs.copyFile(sourcePath, destPath);
-      console.log(`✓ Backed up: ${filename}`);
+      
+      // Verify backup was created
+      const backupStats = await fs.stat(destPath);
+      const sourceStats = await fs.stat(sourcePath);
+      
+      if (backupStats.size !== sourceStats.size) {
+        throw new Error('Backup file size mismatch');
+      }
+      
+      console.log(`✓ Backed up and verified: ${filename} (${backupStats.size} bytes)`);
       return true;
     } catch (error) {
       console.warn(`Failed to backup ${filename}:`, error instanceof Error ? error.message : String(error));
+      return false;
+    }
+  }
+
+  /**
+   * Backup file from buffer during upload (immediate backup)
+   */
+  async backupFileFromBuffer(filename: string, buffer: Buffer): Promise<boolean> {
+    try {
+      await this.ensureDirectories();
+      
+      const destPath = path.join(this.backupDir, filename);
+      
+      // Save buffer directly to backup location
+      await fs.writeFile(destPath, buffer);
+      
+      // Verify backup
+      const savedBuffer = await fs.readFile(destPath);
+      if (savedBuffer.length !== buffer.length) {
+        throw new Error('Backup buffer size mismatch');
+      }
+      
+      console.log(`✓ Buffer backed up: ${filename} (${buffer.length} bytes)`);
+      return true;
+    } catch (error) {
+      console.warn(`Failed to backup buffer for ${filename}:`, error instanceof Error ? error.message : String(error));
       return false;
     }
   }
