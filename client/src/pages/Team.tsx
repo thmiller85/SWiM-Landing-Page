@@ -7,9 +7,9 @@ import { fadeIn, staggerContainer } from "@/lib/animations";
 import { ACCENT_COLOR, HIGHLIGHT_COLOR, PRIMARY_COLOR } from "@/lib/constants";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import rossAvatarImage from "@/assets/ross-avatar.png";
-import tomAvatarImage from "@/assets/tom-avatar.png";
-import steveAvatarImage from "@/assets/steve-avatar.png";
+import rossAvatarImage from "@assets/Ross Avatar.png";
+import tomAvatarImage from "@assets/Tom Avatar.png";
+import steveAvatarImage from "@assets/Steve Avatar.png";
 
 // Define the team member type
 interface TeamMember {
