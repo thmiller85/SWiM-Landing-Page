@@ -1,26 +1,13 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
 import ParticleBackground from "./ParticleBackground";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import {
   fadeIn,
   slideUp,
   floatingAnimation,
-  pulseAnimation,
 } from "@/lib/animations";
-import n8nAgentImage from "@assets/n8n_agent.png";
-import rossAvatar from "@assets/Ross Avatar.png";
-import tomAvatar from "@assets/Tom Avatar.png";
-import steveAvatar from "@assets/Steve Avatar.png";
-import davidAvatar from "@assets/David Avatar.png";
-import openaiLogo from "@assets/OpenAI-white-monoblossom_1749125463906.png";
-import anthropicLogo from "@assets/Anthropic Logo_1749125655517.png";
-import pythonLogo from "@assets/Python Logo White_1749127141265.png";
-import dockerLogo from "@assets/docker-logo-white_1749127182963.png";
-import n8nLogo from "@assets/n8n Logo White Text_1749127191325.png";
-import cursorLogo from "@assets/Cursor Logo (1)_1749128455053.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -54,7 +41,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold leading-tight mb-6">
               <span className="block">Transform your business with</span>
-              <span className="gradient-text">AI-Powered  Solutions</span>
+              <span className="gradient-text">AI-Powered Solutions</span>
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-inter mb-8 max-w-2xl">
               SWiM helps B2B companies leverage artificial intelligence to
@@ -79,37 +66,11 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
               </Button>
             </div>
             <div className="mt-12">
-              {/* Mobile layout */}
-              <div className="flex sm:hidden flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                    <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                    <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                    <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                  </div>
-                  <div className="text-white/80 font-inter text-sm">
-                    <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
-                  </div>
-                </div>
-                <div className="text-white/80 font-inter text-sm text-center">
-                  <span className="text-accent font-medium">Ready to Build</span> Your Success Story
-                </div>
-              </div>
-              
-              {/* Desktop layout */}
-              <div className="hidden sm:flex items-center gap-6">
-                <div className="flex -space-x-2">
-                  <img src={rossAvatar} alt="Ross" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                  <img src={tomAvatar} alt="Tom" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                  <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                  <img src={davidAvatar} alt="David" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
-                </div>
+              <div className="text-center">
                 <div className="text-white/80 font-inter text-sm">
                   <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
                 </div>
-                <div className="h-8 w-px bg-white/20"></div>
-                <div className="text-white/80 font-inter text-sm">
+                <div className="text-white/80 font-inter text-sm mt-2">
                   <span className="text-accent font-medium">Ready to Build</span> Your Success Story
                 </div>
               </div>
@@ -177,7 +138,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           </motion.div>
         </div>
 
-        {/* Trusted by logos */}
+        {/* Technology indicators */}
         <motion.div
           className="mt-24"
           initial={{ opacity: 0, y: 20 }}
@@ -185,50 +146,23 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <p className="text-center text-white/60 font-inter text-sm uppercase tracking-widest mb-8">
-            Built with
+            Built with cutting-edge AI technology
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={openaiLogo} 
-                alt="OpenAI - Advanced AI language models for natural language processing" 
-                className="h-10 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 glass rounded-lg">
+              OpenAI
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={anthropicLogo} 
-                alt="Anthropic - Claude AI for advanced conversational AI solutions" 
-                className="h-6 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 glass rounded-lg">
+              Anthropic
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={pythonLogo} 
-                alt="Python - High-level programming language for AI and data science" 
-                className="h-10 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 glass rounded-lg">
+              Python
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={dockerLogo} 
-                alt="Docker - Containerization platform for scalable application deployment" 
-                className="h-6 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 glass rounded-lg">
+              Docker
             </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={n8nLogo} 
-                alt="n8n - Workflow automation platform for business process optimization" 
-                className="h-24 w-auto"
-              />
-            </div>
-            <div className="hover:scale-110 transition-transform duration-300">
-              <img 
-                src={cursorLogo} 
-                alt="Cursor - AI-powered code editor for enhanced development productivity" 
-                className="h-10 w-auto"
-              />
+            <div className="text-white/80 font-inter text-sm px-4 py-2 glass rounded-lg">
+              n8n
             </div>
           </div>
         </motion.div>
