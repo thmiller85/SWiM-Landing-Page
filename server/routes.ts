@@ -465,11 +465,27 @@ ${posts.map(post => `  <url>
 
       // Verify file was actually saved to disk
       const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
+      console.log(`=== UPLOAD DEBUG ===`);
+      console.log(`File: ${req.file.filename}`);
+      console.log(`Expected path: ${filePath}`);
+      console.log(`Multer destination: ${req.file.destination}`);
+      console.log(`File size: ${req.file.size} bytes`);
+      
       try {
         await fs.access(filePath);
-        console.log(`✓ File successfully saved: ${req.file.filename}`);
+        const stats = await fs.stat(filePath);
+        console.log(`✓ File verified: ${req.file.filename} (${stats.size} bytes)`);
       } catch (fileError) {
         console.error(`✗ File not found after upload: ${filePath}`, fileError);
+        
+        // Debug: Check what files actually exist
+        try {
+          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
+          console.log('Files in persistent-uploads:', files);
+        } catch (dirError) {
+          console.error('Cannot read persistent-uploads directory:', dirError);
+        }
+        
         return res.status(500).json({ error: 'File upload failed - file not saved' });
       }
 
@@ -494,7 +510,7 @@ ${posts.map(post => `  <url>
       console.error('Error uploading image:', error);
       // Clean up file if database save failed
       if (req.file) {
-        const filePath = path.join(process.cwd(), 'uploads/images', req.file.filename);
+        const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
         try {
           await fs.unlink(filePath);
           console.log('Cleaned up orphaned file after database error');
@@ -533,27 +549,49 @@ ${posts.map(post => `  <url>
 
   app.delete('/api/cms/images/:id', async (req, res) => {
     try {
+      console.log(`=== DELETE DEBUG ===`);
       const id = parseInt(req.params.id);
+      console.log(`Deleting image ID: ${id}`);
+      
       const image = await storage.getImageById(id);
       if (!image) {
+        console.log(`✗ Image ID ${id} not found in database`);
         return res.status(404).json({ error: 'Image not found' });
       }
+
+      console.log(`Found image: ${image.filename}`);
+      console.log(`Image URL: ${image.url}`);
 
       // Delete physical file from persistent directory
       const filename = path.basename(image.url);
       const filePath = path.join(process.cwd(), 'persistent-uploads', filename);
+      console.log(`Attempting to delete file: ${filePath}`);
+      
       try {
+        await fs.access(filePath);
         await fs.unlink(filePath);
-        console.log(`✓ Deleted file: ${filename}`);
+        console.log(`✓ Deleted physical file: ${filename}`);
       } catch (fileError) {
         console.warn(`Could not delete physical file ${filename}:`, fileError);
+        // Check if file exists anywhere
+        try {
+          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
+          console.log('Files in persistent-uploads:', files);
+        } catch (dirError) {
+          console.error('Cannot read persistent-uploads directory:', dirError);
+        }
       }
 
+      console.log(`Deleting database record for ID: ${id}`);
       const success = await storage.deleteImage(id);
+      console.log(`Database deletion success: ${success}`);
+      
       res.json({ success });
     } catch (error) {
+      console.error('=== DELETE ERROR ===');
       console.error('Error deleting image:', error);
-      res.status(500).json({ error: 'Failed to delete image' });
+      console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).json({ error: 'Failed to delete image', details: error instanceof Error ? error.message : String(error) });
     }
   });
 
