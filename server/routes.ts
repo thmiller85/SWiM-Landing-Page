@@ -16,11 +16,27 @@ import {
 } from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
-import { cloudStorage } from "./cloud-storage";
 
-// Configure multer for memory storage (cloud upload compatible)
+// Configure multer for image uploads - use persistent directory directly
+const storage_config = multer.diskStorage({
+  destination: async (req, file, cb) => {
+    // Store directly in persistent directory - no backup needed
+    const uploadDir = path.join(process.cwd(), 'persistent-uploads');
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    } catch (error) {
+      cb(error as Error, '');
+    }
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
 const upload = multer({ 
-  storage: multer.memoryStorage(),
+  storage: storage_config,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -71,16 +87,18 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize local storage system (development-focused)
-  console.log('Initializing local storage system...');
+  // Initialize direct persistent storage
+  console.log('Initializing direct persistent storage...');
   try {
     const persistentDir = path.join(process.cwd(), 'persistent-uploads');
     await fs.mkdir(persistentDir, { recursive: true });
-    app.use('/persistent-uploads', express.static(persistentDir));
-    console.log('✓ Local storage initialized - manage posts in development environment');
+    console.log('✓ Persistent storage directory ensured');
   } catch (error) {
-    console.error('Error initializing local storage:', error);
+    console.error('Error initializing persistent storage:', error);
   }
+  
+  // Serve uploaded images statically from persistent directory
+  app.use('/persistent-uploads', express.static(path.join(process.cwd(), 'persistent-uploads')));
   
   // Debug endpoint to test if API routes are working
   app.get('/api/health', (req, res) => {
@@ -441,35 +459,41 @@ ${posts.map(post => `  <url>
   // Image upload and management
   app.post('/api/cms/images/upload', upload.single('image'), async (req, res) => {
     try {
-      if (!req.file || !req.file.buffer) {
+      if (!req.file) {
         return res.status(400).json({ error: 'No image file provided' });
       }
 
-      console.log(`=== LOCAL UPLOAD DEBUG ===`);
-      console.log(`File: ${req.file.originalname}`);
+      // Verify file was actually saved to disk
+      const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
+      console.log(`=== UPLOAD DEBUG ===`);
+      console.log(`File: ${req.file.filename}`);
+      console.log(`Expected path: ${filePath}`);
+      console.log(`Multer destination: ${req.file.destination}`);
       console.log(`File size: ${req.file.size} bytes`);
-      console.log(`MIME type: ${req.file.mimetype}`);
       
-      // Generate unique filename for local storage
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const filename = 'image-' + uniqueSuffix + path.extname(req.file.originalname);
-      
-      console.log(`Generated filename: ${filename}`);
-      
-      // Upload to local storage
-      const uploadResult = await cloudStorage.uploadImage(
-        req.file.buffer,
-        filename,
-        req.file.mimetype
-      );
-      
-      console.log(`✓ Upload successful to: ${uploadResult.url}`);
+      try {
+        await fs.access(filePath);
+        const stats = await fs.stat(filePath);
+        console.log(`✓ File verified: ${req.file.filename} (${stats.size} bytes)`);
+      } catch (fileError) {
+        console.error(`✗ File not found after upload: ${filePath}`, fileError);
+        
+        // Debug: Check what files actually exist
+        try {
+          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
+          console.log('Files in persistent-uploads:', files);
+        } catch (dirError) {
+          console.error('Cannot read persistent-uploads directory:', dirError);
+        }
+        
+        return res.status(500).json({ error: 'File upload failed - file not saved' });
+      }
 
       const imageData = {
-        filename: filename,
+        filename: req.file.filename,
         originalName: req.file.originalname,
-        url: uploadResult.url,
-        size: uploadResult.size,
+        url: `/persistent-uploads/${req.file.filename}`,
+        size: req.file.size,
         mimeType: req.file.mimetype,
         altText: req.body.altText || '',
         caption: req.body.caption || '',
@@ -485,46 +509,33 @@ ${posts.map(post => `  <url>
       const verifyImage = await storage.getImageById(image.id);
       if (!verifyImage) {
         console.error(`✗ Database verification failed for image ID ${image.id}`);
-        // Clean up cloud storage if database failed
+        // Clean up physical file if database failed
         try {
-          await cloudStorage.deleteImage(uploadResult.publicId);
-          console.log('Cleaned up cloud storage after database verification failure');
+          await fs.unlink(filePath);
+          console.log('Cleaned up file after database verification failure');
         } catch (cleanupError) {
-          console.warn('Could not clean up cloud storage after verification failure:', cleanupError);
+          console.warn('Could not clean up file after verification failure:', cleanupError);
         }
         return res.status(500).json({ error: 'Database verification failed' });
       }
       
       console.log(`✓ Database record verified for ID ${image.id}`);
-      console.log(`✓ Upload complete: ${filename}`);
+      console.log(`✓ Upload complete: ${req.file.filename}`);
       
       res.status(201).json(image);
     } catch (error) {
       console.error('Error uploading image:', error);
-      console.error('Error details:', error instanceof Error ? error.message : String(error));
-      
       // Clean up file if database save failed
       if (req.file) {
         const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
         try {
           await fs.unlink(filePath);
-          console.log('✓ Cleaned up orphaned file after database error');
+          console.log('Cleaned up orphaned file after database error');
         } catch (cleanupError) {
           console.warn('Could not clean up orphaned file:', cleanupError);
         }
       }
-      
-      // Provide more specific error message for database issues
-      const isDbError = error instanceof Error && (
-        error.message.includes('database') || 
-        error.message.includes('connection') ||
-        error.message.includes('timeout')
-      );
-      
-      res.status(500).json({ 
-        error: isDbError ? 'Database connection error during upload' : 'Failed to upload image',
-        details: error instanceof Error ? error.message : String(error)
-      });
+      res.status(500).json({ error: 'Failed to upload image' });
     }
   });
 
@@ -555,7 +566,7 @@ ${posts.map(post => `  <url>
 
   app.delete('/api/cms/images/:id', async (req, res) => {
     try {
-      console.log(`=== LOCAL DELETE DEBUG ===`);
+      console.log(`=== DELETE DEBUG ===`);
       const id = parseInt(req.params.id);
       console.log(`Deleting image ID: ${id}`);
       
@@ -568,26 +579,36 @@ ${posts.map(post => `  <url>
       console.log(`Found image: ${image.filename}`);
       console.log(`Image URL: ${image.url}`);
 
-      // Delete from local storage using filename
-      const success = await cloudStorage.deleteImage(image.filename);
-      if (success) {
-        console.log(`✓ Deleted from local storage: ${image.filename}`);
-      } else {
-        console.warn(`Could not delete from local storage: ${image.filename}`);
+      // Delete physical file from persistent directory
+      const filename = path.basename(image.url);
+      const filePath = path.join(process.cwd(), 'persistent-uploads', filename);
+      console.log(`Attempting to delete file: ${filePath}`);
+      
+      try {
+        await fs.access(filePath);
+        await fs.unlink(filePath);
+        console.log(`✓ Deleted physical file: ${filename}`);
+      } catch (fileError) {
+        console.warn(`Could not delete physical file ${filename}:`, fileError);
+        // Check if file exists anywhere
+        try {
+          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
+          console.log('Files in persistent-uploads:', files);
+        } catch (dirError) {
+          console.error('Cannot read persistent-uploads directory:', dirError);
+        }
       }
 
       console.log(`Deleting database record for ID: ${id}`);
-      const dbSuccess = await storage.deleteImage(id);
-      console.log(`Database deletion success: ${dbSuccess}`);
+      const success = await storage.deleteImage(id);
+      console.log(`Database deletion success: ${success}`);
       
-      res.json({ success: dbSuccess });
+      res.json({ success });
     } catch (error) {
-      console.error('=== LOCAL DELETE ERROR ===');
+      console.error('=== DELETE ERROR ===');
       console.error('Error deleting image:', error);
-      res.status(500).json({ 
-        error: 'Failed to delete image', 
-        details: error instanceof Error ? error.message : String(error) 
-      });
+      console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).json({ error: 'Failed to delete image', details: error instanceof Error ? error.message : String(error) });
     }
   });
 
