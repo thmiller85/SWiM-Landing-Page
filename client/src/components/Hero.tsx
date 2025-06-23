@@ -13,6 +13,11 @@ import {
 import rossAvatar from "@/assets/ross-avatar.png";
 import tomAvatar from "@/assets/tom-avatar.png";
 import steveAvatar from "@/assets/steve-avatar.png";
+import openaiLogo from "@/assets/openai-logo.png";
+import anthropicLogo from "@/assets/anthropic-logo.png";
+import pythonLogo from "@/assets/python-logo.png";
+import dockerLogo from "@/assets/docker-logo.png";
+import cursorLogo from "@/assets/cursor-logo.png";
 
 interface HeroProps {
   onDiscoverClick: () => void;
@@ -167,7 +172,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           </motion.div>
         </div>
 
-        {/* Technology stack */}
+        {/* Trusted by logos */}
         <motion.div
           className="mt-24"
           initial={{ opacity: 0, y: 20 }}
@@ -175,26 +180,43 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           <p className="text-center text-white/60 font-inter text-sm uppercase tracking-widest mb-8">
-            Built with cutting-edge technology
+            Built with
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8">
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              OpenAI
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={openaiLogo} 
+                alt="OpenAI - Advanced AI language models for natural language processing" 
+                className="h-10 w-auto"
+              />
             </div>
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              Anthropic
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={anthropicLogo} 
+                alt="Anthropic - Claude AI for advanced conversational AI solutions" 
+                className="h-6 w-auto"
+              />
             </div>
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              Python
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={pythonLogo} 
+                alt="Python - High-level programming language for AI and data science" 
+                className="h-10 w-auto"
+              />
             </div>
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              Docker
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={dockerLogo} 
+                alt="Docker - Containerization platform for scalable application deployment" 
+                className="h-6 w-auto"
+              />
             </div>
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              n8n
-            </div>
-            <div className="text-white/80 font-inter text-sm px-4 py-2 bg-white/5 rounded-full border border-white/10 hover:border-accent/50 transition-colors">
-              React
+            <div className="hover:scale-110 transition-transform duration-300">
+              <img 
+                src={cursorLogo} 
+                alt="Cursor - AI-powered code editor for enhanced development productivity" 
+                className="h-10 w-auto"
+              />
             </div>
           </div>
         </motion.div>
