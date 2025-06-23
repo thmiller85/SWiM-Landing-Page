@@ -17,6 +17,7 @@ import {
 import multer from "multer";
 import fs from "fs/promises";
 import { imagePersistentStorage } from "./storage-persistent";
+import { imagePersistence } from "./image-persistence";
 
 // Configure multer for image uploads - use persistent uploads directory
 const storage_config = multer.diskStorage({
@@ -590,29 +591,46 @@ ${posts.map(post => `  <url>
     try {
       const images = await storage.getAllImages();
       const uploadsDir = path.join(process.cwd(), 'uploads/images');
+      const backupDir = path.join(process.cwd(), 'persistent-uploads');
       const results = {
         checked: 0,
         orphaned: 0,
         repaired: 0,
-        cleaned: [] as Array<{ id: number; filename: string }>
+        cleaned: [] as Array<{ id: number; filename: string }>,
+        restored: [] as Array<{ id: number; filename: string }>
       };
+
+      // Ensure uploads directory exists
+      await fs.mkdir(uploadsDir, { recursive: true });
 
       for (const image of images) {
         results.checked++;
         const filename = path.basename(image.url);
         const filePath = path.join(uploadsDir, filename);
+        const backupPath = path.join(backupDir, filename);
 
         try {
           await fs.access(filePath);
           console.log(`✓ Image file exists: ${filename}`);
         } catch (error) {
-          console.log(`✗ Orphaned image record found: ${filename} (ID: ${image.id})`);
-          results.orphaned++;
+          console.log(`✗ Missing image file: ${filename} (ID: ${image.id})`);
           
-          // Remove orphaned database record
-          await storage.deleteImage(image.id);
-          results.cleaned.push({ id: image.id, filename });
-          console.log(`  → Removed orphaned database record for ID: ${image.id}`);
+          // Try to restore from backup
+          try {
+            await fs.access(backupPath);
+            await fs.copyFile(backupPath, filePath);
+            results.repaired++;
+            results.restored.push({ id: image.id, filename });
+            console.log(`  ✓ Restored from backup: ${filename}`);
+          } catch (backupError) {
+            console.log(`  ✗ No backup found for: ${filename}`);
+            results.orphaned++;
+            
+            // Remove orphaned database record
+            await storage.deleteImage(image.id);
+            results.cleaned.push({ id: image.id, filename });
+            console.log(`  → Removed orphaned database record for ID: ${image.id}`);
+          }
         }
       }
 
@@ -620,6 +638,43 @@ ${posts.map(post => `  <url>
     } catch (error) {
       console.error('Error during consistency check:', error);
       res.status(500).json({ error: 'Failed to perform consistency check' });
+    }
+  });
+
+  // Add GET endpoint for easier testing
+  app.get('/api/cms/images/consistency-check', async (req, res) => {
+    try {
+      const images = await storage.getAllImages();
+      const uploadsDir = path.join(process.cwd(), 'uploads/images');
+      const backupDir = path.join(process.cwd(), 'persistent-uploads');
+      const missingFiles = [];
+      const existingFiles = [];
+      
+      for (const image of images) {
+        const filename = path.basename(image.url);
+        const filePath = path.join(uploadsDir, filename);
+        const backupPath = path.join(backupDir, filename);
+        
+        const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
+        const backupExists = await fs.access(backupPath).then(() => true).catch(() => false);
+        
+        if (fileExists) {
+          existingFiles.push({ id: image.id, filename, hasBackup: backupExists });
+        } else {
+          missingFiles.push({ id: image.id, filename, hasBackup: backupExists });
+        }
+      }
+      
+      res.json({
+        totalImages: images.length,
+        existingCount: existingFiles.length,
+        missingCount: missingFiles.length,
+        existingFiles,
+        missingFiles
+      });
+    } catch (error) {
+      console.error('Error checking image consistency:', error);
+      res.status(500).json({ error: 'Failed to check image consistency' });
     }
   });
 
