@@ -525,17 +525,30 @@ ${posts.map(post => `  <url>
       res.status(201).json(image);
     } catch (error) {
       console.error('Error uploading image:', error);
+      console.error('Error details:', error instanceof Error ? error.message : String(error));
+      
       // Clean up file if database save failed
       if (req.file) {
         const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
         try {
           await fs.unlink(filePath);
-          console.log('Cleaned up orphaned file after database error');
+          console.log('✓ Cleaned up orphaned file after database error');
         } catch (cleanupError) {
           console.warn('Could not clean up orphaned file:', cleanupError);
         }
       }
-      res.status(500).json({ error: 'Failed to upload image' });
+      
+      // Provide more specific error message for database issues
+      const isDbError = error instanceof Error && (
+        error.message.includes('database') || 
+        error.message.includes('connection') ||
+        error.message.includes('timeout')
+      );
+      
+      res.status(500).json({ 
+        error: isDbError ? 'Database connection error during upload' : 'Failed to upload image',
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
