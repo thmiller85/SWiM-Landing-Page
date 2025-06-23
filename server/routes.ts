@@ -16,8 +16,6 @@ import {
 } from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
-import { imagePersistentStorage } from "./storage-persistent";
-import { imagePersistence } from "./image-persistence";
 
 // Configure multer for image uploads - use persistent directory directly
 const storage_config = multer.diskStorage({
@@ -89,31 +87,14 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize enhanced persistence system
-  console.log('Initializing enhanced image persistence system...');
+  // Initialize direct persistent storage
+  console.log('Initializing direct persistent storage...');
   try {
-    await imagePersistence.initialize();
-    
-    // Also initialize the old system for compatibility
-    await imagePersistentStorage.ensureStorageStructure();
-    
-    // Restore uploads from backup on startup (deployment-safe)
-    const { execSync } = await import("child_process");
-    try {
-      execSync("node scripts/backup-uploads.js restore", { stdio: "inherit" });
-    } catch (restoreError) {
-      console.warn('Backup restore failed (this is normal for first deployment)');
-    }
-    
-    const migration = await imagePersistentStorage.migrateFiles();
-    if (migration.migrated > 0) {
-      console.log(`✓ Migrated ${migration.migrated} files to persistent storage`);
-    }
-    if (migration.errors.length > 0) {
-      console.warn(`Migration warnings: ${migration.errors.length} errors`);
-    }
+    const persistentDir = path.join(process.cwd(), 'persistent-uploads');
+    await fs.mkdir(persistentDir, { recursive: true });
+    console.log('✓ Persistent storage directory ensured');
   } catch (error) {
-    console.error('Error initializing persistence systems:', error);
+    console.error('Error initializing persistent storage:', error);
   }
   
   // Serve uploaded images statically from persistent directory
@@ -565,15 +546,7 @@ ${posts.map(post => `  <url>
         await fs.unlink(filePath);
         console.log(`✓ Deleted file: ${filename}`);
       } catch (fileError) {
-        console.warn('Could not delete physical file:', fileError);
-        // Try legacy uploads path as fallback
-        const legacyPath = path.join(process.cwd(), 'uploads/images', filename);
-        try {
-          await fs.unlink(legacyPath);
-          console.log(`✓ Deleted from legacy path: ${filename}`);
-        } catch (legacyError) {
-          console.warn('Could not delete from either location:', legacyError);
-        }
+        console.warn(`Could not delete physical file ${filename}:`, fileError);
       }
 
       const success = await storage.deleteImage(id);
@@ -676,44 +649,21 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Enhanced persistence system endpoints
-  app.get('/api/cms/images/persistence-status', async (req, res) => {
+  // Simple storage status endpoint
+  app.get('/api/cms/images/storage-status', async (req, res) => {
     try {
-      const status = imagePersistence.getStatus();
-      res.json(status);
+      const persistentDir = path.join(process.cwd(), 'persistent-uploads');
+      const files = await fs.readdir(persistentDir);
+      const imageFiles = files.filter(f => f !== '.gitkeep' && (f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg')));
+      
+      res.json({
+        directory: persistentDir,
+        totalFiles: imageFiles.length,
+        files: imageFiles
+      });
     } catch (error) {
-      console.error('Error getting persistence status:', error);
-      res.status(500).json({ error: 'Failed to get persistence status' });
-    }
-  });
-
-  app.post('/api/cms/images/force-backup', async (req, res) => {
-    try {
-      const success = await imagePersistence.backupAllFiles();
-      res.json({ success, message: success ? 'Backup completed successfully' : 'Backup failed' });
-    } catch (error) {
-      console.error('Error forcing backup:', error);
-      res.status(500).json({ error: 'Failed to force backup' });
-    }
-  });
-
-  app.post('/api/cms/images/restore-from-backup', async (req, res) => {
-    try {
-      const result = await imagePersistence.restoreFromBackup();
-      res.json(result);
-    } catch (error) {
-      console.error('Error restoring from backup:', error);
-      res.status(500).json({ error: 'Failed to restore from backup' });
-    }
-  });
-
-  app.post('/api/cms/images/integrity-check', async (req, res) => {
-    try {
-      const result = await imagePersistence.checkAndRepairIntegrity();
-      res.json(result);
-    } catch (error) {
-      console.error('Error checking integrity:', error);
-      res.status(500).json({ error: 'Failed to check integrity' });
+      console.error('Error getting storage status:', error);
+      res.status(500).json({ error: 'Failed to get storage status' });
     }
   });
 
