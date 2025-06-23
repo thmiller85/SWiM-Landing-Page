@@ -88,9 +88,12 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize persistent storage and restore uploads from backup
-  console.log('Initializing persistent image storage...');
+  // Initialize enhanced persistence system
+  console.log('Initializing enhanced image persistence system...');
   try {
+    await imagePersistence.initialize();
+    
+    // Also initialize the old system for compatibility
     await imagePersistentStorage.ensureStorageStructure();
     
     // Restore uploads from backup on startup (deployment-safe)
@@ -109,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.warn(`Migration warnings: ${migration.errors.length} errors`);
     }
   } catch (error) {
-    console.error('Error initializing persistent storage:', error);
+    console.error('Error initializing persistence systems:', error);
   }
   
   // Serve uploaded images statically
@@ -503,13 +506,19 @@ ${posts.map(post => `  <url>
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
       
-      // Backup the uploaded image immediately for deployment persistence
+      // Backup the uploaded image immediately using enhanced persistence system
       try {
-        const { execSync } = await import("child_process");
-        execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
+        await imagePersistence.backupFile(req.file.filename);
         console.log(`✓ Image backed up for persistence: ${req.file.filename}`);
       } catch (backupError) {
-        console.warn('Image backup failed (upload still successful):', backupError);
+        console.warn('Enhanced backup failed, trying legacy backup:', backupError);
+        try {
+          const { execSync } = await import("child_process");
+          execSync("node scripts/backup-uploads.js backup", { stdio: "pipe" });
+          console.log(`✓ Image backed up using legacy system: ${req.file.filename}`);
+        } catch (legacyError) {
+          console.warn('All backup methods failed (upload still successful):', legacyError);
+        }
       }
       
       res.status(201).json(image);
@@ -675,6 +684,47 @@ ${posts.map(post => `  <url>
     } catch (error) {
       console.error('Error checking image consistency:', error);
       res.status(500).json({ error: 'Failed to check image consistency' });
+    }
+  });
+
+  // Enhanced persistence system endpoints
+  app.get('/api/cms/images/persistence-status', async (req, res) => {
+    try {
+      const status = imagePersistence.getStatus();
+      res.json(status);
+    } catch (error) {
+      console.error('Error getting persistence status:', error);
+      res.status(500).json({ error: 'Failed to get persistence status' });
+    }
+  });
+
+  app.post('/api/cms/images/force-backup', async (req, res) => {
+    try {
+      const success = await imagePersistence.backupAllFiles();
+      res.json({ success, message: success ? 'Backup completed successfully' : 'Backup failed' });
+    } catch (error) {
+      console.error('Error forcing backup:', error);
+      res.status(500).json({ error: 'Failed to force backup' });
+    }
+  });
+
+  app.post('/api/cms/images/restore-from-backup', async (req, res) => {
+    try {
+      const result = await imagePersistence.restoreFromBackup();
+      res.json(result);
+    } catch (error) {
+      console.error('Error restoring from backup:', error);
+      res.status(500).json({ error: 'Failed to restore from backup' });
+    }
+  });
+
+  app.post('/api/cms/images/integrity-check', async (req, res) => {
+    try {
+      const result = await imagePersistence.checkAndRepairIntegrity();
+      res.json(result);
+    } catch (error) {
+      console.error('Error checking integrity:', error);
+      res.status(500).json({ error: 'Failed to check integrity' });
     }
   });
 
