@@ -119,9 +119,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve uploaded images statically from persistent directory
   app.use('/persistent-uploads', express.static(path.join(process.cwd(), 'persistent-uploads')));
   
-  // Also serve from legacy uploads path for backward compatibility
-  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-  
   // Debug endpoint to test if API routes are working
   app.get('/api/health', (req, res) => {
     console.log('Health check endpoint hit');
