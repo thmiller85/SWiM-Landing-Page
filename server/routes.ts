@@ -71,24 +71,15 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize cloud storage system
-  console.log('Initializing cloud storage system...');
-  const isProduction = process.env.NODE_ENV === 'production';
-  console.log(`Environment: ${isProduction ? 'production' : 'development'}`);
-  
-  if (!isProduction) {
-    // Development: ensure local directory exists and serve static files
-    try {
-      const persistentDir = path.join(process.cwd(), 'persistent-uploads');
-      await fs.mkdir(persistentDir, { recursive: true });
-      app.use('/persistent-uploads', express.static(persistentDir));
-      console.log('✓ Local development storage initialized');
-    } catch (error) {
-      console.error('Error initializing local storage:', error);
-    }
-  } else {
-    // Production: cloud storage only
-    console.log('✓ Production cloud storage mode enabled');
+  // Initialize local storage system (development-focused)
+  console.log('Initializing local storage system...');
+  try {
+    const persistentDir = path.join(process.cwd(), 'persistent-uploads');
+    await fs.mkdir(persistentDir, { recursive: true });
+    app.use('/persistent-uploads', express.static(persistentDir));
+    console.log('✓ Local storage initialized - manage posts in development environment');
+  } catch (error) {
+    console.error('Error initializing local storage:', error);
   }
   
   // Debug endpoint to test if API routes are working
@@ -454,19 +445,18 @@ ${posts.map(post => `  <url>
         return res.status(400).json({ error: 'No image file provided' });
       }
 
-      console.log(`=== CLOUD UPLOAD DEBUG ===`);
+      console.log(`=== LOCAL UPLOAD DEBUG ===`);
       console.log(`File: ${req.file.originalname}`);
       console.log(`File size: ${req.file.size} bytes`);
       console.log(`MIME type: ${req.file.mimetype}`);
-      console.log(`Environment: ${process.env.NODE_ENV}`);
       
-      // Generate unique filename for cloud storage
+      // Generate unique filename for local storage
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       const filename = 'image-' + uniqueSuffix + path.extname(req.file.originalname);
       
       console.log(`Generated filename: ${filename}`);
       
-      // Upload to cloud storage (or local in development)
+      // Upload to local storage
       const uploadResult = await cloudStorage.uploadImage(
         req.file.buffer,
         filename,
@@ -565,7 +555,7 @@ ${posts.map(post => `  <url>
 
   app.delete('/api/cms/images/:id', async (req, res) => {
     try {
-      console.log(`=== CLOUD DELETE DEBUG ===`);
+      console.log(`=== LOCAL DELETE DEBUG ===`);
       const id = parseInt(req.params.id);
       console.log(`Deleting image ID: ${id}`);
       
@@ -578,12 +568,12 @@ ${posts.map(post => `  <url>
       console.log(`Found image: ${image.filename}`);
       console.log(`Image URL: ${image.url}`);
 
-      // Delete from cloud storage using filename as public ID
+      // Delete from local storage using filename
       const success = await cloudStorage.deleteImage(image.filename);
       if (success) {
-        console.log(`✓ Deleted from cloud storage: ${image.filename}`);
+        console.log(`✓ Deleted from local storage: ${image.filename}`);
       } else {
-        console.warn(`Could not delete from cloud storage: ${image.filename}`);
+        console.warn(`Could not delete from local storage: ${image.filename}`);
       }
 
       console.log(`Deleting database record for ID: ${id}`);
@@ -592,7 +582,7 @@ ${posts.map(post => `  <url>
       
       res.json({ success: dbSuccess });
     } catch (error) {
-      console.error('=== CLOUD DELETE ERROR ===');
+      console.error('=== LOCAL DELETE ERROR ===');
       console.error('Error deleting image:', error);
       res.status(500).json({ 
         error: 'Failed to delete image', 

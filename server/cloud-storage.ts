@@ -222,11 +222,9 @@ export class CloudStorageService {
   }
 }
 
-// Create configured instance
+// Create configured instance - always use local storage for cost-free operation
 export const cloudStorage = new CloudStorageService({
-  provider: process.env.NODE_ENV === 'production' 
-    ? (process.env.CLOUD_STORAGE_PROVIDER as any) || 'cloudinary'
-    : 'local',
+  provider: 'local', // Always use local storage to avoid external costs
   apiKey: process.env.CLOUDINARY_API_KEY,
   apiSecret: process.env.CLOUDINARY_API_SECRET,
   cloudName: process.env.CLOUDINARY_CLOUD_NAME
