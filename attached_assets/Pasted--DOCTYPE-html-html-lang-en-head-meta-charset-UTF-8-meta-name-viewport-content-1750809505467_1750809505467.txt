@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Workflow Automation Readiness Checklist</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #34495e;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: #2980b9;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        .checkbox-item {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            background-color: #f1f8ff;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .score-display {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .priority-high { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); }
+        .priority-medium { background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%); }
+        .priority-low { background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        input[type="text"] {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .results-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+            margin: 20px 0;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .action-buttons { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Business Workflow Automation Readiness Checklist</h1>
+        
+        <div class="results-summary" id="overallProgress" style="display: none;">
+            <h3>📊 Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Complete the assessment to see your automation readiness score.</p>
+        </div>
+
+        <h2>Phase 1: Automation Readiness Assessment</h2>
+        
+        <h3>Manual Process Overload Indicators</h3>
+        <p><strong>Check all that apply to your business:</strong></p>
+        
+        <div class="checkbox-group" data-category="overload">
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload1" onchange="updateScore()">
+                <label for="overload1">Employees spend 2+ hours daily on repetitive data entry</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload2" onchange="updateScore()">
+                <label for="overload2">Data is manually copied between spreadsheets or systems</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload3" onchange="updateScore()">
+                <label for="overload3">Document approvals rely on email chains or physical paperwork</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload4" onchange="updateScore()">
+                <label for="overload4">Manual document routing causes delays or miscommunication</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload5" onchange="updateScore()">
+                <label for="overload5">Frequent human errors in order processing, billing, or data entry</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload6" onchange="updateScore()">
+                <label for="overload6">Staff complaints about repetitive, mind-numbing tasks</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="overload7" onchange="updateScore()">
+                <label for="overload7">Time-sensitive processes often miss deadlines due to manual steps</label>
+            </div>
+        </div>
+
+        <h3>Resource Drain Indicators</h3>
+        <div class="checkbox-group" data-category="resource">
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource1" onchange="updateScore()">
+                <label for="resource1">High operational costs relative to output</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource2" onchange="updateScore()">
+                <label for="resource2">Customer requests take days instead of hours to process</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource3" onchange="updateScore()">
+                <label for="resource3">Internal approvals create significant bottlenecks</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource4" onchange="updateScore()">
+                <label for="resource4">Employee burnout from repetitive tasks</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource5" onchange="updateScore()">
+                <label for="resource5">High turnover in roles with manual processes</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource6" onchange="updateScore()">
+                <label for="resource6">Overtime costs due to process inefficiencies</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="resource7" onchange="updateScore()">
+                <label for="resource7">Difficulty meeting customer service response time expectations</label>
+            </div>
+        </div>
+
+        <h3>Growth Bottleneck Indicators</h3>
+        <div class="checkbox-group" data-category="growth">
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth1" onchange="updateScore()">
+                <label for="growth1">Cannot handle increased volume without hiring more staff</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth2" onchange="updateScore()">
+                <label for="growth2">Scaling operations requires proportional staff increases</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth3" onchange="updateScore()">
+                <label for="growth3">Customer service response times are getting slower</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth4" onchange="updateScore()">
+                <label for="growth4">Limited visibility into where process delays occur</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth5" onchange="updateScore()">
+                <label for="growth5">Cannot track process performance metrics effectively</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth6" onchange="updateScore()">
+                <label for="growth6">Growth is limited by operational capacity</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="growth7" onchange="updateScore()">
+                <label for="growth7">Competitors are responding faster to market opportunities</label>
+            </div>
+        </div>
+
+        <div class="score-display" id="scoreDisplay">
+            Complete the assessment above to see your automation priority level
+        </div>
+
+        <h2>Phase 2: Process Prioritization</h2>
+        
+        <h3>High-Impact Automation Candidates</h3>
+        <p><strong>Rate these processes by frequency and impact (1-5 scale):</strong></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Process</th>
+                    <th>Frequency</th>
+                    <th>Error Rate</th>
+                    <th>Time Impact</th>
+                    <th>Priority Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Data entry tasks</td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><span class="priority-score">0</span></td>
+                </tr>
+                <tr>
+                    <td>Document approvals</td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><span class="priority-score">0</span></td>
+                </tr>
+                <tr>
+                    <td>Customer onboarding</td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><span class="priority-score">0</span></td>
+                </tr>
+                <tr>
+                    <td>Invoice processing</td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><span class="priority-score">0</span></td>
+                </tr>
+                <tr>
+                    <td>Inventory management</td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><input type="number" min="1" max="5" onchange="calculatePriority(this)"></td>
+                    <td><span class="priority-score">0</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Phase 3: Baseline Measurements</h2>
+        
+        <h3>Record Your Current State</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Current Value</th>
+                    <th>Target Improvement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Average time per process (hours)</td>
+                    <td><input type="text" placeholder="e.g., 4.5"></td>
+                    <td><input type="text" placeholder="e.g., 1.5"></td>
+                </tr>
+                <tr>
+                    <td>Monthly process cost ($)</td>
+                    <td><input type="text" placeholder="e.g., 5000"></td>
+                    <td><input type="text" placeholder="e.g., 2000"></td>
+                </tr>
+                <tr>
+                    <td>Current error rate (%)</td>
+                    <td><input type="text" placeholder="e.g., 15"></td>
+                    <td><input type="text" placeholder="e.g., 3"></td>
+                </tr>
+                <tr>
+                    <td>Processes per day</td>
+                    <td><input type="text" placeholder="e.g., 50"></td>
+                    <td><input type="text" placeholder="e.g., 200"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="action-buttons">
+            <button class="btn" onclick="generateReport()">📋 Generate Assessment Report</button>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Checklist</button>
+            <button class="btn" onclick="saveProgress()">💾 Save Progress</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 Reset Form</button>
+        </div>
+
+        <div id="assessmentReport" style="display: none;">
+            <h2>📊 Your Automation Assessment Report</h2>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateScore() {
+            const totalCheckboxes = document.querySelectorAll('input[type="checkbox"]').length;
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const progressElement = document.getElementById('overallProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            let priorityLevel = '';
+            let priorityClass = '';
+            
+            if (checkedBoxes <= 5) {
+                priorityLevel = 'Low Priority';
+                priorityClass = 'priority-low';
+            } else if (checkedBoxes <= 12) {
+                priorityLevel = 'Moderate Priority';
+                priorityClass = 'priority-medium';
+            } else {
+                priorityLevel = 'High Priority - Immediate Action Recommended';
+                priorityClass = 'priority-high';
+            }
+            
+            scoreDisplay.innerHTML = `
+                Automation Priority: ${priorityLevel}<br>
+                <small>Issues Identified: ${checkedBoxes} out of ${totalCheckboxes}</small>
+            `;
+            scoreDisplay.className = `score-display ${priorityClass}`;
+            
+            // Update progress bar
+            const progressPercentage = (checkedBoxes / totalCheckboxes) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
+            progressText.textContent = `Assessment Progress: ${checkedBoxes}/${totalCheckboxes} items checked (${Math.round(progressPercentage)}%)`;
+            progressElement.style.display = 'block';
+        }
+        
+        function calculatePriority(input) {
+            const row = input.closest('tr');
+            const inputs = row.querySelectorAll('input[type="number"]');
+            const scoreSpan = row.querySelector('.priority-score');
+            
+            let total = 0;
+            inputs.forEach(inp => {
+                if (inp.value) total += parseInt(inp.value);
+            });
+            
+            scoreSpan.textContent = total;
+            
+            // Highlight high-priority processes
+            if (total >= 12) {
+                scoreSpan.style.background = '#e74c3c';
+                scoreSpan.style.color = 'white';
+                scoreSpan.style.padding = '5px';
+                scoreSpan.style.borderRadius = '3px';
+            } else {
+                scoreSpan.style.background = '';
+                scoreSpan.style.color = '';
+                scoreSpan.style.padding = '';
+            }
+        }
+        
+        function generateReport() {
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const reportDiv = document.getElementById('assessmentReport');
+            const reportContent = document.getElementById('reportContent');
+            
+            let report = `
+                <div class="results-summary">
+                    <h4>🎯 Assessment Summary</h4>
+                    <p><strong>Issues Identified:</strong> ${checkedBoxes.length}</p>
+                    <p><strong>Recommendation:</strong> ${getRecommendation(checkedBoxes.length)}</p>
+                </div>
+                
+                <h4>📋 Issues Found:</h4>
+                <ul>
+            `;
+            
+            checkedBoxes.forEach(checkbox => {
+                const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                report += `<li>${label.textContent}</li>`;
+            });
+            
+            report += `</ul>
+                
+                <h4>🚀 Next Steps:</h4>
+                <ol>
+                    <li>Focus on processes with priority scores of 12+</li>
+                    <li>Document current workflows for top 3 priority areas</li>
+                    <li>Research automation solutions</li>
+                    <li>Calculate ROI potential</li>
+                    <li>Plan pilot implementation</li>
+                </ol>
+            `;
+            
+            reportContent.innerHTML = report;
+            reportDiv.style.display = 'block';
+            reportDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function getRecommendation(score) {
+            if (score <= 5) return 'Low automation priority. Monitor for future needs.';
+            if (score <= 12) return 'Moderate automation opportunity. Start with highest-impact processes.';
+            return 'High automation priority. Immediate action recommended to remain competitive.';
+        }
+        
+        function saveProgress() {
+            const formData = new FormData();
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+            
+            let data = { checkboxes: [], inputs: [] };
+            
+            checkboxes.forEach(cb => data.checkboxes.push(cb.id));
+            inputs.forEach(inp => {
+                if (inp.value) data.inputs.push({ id: inp.id || inp.name, value: inp.value });
+            });
+            
+            localStorage.setItem('automationChecklist', JSON.stringify(data));
+            alert('✅ Progress saved! You can return anytime to continue your assessment.');
+        }
+        
+        function resetForm() {
+            if (confirm('Are you sure you want to reset all data?')) {
+                document.querySelectorAll('input').forEach(input => {
+                    if (input.type === 'checkbox') input.checked = false;
+                    else input.value = '';
+                });
+                document.querySelectorAll('.priority-score').forEach(span => span.textContent = '0');
+                document.getElementById('scoreDisplay').innerHTML = 'Complete the assessment above to see your automation priority level';
+                document.getElementById('assessmentReport').style.display = 'none';
+                localStorage.removeItem('automationChecklist');
+            }
+        }
+        
+        // Load saved progress on page load
+        window.onload = function() {
+            const saved = localStorage.getItem('automationChecklist');
+            if (saved) {
+                const data = JSON.parse(saved);
+                data.checkboxes.forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+                updateScore();
+            }
+        };
+    </script>
+</body>
+</html>
