@@ -278,3 +278,6 @@ export const trackConversion = (type: string, postId?: number, data?: Record<str
   analytics.trackConversion(type, postId, data);
 export const trackShare = (platform: string, postId?: number) => analytics.trackShare(platform, postId);
 export const trackEvent = (data: TrackingData) => analytics.trackEvent(data);
+
+// Google Analytics specific tracking exports
+export { trackEvent as trackGAEvent, trackShare as trackGAShare } from './google-analytics';

@@ -23,7 +23,6 @@ import { Separator } from '@/components/ui/separator';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useNavigation } from '@/context/NavigationContext';
-import { trackPageView, trackShare } from '@/lib/analytics';
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
