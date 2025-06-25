@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ImagePickerModal } from '@/components/ImagePickerModal';
 import { SEOPreview } from '@/components/SEOPreview';
 import { PostPreview } from '@/components/PostPreview';
+import { InteractiveContentPicker } from '@/components/cms/InteractiveContentPicker';
 import { useToast } from '@/hooks/use-toast';
 import { X, Save, Image, AlertCircle, Check, FileText, Eye, ClipboardPaste } from 'lucide-react';
 import MDEditor from '@uiw/react-md-editor';
@@ -330,6 +331,13 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                         <ClipboardPaste className="h-4 w-4 mr-2" />
                         Paste Markdown
                       </Button>
+                      <InteractiveContentPicker
+                        onInsert={(shortcode) => {
+                          const cursorPosition = content.length;
+                          const newContent = content.slice(0, cursorPosition) + '\n\n' + shortcode + '\n\n' + content.slice(cursorPosition);
+                          setContent(newContent);
+                        }}
+                      />
                       <Button
                         type="button"
                         size="sm"

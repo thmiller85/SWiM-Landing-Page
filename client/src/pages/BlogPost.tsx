@@ -15,10 +15,11 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { blogAPIService } from '@/lib/blog-api';
+import { parseInteractiveShortcodes } from '@/components/interactive/InteractiveContentRenderer';
+import { trackPageView, trackShare, trackGAShare } from '@/lib/analytics';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { trackShare as trackGAShare } from '@/lib/google-analytics';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useNavigation } from '@/context/NavigationContext';
@@ -168,6 +169,12 @@ const BlogPost = () => {
     }
   };
 
+  const handleLeadGenerated = () => {
+    // Track lead generation from interactive content
+    blogAPIService.trackLead(post.slug);
+    // You could also track specific lead sources
+  };
+
   return (
     <div className="relative bg-primary min-h-screen overflow-x-hidden">
       <div className="gradient-bg">
@@ -282,12 +289,25 @@ const BlogPost = () => {
               {/* Article Content */}
               <article className="prose prose-lg prose-invert max-w-none mb-12">
                 <div className="text-gray-200">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeHighlight]}
-                  >
-                    {post.content}
-                  </ReactMarkdown>
+                  {(() => {
+                    const contentParts = parseInteractiveShortcodes(post.content, handleLeadGenerated);
+                    
+                    return contentParts.map((part, index) => {
+                      if (typeof part === 'string') {
+                        return (
+                          <ReactMarkdown
+                            key={index}
+                            remarkPlugins={[remarkGfm]}
+                            rehypePlugins={[rehypeHighlight]}
+                          >
+                            {part}
+                          </ReactMarkdown>
+                        );
+                      } else {
+                        return <div key={index} className="my-8">{part}</div>;
+                      }
+                    });
+                  })()}
                 </div>
               </article>
 
