@@ -155,10 +155,18 @@ ${posts.map(post => `  <url>
 
   // Serve uploaded images from persistent uploads directory
   app.get('/uploads/images/*', (req, res) => {
-    const imagePath = path.join(process.cwd(), req.path);
-    res.sendFile(imagePath, (err) => {
+    const filename = path.basename(req.path);
+    // First try persistent uploads directory
+    const persistentPath = path.join(process.cwd(), 'persistent-uploads', filename);
+    res.sendFile(persistentPath, (err) => {
       if (err && !res.headersSent) {
-        res.status(404).json({ error: 'Image not found' });
+        // Fallback to original uploads path
+        const uploadsPath = path.join(process.cwd(), req.path);
+        res.sendFile(uploadsPath, (fallbackErr) => {
+          if (fallbackErr && !res.headersSent) {
+            res.status(404).json({ error: 'Image not found' });
+          }
+        });
       }
     });
   });
@@ -166,14 +174,21 @@ ${posts.map(post => `  <url>
   // Legacy support for old image paths
   app.get('/images/blog/*', (req, res) => {
     const filename = path.basename(req.path);
-    const imagePath = path.join(process.cwd(), 'uploads/images', filename);
-    res.sendFile(imagePath, (err) => {
+    // First try persistent uploads directory
+    const persistentPath = path.join(process.cwd(), 'persistent-uploads', filename);
+    res.sendFile(persistentPath, (err) => {
       if (err && !res.headersSent) {
-        // Fallback to old location
-        const oldPath = path.join(process.cwd(), 'public', req.path);
-        res.sendFile(oldPath, (fallbackErr) => {
+        // Fallback to uploads/images
+        const uploadsPath = path.join(process.cwd(), 'uploads/images', filename);
+        res.sendFile(uploadsPath, (fallbackErr) => {
           if (fallbackErr && !res.headersSent) {
-            res.status(404).json({ error: 'Image not found' });
+            // Last fallback to old public location
+            const oldPath = path.join(process.cwd(), 'public', req.path);
+            res.sendFile(oldPath, (finalErr) => {
+              if (finalErr && !res.headersSent) {
+                res.status(404).json({ error: 'Image not found' });
+              }
+            });
           }
         });
       }
