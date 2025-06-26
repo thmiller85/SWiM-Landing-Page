@@ -34,7 +34,7 @@ const teamMembers: TeamMember[] = [
     shortBio: "Fractional CMO and founder of Thunder Stock Marketing, helping B2B service companies craft data-driven campaigns and lean operational workflows.",
     photo: "gradient-avatar", // We'll use gradient avatars as placeholders
     social: {
-      linkedin: "https://linkedin.com/in/",
+      linkedin: "https://www.linkedin.com/in/jrossstockdale/",
     }
   },
   {
@@ -44,8 +44,7 @@ const teamMembers: TeamMember[] = [
     shortBio: "Finance veteran and AI innovator creating bespoke technology solutions and transforming complex business challenges into streamlined, cost-effective digital workflows that accelerate growth and operational efficiency.",
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://linkedin.com/in/",
-      twitter: "https://twitter.com/"
+      linkedin: "https://www.linkedin.com/in/thomas-l-miller/",
     }
   },
   {
@@ -55,7 +54,7 @@ const teamMembers: TeamMember[] = [
     shortBio: "Founder of Wurster Digital Group with 15+ years experience in performance media strategy, managing multi-million-dollar budgets, and scaling marketing teams.",
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://linkedin.com/in/",
+      linkedin: "https://www.linkedin.com/in/steve-wurster-68994a7/",
     }
   },
 

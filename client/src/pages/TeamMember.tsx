@@ -49,7 +49,7 @@ const teamMembers: TeamMemberDetailed[] = [
     ],
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://linkedin.com/in/",
+      linkedin: "https://www.linkedin.com/in/jrossstockdale/",
     }
   },
   {
@@ -73,8 +73,7 @@ const teamMembers: TeamMemberDetailed[] = [
     ],
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://linkedin.com/in/",
-      twitter: "https://twitter.com/"
+      linkedin: "https://www.linkedin.com/in/thomas-l-miller/",
     }
   },
   {
@@ -99,7 +98,7 @@ const teamMembers: TeamMemberDetailed[] = [
     ],
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://linkedin.com/in/",
+      linkedin: "https://www.linkedin.com/in/steve-wurster-68994a7/",
     }
   },
 
