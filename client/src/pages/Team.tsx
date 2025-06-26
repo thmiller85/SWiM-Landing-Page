@@ -44,7 +44,7 @@ const teamMembers: TeamMember[] = [
     shortBio: "Finance veteran and AI innovator creating bespoke technology solutions and transforming complex business challenges into streamlined, cost-effective digital workflows that accelerate growth and operational efficiency.",
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://www.linkedin.com/in/thomas-l-miller/",
+      linkedin: "https://www.linkedin.com/in/tom-miller-swimai/",
     }
   },
   {

@@ -73,7 +73,7 @@ const teamMembers: TeamMemberDetailed[] = [
     ],
     photo: "gradient-avatar",
     social: {
-      linkedin: "https://www.linkedin.com/in/thomas-l-miller/",
+      linkedin: "https://www.linkedin.com/in/tom-miller-swimai/",
     }
   },
   {
