@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, Link } from "wouter";
 import Logo from "./ui/logo";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Facebook, Linkedin, Instagram } from "lucide-react";
 import { useNavigation } from "../context/NavigationContext";
 
 interface FooterProps {
@@ -26,16 +26,13 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
               Transforming businesses with AI-powered marketing, workflow automation, and custom SaaS solutions.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-white/60 hover:text-accent transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61577744513077" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-accent transition-colors">
                 <Facebook />
               </a>
-              <a href="#" className="text-white/60 hover:text-accent transition-colors">
-                <Twitter />
-              </a>
-              <a href="#" className="text-white/60 hover:text-accent transition-colors">
+              <a href="https://www.linkedin.com/company/swim-ai-solutions/" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-accent transition-colors">
                 <Linkedin />
               </a>
-              <a href="#" className="text-white/60 hover:text-accent transition-colors">
+              <a href="https://www.instagram.com/swimsolutions.ai/" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-accent transition-colors">
                 <Instagram />
               </a>
             </div>

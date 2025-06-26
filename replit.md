@@ -29,6 +29,13 @@ A sophisticated AI marketing landing page designed with responsive, adaptive tec
 
 ## Recent Changes
 
+### June 26, 2025 - Team and Company Social Links Updated ✓
+- **Team Social Links Fixed**: Updated all team member LinkedIn profiles to correct URLs (Ross, Tom, Steve)
+- **Company Social Links Updated**: Updated footer with correct Facebook, LinkedIn, and Instagram company profiles
+- **Social Link Cleanup**: Removed Twitter links from both team member profiles and company footer
+- **Security Enhancement**: Added proper target="_blank" and rel="noopener noreferrer" attributes to all external social links
+- **Code Cleanup**: Removed unused Twitter imports from components
+
 ### June 24, 2025 - Interactive Content System Complete ✓
 - **Automation Checklist Integration**: Converted HTML automation checklist to React component with full functionality
 - **Shortcode System**: Implemented blog shortcode parser for embedding interactive elements (`[interactive type="automation-checklist"]`)
