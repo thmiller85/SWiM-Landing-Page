@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import path from "path";
+import fetch from "node-fetch";
 import { blogService } from "./blog";
 import { storage } from "./storage";
 // Import server-only validation schemas to avoid drizzle-orm in client bundle
@@ -1062,6 +1063,54 @@ ${posts.map(post => `  <url>
     } catch (error) {
       console.error('Error fetching tag analytics:', error);
       res.status(500).json({ error: 'Failed to fetch tag analytics' });
+    }
+  });
+
+  // Contact form proxy endpoint
+  app.post('/api/contact-form', async (req, res) => {
+    try {
+      const formData = req.body;
+      console.log('Contact form data received:', formData);
+      
+      // Validate required fields (only the truly required ones)
+      if (!formData.name || !formData.email) {
+        console.log('Validation failed:', {
+          name: formData.name,
+          email: formData.email,
+          allFields: formData
+        });
+        return res.status(400).json({ 
+          error: 'Missing required fields', 
+          details: 'Name and email are required',
+          received: Object.keys(formData),
+          values: formData
+        });
+      }
+
+      // Forward to webhook
+      const webhookUrl = 'https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit';
+      
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Webhook responded with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      res.json({ success: true, data: result });
+      
+    } catch (error) {
+      console.error('Contact form submission error:', error);
+      res.status(500).json({ 
+        error: 'Failed to submit contact form', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
     }
   });
 
