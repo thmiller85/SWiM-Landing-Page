@@ -1087,24 +1087,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Contact form proxy endpoint
-  app.post('/api/contact-form', (req, res) => {
-    console.log('=== CONTACT FORM ENDPOINT HIT ===');
-    console.log('Raw request body:', req.body);
-    console.log('Request content-type:', req.headers['content-type']);
-    console.log('Request body type:', typeof req.body);
-    console.log('Request body keys:', req.body ? Object.keys(req.body) : 'no body');
-    
-    // Simple test response first
-    res.json({ 
-      success: true, 
-      message: 'Contact form endpoint working',
-      receivedData: req.body,
-      bodyType: typeof req.body,
-      hasName: !!req.body?.name,
-      hasEmail: !!req.body?.email
-    });
-  });
+
 
   // User management
   app.post('/api/cms/users', async (req, res) => {
