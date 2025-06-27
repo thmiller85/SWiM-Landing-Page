@@ -310,20 +310,41 @@ ${posts.map(post => `  <url>
   // Contact form submission endpoint
   app.post('/api/contact-form', async (req, res) => {
     try {
-      const { name, email, company, message, privacyConsent } = req.body;
+      const formData = req.body;
+      console.log('Contact form data received:', formData);
       
-      if (!name || !email || !message || !privacyConsent) {
-        return res.status(400).json({ error: 'Missing required fields' });
+      // Validate required fields based on the actual form structure
+      if (!formData.name || !formData.email) {
+        return res.status(400).json({ 
+          error: 'Missing required fields', 
+          details: 'Name and email are required' 
+        });
       }
+
+      // Forward to webhook
+      const webhookUrl = 'https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit';
       
-      // Here you would typically send an email or save to a database
-      // For now, we'll just log and return success
-      console.log('Contact form submission:', { name, email, company, message });
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Webhook responded with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      res.json({ success: true, data: result });
       
-      res.json({ success: true, message: 'Thank you for your message. We will get back to you soon!' });
     } catch (error) {
-      console.error('Error processing contact form:', error);
-      res.status(500).json({ error: 'Failed to submit contact form' });
+      console.error('Contact form submission error:', error);
+      res.status(500).json({ 
+        error: 'Failed to submit contact form', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
     }
   });
 
@@ -1067,51 +1088,22 @@ ${posts.map(post => `  <url>
   });
 
   // Contact form proxy endpoint
-  app.post('/api/contact-form', async (req, res) => {
-    try {
-      const formData = req.body;
-      console.log('Contact form data received:', formData);
-      
-      // Validate required fields (only the truly required ones)
-      if (!formData.name || !formData.email) {
-        console.log('Validation failed:', {
-          name: formData.name,
-          email: formData.email,
-          allFields: formData
-        });
-        return res.status(400).json({ 
-          error: 'Missing required fields', 
-          details: 'Name and email are required',
-          received: Object.keys(formData),
-          values: formData
-        });
-      }
-
-      // Forward to webhook
-      const webhookUrl = 'https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit';
-      
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Webhook responded with status ${response.status}`);
-      }
-
-      const result = await response.json();
-      res.json({ success: true, data: result });
-      
-    } catch (error) {
-      console.error('Contact form submission error:', error);
-      res.status(500).json({ 
-        error: 'Failed to submit contact form', 
-        details: error instanceof Error ? error.message : 'Unknown error' 
-      });
-    }
+  app.post('/api/contact-form', (req, res) => {
+    console.log('=== CONTACT FORM ENDPOINT HIT ===');
+    console.log('Raw request body:', req.body);
+    console.log('Request content-type:', req.headers['content-type']);
+    console.log('Request body type:', typeof req.body);
+    console.log('Request body keys:', req.body ? Object.keys(req.body) : 'no body');
+    
+    // Simple test response first
+    res.json({ 
+      success: true, 
+      message: 'Contact form endpoint working',
+      receivedData: req.body,
+      bodyType: typeof req.body,
+      hasName: !!req.body?.name,
+      hasEmail: !!req.body?.email
+    });
   });
 
   // User management
