@@ -335,6 +335,7 @@ const BlogPost = () => {
                     variant="outline" 
                     size="lg"
                     className="text-white border-white hover:bg-white hover:text-gray-900"
+                    onClick={() => handleNavClick(caseStudiesRef)}
                   >
                     <Eye className="mr-2 h-4 w-4" />
                     View Case Studies
