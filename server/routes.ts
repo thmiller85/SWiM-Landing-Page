@@ -389,6 +389,62 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // Lead capture endpoint
+  app.post('/api/leads/capture', async (req, res) => {
+    try {
+      const { 
+        firstName, 
+        lastName, 
+        email, 
+        company, 
+        industry, 
+        companySize, 
+        phone,
+        leadSource,
+        postSlug,
+        interactionData
+      } = req.body;
+
+      // Validate required fields
+      if (!email || !firstName || !company || !leadSource) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      // Get post ID if postSlug provided
+      let postId = null;
+      if (postSlug) {
+        const post = await storage.getPostBySlug(postSlug);
+        if (post) {
+          postId = post.id;
+        }
+      }
+
+      // Create lead
+      const lead = await storage.createLead({
+        firstName,
+        lastName,
+        email,
+        company,
+        industry,
+        companySize,
+        phone,
+        leadSource,
+        postId,
+        interactionData,
+      });
+
+      // Initialize Google Sheets and add lead
+      await googleSheetsService.ensureHeaders();
+      const postTitle = postId ? (await storage.getPostById(postId))?.title : undefined;
+      await googleSheetsService.addLead(lead, postTitle);
+
+      res.json({ success: true, leadId: lead.id });
+    } catch (error) {
+      console.error('Error capturing lead:', error);
+      res.status(500).json({ error: 'Failed to capture lead' });
+    }
+  });
+
   app.post('/api/blog/track/share', async (req, res) => {
     try {
       const { slug } = req.body;

@@ -1,7 +1,8 @@
 import { db } from './db';
 import { 
-  posts, images, users, analyticsEvents, visitorSessions, pageViews, conversions,
+  posts, images, users, leads, analyticsEvents, visitorSessions, pageViews, conversions,
   type Post, type InsertPost, type Image, type InsertImage, type User, type InsertUser,
+  type Lead, type InsertLead,
   type AnalyticsEvent, type InsertAnalyticsEvent, type VisitorSession, type InsertVisitorSession,
   type PageView, type InsertPageView, type Conversion, type InsertConversion
 } from '../shared/schema';
@@ -48,6 +49,14 @@ export interface IStorage {
   trackAnalyticsEvent(eventData: any): Promise<void>;
   getRealtimeAnalytics(): Promise<any>;
   getAnalyticsForRange(start: string, end: string, postId?: number): Promise<any>;
+  
+  // Lead Management
+  createLead(lead: InsertLead): Promise<Lead>;
+  getAllLeads(): Promise<Lead[]>;
+  getLeadById(id: number): Promise<Lead | undefined>;
+  updateLeadStatus(id: number, status: string, notes?: string): Promise<Lead | undefined>;
+  getLeadsBySource(source: string): Promise<Lead[]>;
+  calculateLeadScore(leadData: any): number;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -503,6 +512,85 @@ export class DatabaseStorage implements IStorage {
       deviceBreakdown,
       dateRange: { start, end },
     };
+  }
+
+  // Lead Management Methods
+  async createLead(lead: InsertLead): Promise<Lead> {
+    const leadScore = this.calculateLeadScore(lead.interactionData);
+    const leadWithScore = { ...lead, leadScore };
+    
+    const result = await db.insert(leads).values(leadWithScore).returning();
+    return result[0];
+  }
+
+  async getAllLeads(): Promise<Lead[]> {
+    return await db.select().from(leads).orderBy(desc(leads.createdAt));
+  }
+
+  async getLeadById(id: number): Promise<Lead | undefined> {
+    const result = await db.select().from(leads).where(eq(leads.id, id));
+    return result[0];
+  }
+
+  async updateLeadStatus(id: number, status: string, notes?: string): Promise<Lead | undefined> {
+    const updateData: any = { status, updatedAt: new Date() };
+    if (notes) {
+      updateData.notes = notes;
+    }
+    
+    const result = await db.update(leads)
+      .set(updateData)
+      .where(eq(leads.id, id))
+      .returning();
+    
+    return result[0];
+  }
+
+  async getLeadsBySource(source: string): Promise<Lead[]> {
+    return await db.select().from(leads)
+      .where(eq(leads.leadSource, source))
+      .orderBy(desc(leads.createdAt));
+  }
+
+  calculateLeadScore(interactionData: any): number {
+    let score = 0;
+    
+    if (!interactionData) return score;
+    
+    // ROI Calculator scoring
+    if (interactionData.roiPercentage) {
+      const roi = interactionData.roiPercentage;
+      if (roi > 200) score += 50; // Very high ROI
+      else if (roi > 100) score += 30; // High ROI
+      else if (roi > 50) score += 20; // Medium ROI
+      else score += 10; // Low but positive ROI
+    }
+    
+    if (interactionData.implementationCost) {
+      const cost = interactionData.implementationCost;
+      if (cost > 100000) score += 30; // Large budget
+      else if (cost > 50000) score += 20; // Medium budget
+      else score += 10; // Small budget
+    }
+    
+    // Automation Checklist scoring
+    if (interactionData.priorityLevel) {
+      const priority = interactionData.priorityLevel.toLowerCase();
+      if (priority === 'high') score += 40;
+      else if (priority === 'moderate') score += 25;
+      else score += 10;
+    }
+    
+    // Company size bonus
+    if (interactionData.companySize) {
+      const size = interactionData.companySize;
+      if (size.includes('1000+')) score += 20;
+      else if (size.includes('201-500') || size.includes('501-1000')) score += 15;
+      else if (size.includes('51-200')) score += 10;
+      else score += 5;
+    }
+    
+    return Math.min(score, 100); // Cap at 100
   }
 }
 
