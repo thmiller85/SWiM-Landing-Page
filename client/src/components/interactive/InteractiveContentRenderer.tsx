@@ -14,7 +14,7 @@ export function InteractiveContentRenderer({ type, props, onLeadGenerated }: Int
       return <AutomationChecklist onLeadGenerated={onLeadGenerated} {...props} />;
     
     case 'roi-calculator':
-      return <ROICalculator onLeadGenerated={onLeadGenerated} {...props} />;
+      return <ROICalculator postSlug={props?.postSlug} />;
     
     case 'workflow-assessment':
       return <div>Workflow Assessment component (to be implemented)</div>;

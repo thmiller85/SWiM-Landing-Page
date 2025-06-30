@@ -5,6 +5,7 @@ import path from "path";
 import fetch from "node-fetch";
 import { blogService } from "./blog";
 import { storage } from "./storage";
+import { googleSheetsService } from "./google-sheets";
 // Import server-only validation schemas to avoid drizzle-orm in client bundle
 import { 
   createPostSchema, 

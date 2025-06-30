@@ -1,491 +1,427 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Calculator, TrendingUp, DollarSign, Target } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Calculator, TrendingUp, DollarSign, Clock, Users, Target, ArrowRight, CheckCircle } from 'lucide-react';
+import { LeadCaptureForm } from '@/components/forms/LeadCaptureForm';
+import { apiRequest } from '@/lib/queryClient';
 
 interface ROICalculatorProps {
-  onLeadGenerated?: () => void;
+  postSlug?: string;
 }
 
-interface CalculatorInputs {
-  monthlySpend: number;
-  leadVolume: number;
-  conversionRate: number;
-  dealSize: number;
-  cacReduction: number;
-  conversionImprovement: number;
+interface CalculationResults {
+  monthlySavings: number;
+  annualSavings: number;
   implementationCost: number;
-  monthlyPlatformCost: number;
-}
-
-interface CalculatorResults {
-  currentRevenue: number;
-  newRevenue: number;
-  revenueIncrease: number;
-  revenueIncreasePercent: number;
-  currentCPL: number;
-  newCPL: number;
-  paybackPeriod: number;
-  totalRevenueGain: number;
-  totalInvestment: number;
-  netGain: number;
   roiPercentage: number;
+  paybackPeriod: number;
+  productivityGain: number;
+  timeToValue: number;
 }
 
-const initialInputs: CalculatorInputs = {
-  monthlySpend: 10000,
-  leadVolume: 500,
-  conversionRate: 10,
-  dealSize: 10000,
-  cacReduction: 42,
-  conversionImprovement: 31,
-  implementationCost: 50000,
-  monthlyPlatformCost: 2000
-};
+export function ROICalculator({ postSlug }: ROICalculatorProps) {
+  // Form state
+  const [currentRevenue, setCurrentRevenue] = useState<string>('');
+  const [marketingBudget, setMarketingBudget] = useState<string>('');
+  const [employeeCount, setEmployeeCount] = useState<string>('');
+  const [avgSalary, setAvgSalary] = useState<string>('');
+  const [currentConversion, setCurrentConversion] = useState<string>('');
+  const [hoursPerWeek, setHoursPerWeek] = useState<string>('');
+  const [industry, setIndustry] = useState<string>('');
+  const [companySize, setCompanySize] = useState<string>('');
 
-export function ROICalculator({ onLeadGenerated }: ROICalculatorProps) {
-  const [inputs, setInputs] = useState<CalculatorInputs>(initialInputs);
-  const [results, setResults] = useState<CalculatorResults | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [showResults, setShowResults] = useState(false);
+  // Results and lead capture state
+  const [results, setResults] = useState<CalculationResults | null>(null);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false);
+  const [leadCaptured, setLeadCaptured] = useState(false);
 
-  const formatCurrency = (amount: number): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(Math.round(amount));
+  const industryMultipliers = {
+    'technology': 1.8,
+    'healthcare': 1.6,
+    'finance': 1.7,
+    'retail': 1.4,
+    'manufacturing': 1.5,
+    'professional-services': 1.6,
+    'education': 1.3,
+    'other': 1.5
   };
 
-  const calculateROI = () => {
-    setIsCalculating(true);
+  const companySizeMultipliers = {
+    '1-10': 0.8,
+    '11-50': 1.0,
+    '51-200': 1.2,
+    '201-500': 1.4,
+    '501-1000': 1.6,
+    '1000+': 1.8
+  };
+
+  const calculateROI = useCallback(() => {
+    const revenue = parseFloat(currentRevenue) || 0;
+    const budget = parseFloat(marketingBudget) || 0;
+    const employees = parseFloat(employeeCount) || 0;
+    const salary = parseFloat(avgSalary) || 0;
+    const conversion = parseFloat(currentConversion) || 0;
+    const hours = parseFloat(hoursPerWeek) || 0;
+
+    if (!revenue || !budget || !employees || !hours) {
+      return;
+    }
+
+    const industryMultiplier = industryMultipliers[industry as keyof typeof industryMultipliers] || 1.5;
+    const sizeMultiplier = companySizeMultipliers[companySize as keyof typeof companySizeMultipliers] || 1.0;
+
+    // Base calculations
+    const hourlyRate = salary ? (salary / 2080) : 50; // Default $50/hour
+    const currentHourlyProductivity = revenue / (employees * 2080);
     
-    // Simulate calculation delay for better UX
-    setTimeout(() => {
-      const {
-        monthlySpend,
-        leadVolume,
-        conversionRate,
-        dealSize,
-        cacReduction,
-        conversionImprovement,
-        implementationCost,
-        monthlyPlatformCost
-      } = inputs;
+    // AI improvements
+    const productivityGain = 0.25 * industryMultiplier; // 25% base improvement
+    const conversionImprovement = Math.min(0.35, 0.15 + (industryMultiplier * 0.1)); // Up to 35% conversion boost
+    const timesSaved = hours * 52 * employees * 0.7; // 70% of manual tasks automated
 
-      // Calculate current metrics
-      const currentCPL = leadVolume > 0 ? monthlySpend / leadVolume : 0;
-      const currentCustomers = leadVolume * (conversionRate / 100);
-      const currentRevenue = currentCustomers * dealSize;
-      const currentCAC = currentCustomers > 0 ? monthlySpend / currentCustomers : 0;
+    // Monthly calculations
+    const monthlySavedHours = timesSaved / 12;
+    const monthlySavings = (monthlySavedHours * hourlyRate) + 
+                          (budget * conversionImprovement / 12) + 
+                          ((currentHourlyProductivity * productivityGain * employees * 173.33)); // 173.33 hours/month
 
-      // Calculate AI-enhanced metrics
-      const newConversionRate = conversionRate * (1 + conversionImprovement / 100);
-      const newCAC = currentCAC * (1 - cacReduction / 100);
-      const newCustomers = leadVolume * (newConversionRate / 100);
-      const newRevenue = newCustomers * dealSize;
-      const revenueIncrease = newRevenue - currentRevenue;
-      const revenueIncreasePercent = currentRevenue > 0 ? (revenueIncrease / currentRevenue * 100) : 0;
+    const annualSavings = monthlySavings * 12;
+    
+    // Implementation cost (dynamic based on company size)
+    const baseCost = 25000;
+    const implementationCost = baseCost * sizeMultiplier;
+    
+    // ROI calculations
+    const roiPercentage = ((annualSavings - implementationCost) / implementationCost) * 100;
+    const paybackPeriod = implementationCost / monthlySavings;
+    const timeToValue = Math.max(2, Math.min(6, paybackPeriod / 2)); // 2-6 months
 
-      // Calculate new CPL
-      const newMonthlySpend = newCustomers * newCAC;
-      const newCPL = leadVolume > 0 ? newMonthlySpend / leadVolume : 0;
+    const calculatedResults: CalculationResults = {
+      monthlySavings: Math.round(monthlySavings),
+      annualSavings: Math.round(annualSavings),
+      implementationCost: Math.round(implementationCost),
+      roiPercentage: Math.round(roiPercentage),
+      paybackPeriod: Math.round(paybackPeriod * 10) / 10,
+      productivityGain: Math.round(productivityGain * 100),
+      timeToValue: Math.round(timeToValue)
+    };
 
-      // Calculate ROI over 12 months
-      const monthlyNetGain = revenueIncrease - monthlyPlatformCost;
-      const totalRevenueGain12Months = revenueIncrease * 12;
-      const totalInvestment12Months = implementationCost + (monthlyPlatformCost * 12);
-      const netGain12Months = totalRevenueGain12Months - totalInvestment12Months;
-      const roiPercentage = totalInvestment12Months > 0 ? (netGain12Months / totalInvestment12Months * 100) : 0;
+    setResults(calculatedResults);
+  }, [currentRevenue, marketingBudget, employeeCount, avgSalary, currentConversion, hoursPerWeek, industry, companySize]);
 
-      // Calculate payback period
-      const paybackPeriod = monthlyNetGain > 0 ? Math.ceil(implementationCost / monthlyNetGain) : 0;
+  const handleEnhancedResults = () => {
+    setShowLeadForm(true);
+  };
 
-      const calculatedResults: CalculatorResults = {
-        currentRevenue,
-        newRevenue,
-        revenueIncrease,
-        revenueIncreasePercent,
-        currentCPL,
-        newCPL,
-        paybackPeriod,
-        totalRevenueGain: totalRevenueGain12Months,
-        totalInvestment: totalInvestment12Months,
-        netGain: netGain12Months,
-        roiPercentage
+  const handleLeadSubmit = async (data: any) => {
+    setIsSubmittingLead(true);
+    try {
+      const interactionData = {
+        roiPercentage: results?.roiPercentage,
+        monthlySavings: results?.monthlySavings,
+        annualSavings: results?.annualSavings,
+        implementationCost: results?.implementationCost,
+        paybackPeriod: results?.paybackPeriod,
+        productivityGain: results?.productivityGain,
+        industry,
+        companySize,
+        currentRevenue: parseFloat(currentRevenue),
+        marketingBudget: parseFloat(marketingBudget),
+        employeeCount: parseFloat(employeeCount)
       };
 
-      setResults(calculatedResults);
-      setShowResults(true);
-      setIsCalculating(false);
+      await apiRequest('/api/leads/capture', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...data,
+          leadSource: 'ROI Calculator',
+          postSlug,
+          interactionData
+        })
+      });
 
-      // Track lead generation
-      if (onLeadGenerated) {
-        onLeadGenerated();
-      }
-    }, 500);
-  };
-
-  const updateInput = (field: keyof CalculatorInputs, value: string) => {
-    const numValue = parseFloat(value) || 0;
-    setInputs(prev => ({ ...prev, [field]: numValue }));
-    
-    // Auto-recalculate if results are shown
-    if (showResults) {
-      setTimeout(() => calculateROI(), 300);
+      setLeadCaptured(true);
+      setShowLeadForm(false);
+    } catch (error) {
+      console.error('Error submitting lead:', error);
+    } finally {
+      setIsSubmittingLead(false);
     }
   };
 
-  const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => (
-    <div className="group relative inline-block">
-      {children}
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
-        {content}
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
-      </div>
-    </div>
-  );
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const formatPercentage = (value: number) => {
+    return `${value}%`;
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto my-8"
-    >
-      <Card className="bg-gray-900/50 backdrop-blur-sm border-gray-800">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <div className="flex items-center gap-3">
-            <Calculator className="h-8 w-8" />
-            <div>
-              <CardTitle className="text-2xl">AI Marketing ROI Calculator</CardTitle>
-              <CardDescription className="text-blue-100">
-                Estimate your potential returns from implementing AI-powered marketing solutions
-              </CardDescription>
-            </div>
-          </div>
+    <div className="w-full max-w-4xl mx-auto space-y-6">
+      <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3 text-white">
+            <Calculator className="h-6 w-6 text-blue-400" />
+            AI Marketing ROI Calculator
+          </CardTitle>
+          <p className="text-slate-300">
+            Calculate your potential return on investment with AI-powered marketing automation
+          </p>
         </CardHeader>
-        
-        <CardContent className="p-8">
+        <CardContent className="space-y-6">
           {/* Input Section */}
-          <div className="space-y-8">
-            {/* Current Marketing Metrics */}
-            <div>
-              <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-blue-400" />
-                Current Marketing Metrics
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label htmlFor="monthlySpend" className="text-gray-300 flex items-center gap-2">
-                    Monthly Marketing Spend
-                    <Tooltip content="Your total monthly budget for marketing activities">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="monthlySpend"
-                      type="number"
-                      value={inputs.monthlySpend}
-                      onChange={(e) => updateInput('monthlySpend', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pl-8"
-                      placeholder="10000"
-                    />
-                    <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="leadVolume" className="text-gray-300 flex items-center gap-2">
-                    Monthly Lead Volume
-                    <Tooltip content="Average number of leads generated per month">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <Input
-                    id="leadVolume"
-                    type="number"
-                    value={inputs.leadVolume}
-                    onChange={(e) => updateInput('leadVolume', e.target.value)}
-                    className="bg-gray-800 border-gray-700 text-white"
-                    placeholder="500"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="conversionRate" className="text-gray-300 flex items-center gap-2">
-                    Current Conversion Rate
-                    <Tooltip content="Percentage of leads that become customers">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="conversionRate"
-                      type="number"
-                      step="0.1"
-                      value={inputs.conversionRate}
-                      onChange={(e) => updateInput('conversionRate', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pr-8"
-                      placeholder="10"
-                    />
-                    <span className="absolute right-2 top-2.5 text-gray-400 text-sm">%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="dealSize" className="text-gray-300 flex items-center gap-2">
-                    Average Deal Size
-                    <Tooltip content="Average revenue per customer">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="dealSize"
-                      type="number"
-                      value={inputs.dealSize}
-                      onChange={(e) => updateInput('dealSize', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pl-8"
-                      placeholder="10000"
-                    />
-                    <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* AI Implementation Parameters */}
-            <div>
-              <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                <Target className="h-5 w-5 text-purple-400" />
-                AI Implementation Parameters
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label htmlFor="cacReduction" className="text-gray-300 flex items-center gap-2">
-                    Expected CAC Reduction
-                    <Tooltip content="Industry average is 42%">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="cacReduction"
-                      type="number"
-                      value={inputs.cacReduction}
-                      onChange={(e) => updateInput('cacReduction', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pr-8"
-                      placeholder="42"
-                    />
-                    <span className="absolute right-2 top-2.5 text-gray-400 text-sm">%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="conversionImprovement" className="text-gray-300 flex items-center gap-2">
-                    Expected Conversion Rate Improvement
-                    <Tooltip content="Industry average is 31%">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="conversionImprovement"
-                      type="number"
-                      value={inputs.conversionImprovement}
-                      onChange={(e) => updateInput('conversionImprovement', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pr-8"
-                      placeholder="31"
-                    />
-                    <span className="absolute right-2 top-2.5 text-gray-400 text-sm">%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="implementationCost" className="text-gray-300 flex items-center gap-2">
-                    Implementation Cost
-                    <Tooltip content="One-time setup and integration costs">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="implementationCost"
-                      type="number"
-                      value={inputs.implementationCost}
-                      onChange={(e) => updateInput('implementationCost', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pl-8"
-                      placeholder="50000"
-                    />
-                    <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="monthlyPlatformCost" className="text-gray-300 flex items-center gap-2">
-                    Monthly AI Platform Cost
-                    <Tooltip content="Ongoing software and maintenance fees">
-                      <div className="w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-400 cursor-help">?</div>
-                    </Tooltip>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="monthlyPlatformCost"
-                      type="number"
-                      value={inputs.monthlyPlatformCost}
-                      onChange={(e) => updateInput('monthlyPlatformCost', e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pl-8"
-                      placeholder="2000"
-                    />
-                    <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Calculate Button */}
-          <div className="flex justify-center mt-8">
-            <Button
-              onClick={calculateROI}
-              disabled={isCalculating}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg font-semibold"
-            >
-              {isCalculating ? 'Calculating...' : 'Calculate AI Marketing ROI'}
-            </Button>
-          </div>
-
-          {/* Results Section */}
-          {showResults && results && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mt-12"
-            >
-              <h3 className="text-2xl font-semibold text-white mb-8 text-center">
-                Your AI Marketing ROI Projection
-              </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Company Information</h3>
               
-              {/* Key Metrics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wide">New Monthly Revenue</h4>
-                    <div className="text-2xl font-bold text-green-400 mt-2">
-                      {formatCurrency(results.newRevenue)}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      vs. {formatCurrency(results.currentRevenue)} current
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wide">Monthly Revenue Increase</h4>
-                    <div className="text-2xl font-bold text-green-400 mt-2">
-                      {formatCurrency(results.revenueIncrease)}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      {results.revenueIncreasePercent.toFixed(1)}% improvement
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wide">New Cost Per Lead</h4>
-                    <div className="text-2xl font-bold text-blue-400 mt-2">
-                      {formatCurrency(results.newCPL)}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      vs. {formatCurrency(results.currentCPL)} current
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wide">Payback Period</h4>
-                    <div className="text-2xl font-bold text-purple-400 mt-2">
-                      {results.paybackPeriod}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">months</div>
-                  </CardContent>
-                </Card>
+              <div className="space-y-2">
+                <Label htmlFor="industry" className="text-slate-300">Industry</Label>
+                <Select value={industry} onValueChange={setIndustry}>
+                  <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                    <SelectValue placeholder="Select your industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="healthcare">Healthcare</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                    <SelectItem value="retail">Retail</SelectItem>
+                    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="professional-services">Professional Services</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* ROI Breakdown */}
-              <Card className="bg-gray-800/30 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-white">12-Month ROI Breakdown</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                      <span className="text-gray-400">Total Revenue Gain</span>
-                      <span className="text-white font-semibold">{formatCurrency(results.totalRevenueGain)}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                      <span className="text-gray-400">Total Investment</span>
-                      <span className="text-white font-semibold">{formatCurrency(results.totalInvestment)}</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                      <span className="text-gray-400">Net Gain</span>
-                      <span className={`font-semibold ${results.netGain > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {formatCurrency(results.netGain)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-3 text-lg font-bold">
-                      <span className="text-white">ROI Percentage</span>
-                      <Badge className={`text-lg px-3 py-1 ${results.roiPercentage > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
-                        {results.roiPercentage.toFixed(1)}%
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="space-y-2">
+                <Label htmlFor="companySize" className="text-slate-300">Company Size</Label>
+                <Select value={companySize} onValueChange={setCompanySize}>
+                  <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                    <SelectValue placeholder="Select company size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1-10">1-10 employees</SelectItem>
+                    <SelectItem value="11-50">11-50 employees</SelectItem>
+                    <SelectItem value="51-200">51-200 employees</SelectItem>
+                    <SelectItem value="201-500">201-500 employees</SelectItem>
+                    <SelectItem value="501-1000">501-1000 employees</SelectItem>
+                    <SelectItem value="1000+">1000+ employees</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-              {/* CTA Section */}
-              <Card className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500/30 mt-8">
-                <CardContent className="p-8 text-center">
-                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Achieve These Results?</h3>
-                  <p className="text-gray-300 mb-6">
-                    Get a personalized AI marketing strategy tailored to your business goals.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button 
-                      asChild
-                      className="bg-green-600 hover:bg-green-700 text-white px-6 py-3"
-                    >
-                      <a href="/contact" target="_blank" rel="noopener noreferrer">
-                        Get Your Free Assessment
-                      </a>
-                    </Button>
-                    <Button 
-                      asChild
-                      variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-800 px-6 py-3"
-                    >
-                      <a href="/services" target="_blank" rel="noopener noreferrer">
-                        Learn More
-                      </a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+              <div className="space-y-2">
+                <Label htmlFor="revenue" className="text-slate-300">Annual Revenue ($)</Label>
+                <Input
+                  id="revenue"
+                  type="number"
+                  placeholder="1000000"
+                  value={currentRevenue}
+                  onChange={(e) => setCurrentRevenue(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="budget" className="text-slate-300">Annual Marketing Budget ($)</Label>
+                <Input
+                  id="budget"
+                  type="number"
+                  placeholder="100000"
+                  value={marketingBudget}
+                  onChange={(e) => setMarketingBudget(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">Operational Details</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="employees" className="text-slate-300">Marketing Team Size</Label>
+                <Input
+                  id="employees"
+                  type="number"
+                  placeholder="5"
+                  value={employeeCount}
+                  onChange={(e) => setEmployeeCount(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="salary" className="text-slate-300">Average Salary ($)</Label>
+                <Input
+                  id="salary"
+                  type="number"
+                  placeholder="65000"
+                  value={avgSalary}
+                  onChange={(e) => setAvgSalary(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="conversion" className="text-slate-300">Current Conversion Rate (%)</Label>
+                <Input
+                  id="conversion"
+                  type="number"
+                  placeholder="2.5"
+                  step="0.1"
+                  value={currentConversion}
+                  onChange={(e) => setCurrentConversion(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="hours" className="text-slate-300">Manual Tasks (hours/week)</Label>
+                <Input
+                  id="hours"
+                  type="number"
+                  placeholder="20"
+                  value={hoursPerWeek}
+                  onChange={(e) => setHoursPerWeek(e.target.value)}
+                  className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Button 
+            onClick={calculateROI}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            disabled={!currentRevenue || !marketingBudget || !employeeCount || !hoursPerWeek}
+          >
+            <Calculator className="h-5 w-5 mr-2" />
+            Calculate ROI
+          </Button>
+
+          {/* Basic Results Section */}
+          {results && (
+            <>
+              <Separator className="bg-slate-600" />
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <TrendingUp className="h-6 w-6 text-green-400" />
+                  Your AI Marketing ROI
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="bg-slate-800 border-slate-600">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <DollarSign className="h-8 w-8 text-green-400" />
+                        <div>
+                          <p className="text-slate-400 text-sm">Monthly Savings</p>
+                          <p className="text-2xl font-bold text-white">{formatCurrency(results.monthlySavings)}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-slate-800 border-slate-600">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Target className="h-8 w-8 text-blue-400" />
+                        <div>
+                          <p className="text-slate-400 text-sm">Annual ROI</p>
+                          <p className="text-2xl font-bold text-white">{formatPercentage(results.roiPercentage)}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-slate-800 border-slate-600">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Clock className="h-8 w-8 text-purple-400" />
+                        <div>
+                          <p className="text-slate-400 text-sm">Payback Period</p>
+                          <p className="text-2xl font-bold text-white">{results.paybackPeriod} mo</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* CTA for Enhanced Results */}
+                {!leadCaptured && (
+                  <Card className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-600">
+                    <CardContent className="p-6">
+                      <div className="text-center space-y-4">
+                        <h4 className="text-xl font-bold text-white">Want Detailed Analysis?</h4>
+                        <p className="text-blue-100">
+                          Get a comprehensive ROI breakdown, implementation roadmap, and industry benchmarks
+                        </p>
+                        <div className="flex items-center justify-center gap-4 text-sm text-blue-200">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Custom Implementation Plan
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Industry Benchmarks
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Risk Assessment
+                          </div>
+                        </div>
+                        <Button 
+                          onClick={handleEnhancedResults}
+                          className="bg-white text-blue-900 hover:bg-blue-50 font-semibold px-6 py-3"
+                        >
+                          Get Enhanced Results
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Thank You Message */}
+                {leadCaptured && (
+                  <Card className="bg-gradient-to-r from-green-900 to-emerald-900 border-green-600">
+                    <CardContent className="p-6">
+                      <div className="text-center space-y-4">
+                        <CheckCircle className="h-12 w-12 text-green-400 mx-auto" />
+                        <h4 className="text-xl font-bold text-white">Thank You!</h4>
+                        <p className="text-green-100">
+                          Your detailed ROI analysis will be sent to your email within the next few minutes.
+                          Our team will also reach out to discuss a customized implementation strategy.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
-    </motion.div>
+
+      {/* Lead Capture Form Modal */}
+      <LeadCaptureForm
+        isOpen={showLeadForm}
+        onClose={() => setShowLeadForm(false)}
+        onSubmit={handleLeadSubmit}
+        title="Get Your Detailed ROI Analysis"
+        description="Enter your details to receive a comprehensive analysis with implementation roadmap and industry benchmarks."
+        ctaText="Send My Analysis"
+        isSubmitting={isSubmittingLead}
+      />
+    </div>
   );
 }
