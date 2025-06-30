@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Marketing ROI Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .calculator-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .calculator-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calculator-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calculator-body {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .input-addon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .tooltip {
+            display: inline-block;
+            margin-left: 5px;
+            width: 16px;
+            height: 16px;
+            background: #e1e4e8;
+            color: #666;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 12px;
+            cursor: help;
+            position: relative;
+        }
+
+        .tooltip-wrapper {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            pointer-events: none;
+            padding-bottom: 8px;
+        }
+
+        .tooltip-content {
+            background: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: normal;
+            width: 220px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .tooltip:hover .tooltip-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #333;
+        }
+
+        /* Auto-positioning for edge cases */
+        .tooltip-wrapper.tooltip-right {
+            left: auto;
+            right: -10px;
+            transform: none;
+        }
+
+        .tooltip-wrapper.tooltip-right .tooltip-arrow {
+            left: auto;
+            right: 16px;
+        }
+
+        .tooltip-wrapper.tooltip-left {
+            left: -10px;
+            transform: none;
+        }
+
+        .tooltip-wrapper.tooltip-left .tooltip-arrow {
+            left: 16px;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 40px auto;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e1e4e8;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #2a5298;
+            transform: scale(1.2);
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .result-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .result-card:hover {
+            border-color: #2a5298;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .result-value.positive {
+            color: #28a745;
+        }
+
+        .result-value.negative {
+            color: #dc3545;
+        }
+
+        .result-subtitle {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .roi-breakdown {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .breakdown-label {
+            color: #666;
+        }
+
+        .breakdown-value {
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+
+        .cta-section h3 {
+            font-size: 24px;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .cta-button {
+            background: #28a745;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .cta-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: #6c757d;
+        }
+
+        .cta-button.secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-body {
+                padding: 20px;
+            }
+            
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-header">
+            <h1>AI Marketing ROI Calculator</h1>
+            <p>Estimate your potential returns from implementing AI-powered marketing solutions</p>
+        </div>
+        
+        <div class="calculator-body">
+            <div class="input-section">
+                <h2 class="section-title">Current Marketing Metrics</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>
+                            Monthly Marketing Spend
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Your total monthly budget for marketing activities
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="monthlySpend" placeholder="10000" value="10000">
+                            <span class="input-addon">$</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Monthly Lead Volume
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Average number of leads generated per month
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="leadVolume" placeholder="500" value="500">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Current Conversion Rate
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Percentage of leads that become customers
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="conversionRate" placeholder="10" value="10" step="0.1">
+                            <span class="input-addon">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Average Deal Size
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Average revenue per customer
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="dealSize" placeholder="10000" value="10000">
+                            <span class="input-addon">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <h2 class="section-title">AI Implementation Parameters</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>
+                            Expected CAC Reduction
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Industry average is 42%
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="cacReduction" placeholder="42" value="42" step="1">
+                            <span class="input-addon">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Expected Conversion Rate Improvement
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Industry average is 31%
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="conversionImprovement" placeholder="31" value="31" step="1">
+                            <span class="input-addon">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Implementation Cost
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        One-time setup and integration costs
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="implementationCost" placeholder="50000" value="50000">
+                            <span class="input-addon">$</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>
+                            Monthly AI Platform Cost
+                            <span class="tooltip">?
+                                <div class="tooltip-wrapper">
+                                    <div class="tooltip-content">
+                                        Ongoing software and maintenance fees
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="monthlyPlatformCost" placeholder="2000" value="2000">
+                            <span class="input-addon">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-indicator">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot" id="resultsDot"></div>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateROI()">Calculate AI Marketing ROI</button>
+            
+            <div class="results-section" id="resultsSection">
+                <h2 class="section-title">Your AI Marketing ROI Projection</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>New Monthly Revenue</h3>
+                        <div class="result-value positive" id="newRevenue">$0</div>
+                        <div class="result-subtitle">vs. <span id="currentRevenue">$0</span> current</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Monthly Revenue Increase</h3>
+                        <div class="result-value positive" id="revenueIncrease">$0</div>
+                        <div class="result-subtitle"><span id="revenueIncreasePercent">0%</span> improvement</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>New Cost Per Lead</h3>
+                        <div class="result-value" id="newCPL">$0</div>
+                        <div class="result-subtitle">vs. <span id="currentCPL">$0</span> current</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>Payback Period</h3>
+                        <div class="result-value" id="paybackPeriod">0</div>
+                        <div class="result-subtitle">months</div>
+                    </div>
+                </div>
+                
+                <div class="roi-breakdown">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">12-Month ROI Breakdown</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Total Revenue Gain</span>
+                        <span class="breakdown-value" id="totalRevenueGain">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Total Investment</span>
+                        <span class="breakdown-value" id="totalInvestment">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Net Gain</span>
+                        <span class="breakdown-value" id="netGain">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">ROI Percentage</span>
+                        <span class="breakdown-value positive" id="roiPercentage">0%</span>
+                    </div>
+                </div>
+                
+                <div class="cta-section">
+                    <h3>Ready to Achieve These Results?</h3>
+                    <p>Get a personalized AI marketing strategy tailored to your business goals.</p>
+                    <a href="https://swimsolutions.ai/services/ai-strategy-consulting" class="cta-button">Get Your Free Assessment</a>
+                    <a href="https://swimsolutions.ai/services/ai-powered-marketing" class="cta-button secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatCurrency(amount) {
+            return '$' + Math.round(amount).toLocaleString();
+        }
+
+        function calculateROI() {
+            // Animate progress indicator
+            document.getElementById('resultsDot').classList.add('active');
+            
+            // Get input values
+            const monthlySpend = parseFloat(document.getElementById('monthlySpend').value) || 0;
+            const leadVolume = parseFloat(document.getElementById('leadVolume').value) || 0;
+            const conversionRate = parseFloat(document.getElementById('conversionRate').value) || 0;
+            const dealSize = parseFloat(document.getElementById('dealSize').value) || 0;
+            const cacReduction = parseFloat(document.getElementById('cacReduction').value) || 0;
+            const conversionImprovement = parseFloat(document.getElementById('conversionImprovement').value) || 0;
+            const implementationCost = parseFloat(document.getElementById('implementationCost').value) || 0;
+            const monthlyPlatformCost = parseFloat(document.getElementById('monthlyPlatformCost').value) || 0;
+
+            // Calculate current metrics
+            const currentCPL = leadVolume > 0 ? monthlySpend / leadVolume : 0;
+            const currentCustomers = leadVolume * (conversionRate / 100);
+            const currentRevenue = currentCustomers * dealSize;
+            const currentCAC = currentCustomers > 0 ? monthlySpend / currentCustomers : 0;
+
+            // Calculate AI-enhanced metrics
+            const newConversionRate = conversionRate * (1 + conversionImprovement / 100);
+            const newCAC = currentCAC * (1 - cacReduction / 100);
+            const newCustomers = leadVolume * (newConversionRate / 100);
+            const newRevenue = newCustomers * dealSize;
+            const revenueIncrease = newRevenue - currentRevenue;
+            const revenueIncreasePercent = currentRevenue > 0 ? (revenueIncrease / currentRevenue * 100) : 0;
+
+            // Calculate new CPL (assuming same lead volume but lower spend due to efficiency)
+            const newMonthlySpend = newCustomers * newCAC;
+            const newCPL = leadVolume > 0 ? newMonthlySpend / leadVolume : 0;
+
+            // Calculate ROI over 12 months
+            const monthlyNetGain = revenueIncrease - monthlyPlatformCost;
+            const totalRevenueGain12Months = revenueIncrease * 12;
+            const totalInvestment12Months = implementationCost + (monthlyPlatformCost * 12);
+            const netGain12Months = totalRevenueGain12Months - totalInvestment12Months;
+            const roiPercentage = totalInvestment12Months > 0 ? (netGain12Months / totalInvestment12Months * 100) : 0;
+
+            // Calculate payback period
+            const paybackPeriod = monthlyNetGain > 0 ? Math.ceil(implementationCost / monthlyNetGain) : 0;
+
+            // Update results with animation
+            setTimeout(() => {
+                document.getElementById('currentRevenue').textContent = formatCurrency(currentRevenue);
+                document.getElementById('newRevenue').textContent = formatCurrency(newRevenue);
+                document.getElementById('revenueIncrease').textContent = formatCurrency(revenueIncrease);
+                document.getElementById('revenueIncreasePercent').textContent = revenueIncreasePercent.toFixed(1) + '%';
+                document.getElementById('currentCPL').textContent = formatCurrency(currentCPL);
+                document.getElementById('newCPL').textContent = formatCurrency(newCPL);
+                document.getElementById('paybackPeriod').textContent = paybackPeriod;
+                document.getElementById('totalRevenueGain').textContent = formatCurrency(totalRevenueGain12Months);
+                document.getElementById('totalInvestment').textContent = formatCurrency(totalInvestment12Months);
+                document.getElementById('netGain').textContent = formatCurrency(netGain12Months);
+                document.getElementById('roiPercentage').textContent = roiPercentage.toFixed(1) + '%';
+
+                // Update value colors
+                if (revenueIncrease > 0) {
+                    document.getElementById('revenueIncrease').classList.add('positive');
+                } else {
+                    document.getElementById('revenueIncrease').classList.remove('positive');
+                }
+
+                if (netGain12Months > 0) {
+                    document.getElementById('netGain').style.color = '#28a745';
+                } else {
+                    document.getElementById('netGain').style.color = '#dc3545';
+                }
+
+                // Show results
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+
+        // Add input event listeners for real-time updates
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                if (document.getElementById('resultsSection').style.display === 'block') {
+                    calculateROI();
+                }
+            });
+        });
+
+        // Handle tooltip positioning
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltips = document.querySelectorAll('.tooltip');
+            
+            tooltips.forEach(tooltip => {
+                tooltip.addEventListener('mouseenter', function() {
+                    const wrapper = this.querySelector('.tooltip-wrapper');
+                    const rect = wrapper.getBoundingClientRect();
+                    const containerRect = this.closest('.calculator-container').getBoundingClientRect();
+                    
+                    // Reset classes
+                    wrapper.classList.remove('tooltip-left', 'tooltip-right');
+                    
+                    // Check if tooltip goes beyond left edge
+                    if (rect.left < containerRect.left) {
+                        wrapper.classList.add('tooltip-left');
+                    }
+                    // Check if tooltip goes beyond right edge
+                    else if (rect.right > containerRect.right) {
+                        wrapper.classList.add('tooltip-right');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
