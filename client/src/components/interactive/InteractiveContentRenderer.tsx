@@ -1,5 +1,6 @@
 import React from 'react';
 import { AutomationChecklist } from './AutomationChecklist';
+import { ROICalculator } from './ROICalculator';
 
 interface InteractiveContentRendererProps {
   type: string;
@@ -12,9 +13,8 @@ export function InteractiveContentRenderer({ type, props, onLeadGenerated }: Int
     case 'automation-checklist':
       return <AutomationChecklist onLeadGenerated={onLeadGenerated} {...props} />;
     
-    // Add more interactive components here as needed
     case 'roi-calculator':
-      return <div>ROI Calculator component (to be implemented)</div>;
+      return <ROICalculator onLeadGenerated={onLeadGenerated} {...props} />;
     
     case 'workflow-assessment':
       return <div>Workflow Assessment component (to be implemented)</div>;

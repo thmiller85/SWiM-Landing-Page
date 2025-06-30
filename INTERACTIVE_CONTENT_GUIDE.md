@@ -22,6 +22,24 @@ A comprehensive 3-phase assessment tool that helps businesses evaluate their aut
 - Local storage for session persistence
 - Data export functionality
 
+### 2. AI Marketing ROI Calculator
+**Shortcode:** `[interactive type="roi-calculator"]`
+
+A comprehensive ROI calculator that helps businesses estimate potential returns from implementing AI-powered marketing solutions:
+
+- **Current Marketing Metrics** - Monthly spend, lead volume, conversion rates, and deal sizes
+- **AI Implementation Parameters** - Expected CAC reduction, conversion improvements, and costs
+- **12-Month Projections** - Revenue gains, payback period, and ROI percentage
+- **Real-time Calculations** - Auto-updates as users modify input parameters
+
+**Features:**
+- Professional dark theme with responsive design
+- Interactive tooltips with industry benchmarks
+- Detailed breakdown of costs and benefits
+- Lead generation on calculation completion
+- Professional CTA integration with service links
+- Mobile-optimized interface
+
 ## How to Use Interactive Content
 
 ### In the CMS Editor
@@ -88,10 +106,10 @@ Interactive components inherit the blog's dark theme and styling:
 
 The system is designed to be extensible. Planned additions:
 
-1. **ROI Calculator** - `[interactive type="roi-calculator"]`
-2. **Workflow Assessment** - `[interactive type="workflow-assessment"]`  
-3. **Custom Forms** - `[interactive type="lead-form"]`
-4. **Surveys and Polls** - `[interactive type="survey"]`
+1. **Workflow Assessment** - `[interactive type="workflow-assessment"]`  
+2. **Custom Forms** - `[interactive type="lead-form"]`
+3. **Surveys and Polls** - `[interactive type="survey"]`
+4. **Lead Magnets** - `[interactive type="lead-magnet"]`
 
 ## Best Practices
 

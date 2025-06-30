@@ -28,12 +28,12 @@ const interactiveElements: InteractiveElement[] = [
   },
   {
     id: 'roi-calculator',
-    name: 'ROI Calculator',
-    description: 'Calculate return on investment for automation projects with customizable parameters.',
+    name: 'AI Marketing ROI Calculator',
+    description: 'Interactive calculator to estimate potential returns from AI-powered marketing solutions with detailed projections.',
     shortcode: '[interactive type="roi-calculator"]',
     icon: <Calculator className="h-5 w-5" />,
     category: 'calculator',
-    preview: 'Coming soon - Interactive calculator for automation ROI analysis.'
+    preview: 'Comprehensive ROI calculator with current marketing metrics, AI implementation parameters, and 12-month projections including payback period and revenue increase analysis.'
   },
   {
     id: 'workflow-assessment',
