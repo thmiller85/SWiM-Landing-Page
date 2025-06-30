@@ -35,7 +35,16 @@ export function parseInteractiveShortcodes(content: string, onLeadGenerated?: ()
   let lastIndex = 0;
   let match;
 
+  // Check for any interactive shortcode patterns
+  if (content.includes('[interactive')) {
+    console.log('Content contains [interactive shortcode');
+    console.log('Full content around shortcode:', content.slice(content.indexOf('[interactive') - 50, content.indexOf('[interactive') + 100));
+  } else {
+    console.log('No [interactive shortcode found in content');
+  }
+
   while ((match = shortcodeRegex.exec(content)) !== null) {
+    console.log('Found shortcode match:', match);
     // Add text before the shortcode
     if (match.index > lastIndex) {
       parts.push(content.slice(lastIndex, match.index));
