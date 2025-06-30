@@ -199,4 +199,33 @@ export type Conversion = typeof conversions.$inferSelect;
 export type InsertConversion = z.infer<typeof insertConversionSchema>;
 export type AnalyticsAggregate = typeof analyticsAggregates.$inferSelect;
 
+// Leads table for capturing contact information from interactive elements
+export const leads = pgTable('leads', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 255 }).notNull(),
+  firstName: varchar('first_name', { length: 100 }),
+  lastName: varchar('last_name', { length: 100 }),
+  company: varchar('company', { length: 255 }),
+  industry: varchar('industry', { length: 100 }),
+  companySize: varchar('company_size', { length: 50 }),
+  phone: varchar('phone', { length: 50 }),
+  leadSource: varchar('lead_source', { length: 100 }).notNull(), // 'roi-calculator', 'automation-checklist'
+  postId: integer('post_id').references(() => posts.id),
+  interactionData: jsonb('interaction_data'), // Store calculator results, assessment scores
+  leadScore: integer('lead_score').default(0),
+  status: varchar('status', { length: 50 }).default('new'), // 'new', 'contacted', 'qualified', 'converted'
+  notes: text('notes'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const insertLeadSchema = createInsertSchema(leads).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type Lead = typeof leads.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+
 // Note: BlogPost interface moved to client-only types to avoid drizzle-orm imports in client bundle
