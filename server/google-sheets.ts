@@ -101,24 +101,68 @@ export class GoogleSheetsService {
         'Notes'
       ];
 
+      // First, get spreadsheet metadata to find available sheets
+      const spreadsheet = await this.sheets.spreadsheets.get({
+        spreadsheetId: this.config.spreadsheetId,
+      });
+
+      const sheets = spreadsheet.data.sheets || [];
+      console.log(`Found ${sheets.length} sheets:`, sheets.map((s: any) => s.properties?.title));
+      
+      let targetSheetName = this.config.sheetName;
+
+      // Find the best sheet to use (prefer "Leads", "Blog Leads", or first available)
+      const leadsSheet = sheets.find((sheet: any) => 
+        sheet.properties?.title === 'Leads' || 
+        sheet.properties?.title === 'Blog Leads'
+      );
+      
+      if (leadsSheet) {
+        targetSheetName = leadsSheet.properties?.title || 'Leads';
+        console.log(`Using existing sheet: ${targetSheetName}`);
+      } else if (sheets.length > 0) {
+        // Use the first available sheet
+        targetSheetName = sheets[0].properties?.title || 'Sheet1';
+        console.log(`Using first available sheet: ${targetSheetName} (Blog Leads not found)`);
+      } else {
+        // Create a new sheet named "Leads"
+        await this.sheets.spreadsheets.batchUpdate({
+          spreadsheetId: this.config.spreadsheetId,
+          resource: {
+            requests: [{
+              addSheet: {
+                properties: {
+                  title: 'Leads'
+                }
+              }
+            }]
+          }
+        });
+        targetSheetName = 'Leads';
+        console.log('Created new "Leads" sheet');
+      }
+
       // Check if headers exist
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.config.spreadsheetId,
-        range: `${this.config.sheetName}!1:1`,
+        range: `${targetSheetName}!1:1`,
       });
 
       if (!response.data.values || response.data.values.length === 0) {
         // Add headers
         await this.sheets.spreadsheets.values.update({
           spreadsheetId: this.config.spreadsheetId,
-          range: `${this.config.sheetName}!1:1`,
+          range: `${targetSheetName}!1:1`,
           valueInputOption: 'USER_ENTERED',
           resource: {
             values: [headers],
           },
         });
-        console.log('Headers added to Google Sheet');
+        console.log(`Headers added to Google Sheet: ${targetSheetName}`);
       }
+
+      // Update config to use the correct sheet name
+      this.config.sheetName = targetSheetName;
     } catch (error) {
       console.error('Error ensuring headers:', error);
     }
