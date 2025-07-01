@@ -29,10 +29,15 @@ export class GoogleSheetsService {
 
   private initializeAuth() {
     try {
+      // Use the current domain for redirect URI, or localhost for development
+      const redirectUri = process.env.REPLIT_DEV_DOMAIN 
+        ? `https://${process.env.REPLIT_DEV_DOMAIN}/auth/google/callback`
+        : 'http://localhost:5000/auth/google/callback';
+
       this.oauth2Client = new google.auth.OAuth2(
         this.config.clientId,
         this.config.clientSecret,
-        'http://localhost:5000/auth/google/callback' // This can be any valid URL for server-to-server
+        redirectUri
       );
 
       if (this.config.refreshToken) {
@@ -224,6 +229,10 @@ export class GoogleSheetsService {
   }
 
   getSetupInstructions(): string {
+    const redirectUri = process.env.REPLIT_DEV_DOMAIN 
+      ? `https://${process.env.REPLIT_DEV_DOMAIN}/auth/google/callback`
+      : 'http://localhost:5000/auth/google/callback';
+      
     return `
 Google Sheets OAuth Setup Instructions:
 
@@ -239,7 +248,7 @@ Google Sheets OAuth Setup Instructions:
    - Go to APIs & Services > Credentials
    - Click "Create Credentials" > "OAuth 2.0 Client IDs"
    - Application type: "Web application"
-   - Add authorized redirect URI: http://localhost:5000/auth/google/callback
+   - Add authorized redirect URI: ${redirectUri}
 
 4. Get OAuth URL:
    - Visit /api/google-sheets/auth-url to get the authorization URL

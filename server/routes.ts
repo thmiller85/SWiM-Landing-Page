@@ -953,6 +953,51 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // OAuth callback route
+  app.get('/auth/google/callback', async (req, res) => {
+    try {
+      const { code } = req.query;
+      if (!code) {
+        return res.send(`
+          <html>
+            <body>
+              <h2>OAuth Error</h2>
+              <p>No authorization code received.</p>
+              <a href="/">Go back to app</a>
+            </body>
+          </html>
+        `);
+      }
+
+      const tokens = await googleSheetsService.getTokensFromCode(code as string);
+      
+      res.send(`
+        <html>
+          <body>
+            <h2>Google Sheets OAuth Success!</h2>
+            <p>Copy this refresh token and add it to your environment variables:</p>
+            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+GOOGLE_REFRESH_TOKEN=${tokens.refresh_token}
+            </pre>
+            <p>Add this to your Replit secrets or environment variables.</p>
+            <a href="/">Go back to app</a>
+          </body>
+        </html>
+      `);
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.send(`
+        <html>
+          <body>
+            <h2>OAuth Error</h2>
+            <p>Failed to exchange authorization code: ${(error as Error).message}</p>
+            <a href="/">Go back to app</a>
+          </body>
+        </html>
+      `);
+    }
+  });
+
   // Test Google Sheets connection and configuration
   app.get('/api/google-sheets/test', async (req, res) => {
     try {
