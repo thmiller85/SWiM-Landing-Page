@@ -916,6 +916,73 @@ ${posts.map(post => `  <url>
   });
 
   // =============================================================================
+  // Google Sheets OAuth Integration
+  // =============================================================================
+
+  // Get OAuth authorization URL
+  app.get('/api/google-sheets/auth-url', (req, res) => {
+    try {
+      const authUrl = googleSheetsService.generateAuthUrl();
+      res.json({ authUrl });
+    } catch (error) {
+      console.error('Error generating auth URL:', error);
+      res.status(500).json({ error: 'Failed to generate auth URL' });
+    }
+  });
+
+  // Handle OAuth callback and exchange code for tokens
+  app.post('/api/google-sheets/auth/callback', async (req, res) => {
+    try {
+      const { code } = req.body;
+      if (!code) {
+        return res.status(400).json({ error: 'Authorization code required' });
+      }
+
+      const tokens = await googleSheetsService.getTokensFromCode(code);
+      
+      // In production, you'd save the refresh_token to environment variables
+      // For now, return it so the user can set it manually
+      res.json({ 
+        success: true, 
+        refreshToken: tokens.refresh_token,
+        message: 'Save this refresh token as GOOGLE_REFRESH_TOKEN environment variable'
+      });
+    } catch (error) {
+      console.error('Error handling OAuth callback:', error);
+      res.status(500).json({ error: 'Failed to exchange authorization code' });
+    }
+  });
+
+  // Test Google Sheets connection and configuration
+  app.get('/api/google-sheets/test', async (req, res) => {
+    try {
+      const isConfigured = googleSheetsService.isConfigured();
+      if (!isConfigured) {
+        return res.json({ 
+          configured: false, 
+          message: 'Google Sheets not configured. Missing credentials.',
+          instructions: googleSheetsService.getSetupInstructions()
+        });
+      }
+
+      // Try to ensure headers (this will test the connection)
+      await googleSheetsService.ensureHeaders();
+      
+      res.json({ 
+        configured: true, 
+        message: 'Google Sheets integration is working!' 
+      });
+    } catch (error) {
+      console.error('Error testing Google Sheets:', error);
+      res.status(500).json({ 
+        configured: false, 
+        error: 'Failed to connect to Google Sheets',
+        details: (error as Error).message 
+      });
+    }
+  });
+
+  // =============================================================================
   // New Analytics System - Event Tracking
   // =============================================================================
 

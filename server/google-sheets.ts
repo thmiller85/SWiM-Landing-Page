@@ -4,21 +4,24 @@ import type { Lead } from '@shared/schema';
 interface GoogleSheetsConfig {
   spreadsheetId: string;
   sheetName: string;
-  serviceAccountEmail: string;
-  privateKey: string;
+  clientId: string;
+  clientSecret: string;
+  refreshToken: string;
 }
 
 export class GoogleSheetsService {
   private sheets: any;
   private config: GoogleSheetsConfig;
+  private oauth2Client: any;
 
   constructor() {
     // Initialize with environment variables
     this.config = {
-      spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID || '',
+      spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID || '',
       sheetName: process.env.GOOGLE_SHEETS_SHEET_NAME || 'Leads',
-      serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '',
-      privateKey: (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN || '',
     };
 
     this.initializeAuth();
@@ -26,17 +29,43 @@ export class GoogleSheetsService {
 
   private initializeAuth() {
     try {
-      const auth = new google.auth.GoogleAuth({
-        credentials: {
-          client_email: this.config.serviceAccountEmail,
-          private_key: this.config.privateKey,
-        },
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      });
+      this.oauth2Client = new google.auth.OAuth2(
+        this.config.clientId,
+        this.config.clientSecret,
+        'http://localhost:5000/auth/google/callback' // This can be any valid URL for server-to-server
+      );
 
-      this.sheets = google.sheets({ version: 'v4', auth });
+      if (this.config.refreshToken) {
+        this.oauth2Client.setCredentials({
+          refresh_token: this.config.refreshToken,
+        });
+      }
+
+      this.sheets = google.sheets({ version: 'v4', auth: this.oauth2Client });
     } catch (error) {
       console.error('Google Sheets authentication failed:', error);
+    }
+  }
+
+  // Generate OAuth URL for initial setup
+  generateAuthUrl(): string {
+    const scopes = ['https://www.googleapis.com/auth/spreadsheets'];
+    return this.oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes,
+      prompt: 'consent', // Forces refresh token generation
+    });
+  }
+
+  // Exchange authorization code for tokens
+  async getTokensFromCode(code: string): Promise<any> {
+    try {
+      const { tokens } = await this.oauth2Client.getToken(code);
+      this.oauth2Client.setCredentials(tokens);
+      return tokens;
+    } catch (error) {
+      console.error('Error exchanging code for tokens:', error);
+      throw error;
     }
   }
 
@@ -188,38 +217,39 @@ export class GoogleSheetsService {
   isConfigured(): boolean {
     return !!(
       this.config.spreadsheetId &&
-      this.config.serviceAccountEmail &&
-      this.config.privateKey
+      this.config.clientId &&
+      this.config.clientSecret &&
+      this.config.refreshToken
     );
   }
 
   getSetupInstructions(): string {
     return `
-Google Sheets Setup Instructions:
+Google Sheets OAuth Setup Instructions:
 
-1. Create a Google Cloud Project:
+1. Create Google Cloud Project:
    - Go to https://console.cloud.google.com/
-   - Create a new project or select existing
+   - Create a new project
 
 2. Enable Google Sheets API:
    - Go to APIs & Services > Library
    - Search for "Google Sheets API" and enable it
 
-3. Create Service Account:
+3. Create OAuth 2.0 Credentials:
    - Go to APIs & Services > Credentials
-   - Click "Create Credentials" > "Service Account"
-   - Download the JSON key file
+   - Click "Create Credentials" > "OAuth 2.0 Client IDs"
+   - Application type: "Web application"
+   - Add authorized redirect URI: http://localhost:5000/auth/google/callback
 
-4. Create Google Sheet:
-   - Create a new Google Sheet
-   - Share it with your service account email (from step 3)
-   - Copy the Sheet ID from the URL
+4. Get OAuth URL:
+   - Visit /api/google-sheets/auth-url to get the authorization URL
+   - Complete OAuth flow to get refresh token
 
 5. Set Environment Variables:
-   GOOGLE_SHEETS_SPREADSHEET_ID=your_sheet_id
-   GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account_email
-   GOOGLE_PRIVATE_KEY=your_private_key
-   GOOGLE_SHEETS_SHEET_NAME=Leads
+   GOOGLE_SPREADSHEET_ID=your_sheet_id
+   GOOGLE_CLIENT_ID=your_client_id
+   GOOGLE_CLIENT_SECRET=your_client_secret
+   GOOGLE_REFRESH_TOKEN=your_refresh_token
 
 The system will automatically create headers and start logging leads!
     `;
