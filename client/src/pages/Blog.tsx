@@ -68,11 +68,11 @@ const Blog = () => {
       <Link href={`/blog/${post.slug}`}>
         <div className="p-6">
           {post.featuredImage && (
-            <div className="mb-4 rounded-lg overflow-hidden aspect-video">
+            <div className="mb-4 rounded-lg overflow-hidden">
               <img 
                 src={post.featuredImage} 
                 alt={post.title}
-                className="w-full h-full object-contain bg-gray-900/50 group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
               />
             </div>
           )}
