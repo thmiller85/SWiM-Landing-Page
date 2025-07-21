@@ -8,6 +8,30 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/blog/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/cms/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/persistent-uploads/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/dist/index.js"
     }

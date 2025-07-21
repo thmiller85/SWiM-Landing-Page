@@ -108,13 +108,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), environment: process.env.NODE_ENV });
   });
   
+  // Robots.txt handler to prevent redirect issues
+  app.get('/robots.txt', (req, res) => {
+    const baseUrl = req.protocol + '://' + req.get('host');
+    const robots = `User-agent: *
+Allow: /
+
+Sitemap: ${baseUrl}/sitemap.xml`;
+    
+    res.set('Content-Type', 'text/plain');
+    res.send(robots);
+  });
+
   // Dynamic sitemap generation based on current database posts
   app.get('/sitemap.xml', async (req, res) => {
     try {
       const posts = await storage.getPublishedPosts();
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://your-domain.com' 
-        : 'http://localhost:5000';
+      const baseUrl = req.protocol + '://' + req.get('host');
       
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

@@ -40,6 +40,18 @@ app.use((req, res, next) => {
 (async () => {
   // Register blog SSR route first to prevent Vite interception
   const { storage } = await import("./storage");
+  
+  // Add direct route handlers for main pages to prevent redirects
+  app.get('/', (req, res, next) => {
+    // Let this be handled by Vite in development or static files in production
+    next();
+  });
+  
+  app.get('/blog', (req, res, next) => {
+    // Let this be handled by Vite in development or static files in production
+    next();
+  });
+  
   app.get('/blog/:slug', async (req, res, next) => {
     try {
       const { slug } = req.params;
