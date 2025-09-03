@@ -326,7 +326,10 @@ const BlogPost = () => {
                       textShadow: "0 0 5px rgba(0,240,255,0.3)",
                       boxShadow: "0 0 20px rgba(0,240,255,0.5)"
                     }}
-                    onClick={() => blogAPIService.trackLead(post.slug)}
+                    onClick={() => {
+                      blogAPIService.trackLead(post.slug);
+                      handleNavClick(contactRef);
+                    }}
                   >
                     Schedule Consultation
                     <ChevronRight className="ml-2 h-4 w-4" />
