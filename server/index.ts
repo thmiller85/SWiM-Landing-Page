@@ -42,13 +42,46 @@ app.use((req, res, next) => {
   const { storage } = await import("./storage");
   
   // Add direct route handlers for main pages to prevent redirects
+  // Handle static pages with proper canonical URLs and meta tags
   app.get('/', (req, res, next) => {
-    // Let this be handled by Vite in development or static files in production
+    // For homepage, ensure proper meta tags in production
+    if (process.env.NODE_ENV === 'production') {
+      const baseUrl = req.protocol + '://' + req.get('host');
+      // Check if we have a static file to serve
+      const distPath = path.resolve('dist/public/index.html');
+      const fs = require('fs');
+      if (fs.existsSync(distPath)) {
+        let html = fs.readFileSync(distPath, 'utf-8');
+        // Ensure canonical URL is present
+        if (!html.includes('<link rel="canonical"')) {
+          html = html.replace('</head>', `    <link rel="canonical" href="${baseUrl}/" />\n</head>`);
+        }
+        res.setHeader('Content-Type', 'text/html');
+        return res.send(html);
+      }
+    }
     next();
   });
   
   app.get('/blog', (req, res, next) => {
-    // Let this be handled by Vite in development or static files in production
+    // For blog index, ensure proper meta tags in production
+    if (process.env.NODE_ENV === 'production') {
+      const baseUrl = req.protocol + '://' + req.get('host');
+      const distPath = path.resolve('dist/public/index.html');
+      const fs = require('fs');
+      if (fs.existsSync(distPath)) {
+        let html = fs.readFileSync(distPath, 'utf-8');
+        // Update meta tags for blog page
+        html = html.replace(/<title>.*?<\/title>/, '<title>Blog | SWiM AI - AI Marketing Insights</title>');
+        html = html.replace(/<meta name="description" content=".*?"/, '<meta name="description" content="Discover AI marketing strategies, automation insights, and business transformation tips from SWiM AI experts."');
+        // Ensure canonical URL is present
+        if (!html.includes('<link rel="canonical"')) {
+          html = html.replace('</head>', `    <link rel="canonical" href="${baseUrl}/blog" />\n</head>`);
+        }
+        res.setHeader('Content-Type', 'text/html');
+        return res.send(html);
+      }
+    }
     next();
   });
   
