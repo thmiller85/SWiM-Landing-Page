@@ -18,6 +18,7 @@ import {
 } from "./schema-validators";
 import multer from "multer";
 import fs from "fs/promises";
+import { existsSync } from "fs";
 
 // Configure multer for image uploads - use persistent directory directly
 const storage_config = multer.diskStorage({
@@ -102,10 +103,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Serve uploaded images statically from persistent directory
   app.use('/persistent-uploads', express.static(path.join(process.cwd(), 'persistent-uploads')));
   
-  // Debug endpoint to test if API routes are working
-  app.get('/api/health', (req, res) => {
+  // Enhanced health check endpoint with database connectivity test
+  app.get('/api/health', async (req, res) => {
     console.log('Health check endpoint hit');
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), environment: process.env.NODE_ENV });
+    try {
+      // Test database connectivity
+      await storage.getPublishedPosts();
+      
+      res.json({ 
+        status: 'ok', 
+        timestamp: new Date().toISOString(), 
+        environment: process.env.NODE_ENV,
+        database: 'connected',
+        services: {
+          storage: 'operational',
+          api: 'healthy'
+        }
+      });
+    } catch (error) {
+      console.error('Health check failed:', error);
+      res.status(503).json({ 
+        status: 'unhealthy', 
+        timestamp: new Date().toISOString(), 
+        environment: process.env.NODE_ENV,
+        database: 'disconnected',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        services: {
+          storage: 'error',
+          api: 'degraded'
+        }
+      });
+    }
   });
   
   // Robots.txt handler to prevent redirect issues
@@ -166,7 +194,7 @@ ${posts.map(post => `  <url>
       console.error('Error generating sitemap:', error);
       // Fallback to static sitemap if it exists
       const staticSitemapPath = path.resolve(process.cwd(), 'client/public/sitemap.xml');
-      if (require('fs').existsSync(staticSitemapPath)) {
+      if (existsSync(staticSitemapPath)) {
         res.sendFile(staticSitemapPath);
       } else {
         res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');

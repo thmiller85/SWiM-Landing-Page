@@ -1,5 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { getClientAssets } from "./html-utils";
@@ -50,7 +51,7 @@ app.use((req, res, next) => {
       const baseUrl = req.protocol + '://' + req.get('host');
       // Check if we have a static file to serve
       const distPath = path.resolve('dist/public/index.html');
-      const fs = require('fs');
+
       if (fs.existsSync(distPath)) {
         let html = fs.readFileSync(distPath, 'utf-8');
         // Ensure canonical URL is present
@@ -69,7 +70,7 @@ app.use((req, res, next) => {
     if (process.env.NODE_ENV === 'production') {
       const baseUrl = req.protocol + '://' + req.get('host');
       const distPath = path.resolve('dist/public/index.html');
-      const fs = require('fs');
+
       if (fs.existsSync(distPath)) {
         let html = fs.readFileSync(distPath, 'utf-8');
         // Update meta tags for blog page
@@ -101,7 +102,7 @@ app.use((req, res, next) => {
       if (process.env.NODE_ENV === 'production') {
         const baseUrl = req.protocol + '://' + req.get('host');
         const distPath = path.resolve('dist/public/index.html');
-        const fs = require('fs');
+  
         if (fs.existsSync(distPath)) {
           let html = fs.readFileSync(distPath, 'utf-8');
           // Update meta tags for service page
@@ -132,7 +133,7 @@ app.use((req, res, next) => {
       if (process.env.NODE_ENV === 'production') {
         const baseUrl = req.protocol + '://' + req.get('host');
         const distPath = path.resolve('dist/public/index.html');
-        const fs = require('fs');
+  
         if (fs.existsSync(distPath)) {
           let html = fs.readFileSync(distPath, 'utf-8');
           // Update meta tags for team page
@@ -161,7 +162,7 @@ app.use((req, res, next) => {
       if (process.env.NODE_ENV === 'production') {
         const baseUrl = req.protocol + '://' + req.get('host');
         const distPath = path.resolve('dist/public/index.html');
-        const fs = require('fs');
+  
         if (fs.existsSync(distPath)) {
           let html = fs.readFileSync(distPath, 'utf-8');
           // Update meta tags for legal page
