@@ -126,25 +126,37 @@ Sitemap: ${baseUrl}/sitemap.xml`;
       const posts = await storage.getPublishedPosts();
       const baseUrl = req.protocol + '://' + req.get('host');
       
+      // Static routes with priorities
+      const staticRoutes = [
+        { url: '/', priority: '1.0', changefreq: 'weekly' },
+        { url: '/blog', priority: '0.9', changefreq: 'daily' },
+        { url: '/team', priority: '0.8', changefreq: 'monthly' },
+        { url: '/team/ross-stockdale', priority: '0.7', changefreq: 'monthly' },
+        { url: '/team/tom-miller', priority: '0.7', changefreq: 'monthly' },
+        { url: '/team/steve-wurster', priority: '0.7', changefreq: 'monthly' },
+        { url: '/services/ai-powered-marketing', priority: '0.9', changefreq: 'weekly' },
+        { url: '/services/workflow-automation', priority: '0.9', changefreq: 'weekly' },
+        { url: '/services/b2b-saas-development', priority: '0.9', changefreq: 'weekly' },
+        { url: '/services/data-intelligence', priority: '0.9', changefreq: 'weekly' },
+        { url: '/services/ai-strategy-consulting', priority: '0.9', changefreq: 'weekly' },
+        { url: '/services/ai-security-ethics', priority: '0.9', changefreq: 'weekly' },
+        { url: '/privacy', priority: '0.3', changefreq: 'yearly' },
+        { url: '/terms', priority: '0.3', changefreq: 'yearly' }
+      ];
+      
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${baseUrl}</loc>
+${staticRoutes.map(route => `  <url>
+    <loc>${baseUrl}${route.url}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}/blog</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+    <changefreq>${route.changefreq}</changefreq>
+    <priority>${route.priority}</priority>
+  </url>`).join('\n')}
 ${posts.map(post => `  <url>
     <loc>${baseUrl}/blog/${post.slug}</loc>
     <lastmod>${post.updatedAt.toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>`).join('\n')}
 </urlset>`;
 

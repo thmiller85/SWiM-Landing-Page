@@ -5,6 +5,9 @@ This project delivers a sophisticated AI marketing landing page integrated with 
 
 The vision is to provide a comprehensive, high-performance platform for AI marketing agencies to establish a strong online presence, manage content efficiently, and generate leads effectively, positioning them competitively in the rapidly evolving AI services market.
 
+## Recent Changes
+- **September 3, 2025**: Fixed Google Search Console indexing issues by implementing direct route handlers for all static pages (services, team, legal), eliminating redirect chains that prevented proper indexing. Added canonical URL support and proper meta tags for all pages to ensure Google can crawl and index the site effectively.
+
 ## User Preferences
 - Use authentic data from database rather than placeholder content
 - Maintain professional tone in communications

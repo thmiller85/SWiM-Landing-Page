@@ -6,9 +6,10 @@ import { storage } from '../server/storage.js';
 
 const siteUrl = 'https://swimsolutions.ai';
 
-// Static routes from the application
+// Static routes from the application - ensure these match the actual site structure
 const staticRoutes = [
   '/',
+  '/blog',
   '/team',
   '/team/ross-stockdale',
   '/team/tom-miller', 
@@ -18,7 +19,9 @@ const staticRoutes = [
   '/services/b2b-saas-development',
   '/services/data-intelligence',
   '/services/ai-strategy-consulting',
-  '/services/ai-security-ethics'
+  '/services/ai-security-ethics',
+  '/privacy',
+  '/terms'
 ];
 
 async function generateSitemap() {

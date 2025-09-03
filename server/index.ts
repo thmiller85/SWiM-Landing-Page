@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { getClientAssets } from "./html-utils";
@@ -83,6 +84,99 @@ app.use((req, res, next) => {
       }
     }
     next();
+  });
+
+  // Service pages handlers to prevent redirects
+  const servicePages = [
+    { path: '/services/ai-powered-marketing', title: 'AI-Powered Marketing Services | SWiM AI', description: 'Transform your marketing with AI-powered strategies, automation, and data-driven insights from SWiM AI experts.' },
+    { path: '/services/workflow-automation', title: 'Workflow Automation Services | SWiM AI', description: 'Streamline your business operations with custom workflow automation solutions designed for maximum efficiency.' },
+    { path: '/services/b2b-saas-development', title: 'B2B SaaS Development | SWiM AI', description: 'Expert B2B SaaS development services with AI integration, scalable architecture, and user-focused design.' },
+    { path: '/services/data-intelligence', title: 'Data Intelligence Services | SWiM AI', description: 'Unlock actionable insights from your data with advanced analytics, AI-powered reporting, and intelligent dashboards.' },
+    { path: '/services/ai-strategy-consulting', title: 'AI Strategy Consulting | SWiM AI', description: 'Strategic AI consulting to help your business adopt and implement artificial intelligence effectively.' },
+    { path: '/services/ai-security-ethics', title: 'AI Security & Ethics | SWiM AI', description: 'Ensure responsible AI implementation with security best practices and ethical AI frameworks.' }
+  ];
+
+  servicePages.forEach(({ path: servicePath, title, description }) => {
+    app.get(servicePath, (req, res, next) => {
+      if (process.env.NODE_ENV === 'production') {
+        const baseUrl = req.protocol + '://' + req.get('host');
+        const distPath = path.resolve('dist/public/index.html');
+        const fs = require('fs');
+        if (fs.existsSync(distPath)) {
+          let html = fs.readFileSync(distPath, 'utf-8');
+          // Update meta tags for service page
+          html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+          html = html.replace(/<meta name="description" content=".*?"/, `<meta name="description" content="${description}"`);
+          // Ensure canonical URL is present
+          if (!html.includes('<link rel="canonical"')) {
+            html = html.replace('</head>', `    <link rel="canonical" href="${baseUrl}${servicePath}" />\n</head>`);
+          }
+          res.setHeader('Content-Type', 'text/html');
+          return res.send(html);
+        }
+      }
+      next();
+    });
+  });
+
+  // Team pages handlers
+  const teamPages = [
+    { path: '/team', title: 'Our Team | SWiM AI', description: 'Meet the SWiM AI team of experts in AI marketing, automation, and business transformation.' },
+    { path: '/team/ross-stockdale', title: 'Ross Stockdale | SWiM AI Team', description: 'Ross Stockdale, AI marketing expert and co-founder of SWiM AI, specializing in business transformation.' },
+    { path: '/team/tom-miller', title: 'Tom Miller | SWiM AI Team', description: 'Tom Miller, technical lead at SWiM AI, expert in AI development and workflow automation.' },
+    { path: '/team/steve-wurster', title: 'Steve Wurster | SWiM AI Team', description: 'Steve Wurster, strategy consultant at SWiM AI, focused on AI implementation and business growth.' }
+  ];
+
+  teamPages.forEach(({ path: teamPath, title, description }) => {
+    app.get(teamPath, (req, res, next) => {
+      if (process.env.NODE_ENV === 'production') {
+        const baseUrl = req.protocol + '://' + req.get('host');
+        const distPath = path.resolve('dist/public/index.html');
+        const fs = require('fs');
+        if (fs.existsSync(distPath)) {
+          let html = fs.readFileSync(distPath, 'utf-8');
+          // Update meta tags for team page
+          html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+          html = html.replace(/<meta name="description" content=".*?"/, `<meta name="description" content="${description}"`);
+          // Ensure canonical URL is present
+          if (!html.includes('<link rel="canonical"')) {
+            html = html.replace('</head>', `    <link rel="canonical" href="${baseUrl}${teamPath}" />\n</head>`);
+          }
+          res.setHeader('Content-Type', 'text/html');
+          return res.send(html);
+        }
+      }
+      next();
+    });
+  });
+
+  // Legal pages handlers
+  const legalPages = [
+    { path: '/privacy', title: 'Privacy Policy | SWiM AI', description: 'SWiM AI privacy policy - how we collect, use, and protect your personal information.' },
+    { path: '/terms', title: 'Terms of Service | SWiM AI', description: 'SWiM AI terms of service - the legal agreement for using our AI marketing services.' }
+  ];
+
+  legalPages.forEach(({ path: legalPath, title, description }) => {
+    app.get(legalPath, (req, res, next) => {
+      if (process.env.NODE_ENV === 'production') {
+        const baseUrl = req.protocol + '://' + req.get('host');
+        const distPath = path.resolve('dist/public/index.html');
+        const fs = require('fs');
+        if (fs.existsSync(distPath)) {
+          let html = fs.readFileSync(distPath, 'utf-8');
+          // Update meta tags for legal page
+          html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+          html = html.replace(/<meta name="description" content=".*?"/, `<meta name="description" content="${description}"`);
+          // Ensure canonical URL is present
+          if (!html.includes('<link rel="canonical"')) {
+            html = html.replace('</head>', `    <link rel="canonical" href="${baseUrl}${legalPath}" />\n</head>`);
+          }
+          res.setHeader('Content-Type', 'text/html');
+          return res.send(html);
+        }
+      }
+      next();
+    });
   });
   
   app.get('/blog/:slug', async (req, res, next) => {
