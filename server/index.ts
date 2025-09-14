@@ -1,4 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import MemoryStore from "memorystore";
 import path from "path";
 import fs from "fs";
 import { registerRoutes } from "./routes";
@@ -6,8 +8,40 @@ import { setupVite, serveStatic, log } from "./vite";
 import { getClientAssets } from "./html-utils";
 
 const app = express();
+
+// Trust proxy for secure cookie handling behind reverse proxies
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Session configuration with enhanced security
+const MemStore = MemoryStore(session);
+
+// Ensure SESSION_SECRET is set in production
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  console.error('CRITICAL SECURITY ERROR: SESSION_SECRET environment variable is required in production');
+  process.exit(1);
+}
+
+const sessionSecret = process.env.SESSION_SECRET || 'dev-fallback-key-not-for-production';
+
+app.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  store: new MemStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' // CSRF protection
+  }
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();

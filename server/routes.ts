@@ -20,6 +20,7 @@ import multer from "multer";
 import fs from "fs/promises";
 import { existsSync } from "fs";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { requireAuth, requireAdmin, requireEditor } from "./auth-middleware";
 
 // Configure multer for temporary file handling during Object Storage upload
 const upload = multer({ 
@@ -485,8 +486,8 @@ ${posts.map(post => `  <url>
   // CMS API Routes - Database-backed content management
   // =============================================================================
 
-  // Posts management
-  app.get('/api/cms/posts', async (req, res) => {
+  // Posts management - EDITOR REQUIRED
+  app.get('/api/cms/posts', requireEditor, async (req, res) => {
     try {
       const posts = await storage.getAllPosts();
       res.json(posts);
@@ -496,7 +497,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.get('/api/cms/posts/:id', async (req, res) => {
+  app.get('/api/cms/posts/:id', requireEditor, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const post = await storage.getPostById(id);
@@ -510,7 +511,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.post('/api/cms/posts', async (req, res) => {
+  app.post('/api/cms/posts', requireEditor, async (req, res) => {
     try {
       const validatedData = createPostSchema.parse(req.body);
       
@@ -528,7 +529,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.put('/api/cms/posts/:id', async (req, res) => {
+  app.put('/api/cms/posts/:id', requireEditor, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -551,7 +552,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.delete('/api/cms/posts/:id', async (req, res) => {
+  app.delete('/api/cms/posts/:id', requireEditor, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deletePost(id);
@@ -565,8 +566,8 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Image upload and management using Object Storage
-  app.post('/api/cms/images/upload', upload.single('image'), async (req, res) => {
+  // Image upload and management using Object Storage - EDITOR REQUIRED
+  app.post('/api/cms/images/upload', requireEditor, upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No image file provided' });
@@ -625,7 +626,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.get('/api/cms/images', async (req, res) => {
+  app.get('/api/cms/images', requireEditor, async (req, res) => {
     try {
       const images = await storage.getAllImages();
       res.json(images);
@@ -635,7 +636,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.put('/api/cms/images/:id', async (req, res) => {
+  app.put('/api/cms/images/:id', requireEditor, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { altText, caption } = req.body;
@@ -650,7 +651,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.delete('/api/cms/images/:id', async (req, res) => {
+  app.delete('/api/cms/images/:id', requireEditor, async (req, res) => {
     try {
       console.log(`=== DELETE DEBUG ===`);
       const id = parseInt(req.params.id);
@@ -706,7 +707,7 @@ ${posts.map(post => `  <url>
   // Legacy migration and consistency check endpoints removed - Object Storage handles all image operations
 
   // Reading time calculation endpoint
-  app.post('/api/cms/calculate-reading-time', async (req, res) => {
+  app.post('/api/cms/calculate-reading-time', requireAuth, async (req, res) => {
     try {
       const { content } = req.body;
       if (!content || typeof content !== 'string') {
@@ -751,7 +752,7 @@ ${posts.map(post => `  <url>
   });
 
   // Analytics tracking
-  app.post('/api/cms/analytics/:postId/view', async (req, res) => {
+  app.post('/api/cms/analytics/:postId/view', requireAuth, async (req, res) => {
     try {
       const postId = parseInt(req.params.postId);
       await storage.trackView(postId);
@@ -762,7 +763,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.post('/api/cms/analytics/:postId/lead', async (req, res) => {
+  app.post('/api/cms/analytics/:postId/lead', requireAuth, async (req, res) => {
     try {
       const postId = parseInt(req.params.postId);
       await storage.trackLead(postId);
@@ -773,7 +774,7 @@ ${posts.map(post => `  <url>
     }
   });
 
-  app.post('/api/cms/analytics/:postId/share', async (req, res) => {
+  app.post('/api/cms/analytics/:postId/share', requireAuth, async (req, res) => {
     try {
       const postId = parseInt(req.params.postId);
       await storage.trackShare(postId);
@@ -1127,8 +1128,8 @@ GOOGLE_REFRESH_TOKEN=${tokens.refresh_token}
 
 
 
-  // User management
-  app.post('/api/cms/users', async (req, res) => {
+  // User management - ADMIN ONLY
+  app.post('/api/cms/users', requireAdmin, async (req, res) => {
     try {
       const validatedData = createUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(validatedData.username);
@@ -1153,11 +1154,57 @@ GOOGLE_REFRESH_TOKEN=${tokens.refresh_token}
         return res.status(401).json({ error: 'Invalid credentials' });
       }
       
-      const { passwordHash, ...userWithoutPassword } = user;
-      res.json({ user: userWithoutPassword, message: 'Login successful' });
+      // Session fixation protection - regenerate session ID on login
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Session regeneration failed:', err);
+          return res.status(500).json({ error: 'Login failed due to session error' });
+        }
+        
+        // Store only secure user data in session (no passwordHash)
+        const { passwordHash, ...sessionUser } = user;
+        req.session.user = sessionUser;
+        
+        // Save session and respond
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('Session save failed:', saveErr);
+            return res.status(500).json({ error: 'Login failed due to session error' });
+          }
+          
+          res.json({ user: sessionUser, message: 'Login successful' });
+        });
+      });
     } catch (error) {
       console.error('Error during login:', error);
       res.status(500).json({ error: 'Login failed' });
+    }
+  });
+
+  // Logout endpoint to destroy session
+  app.post('/api/cms/auth/logout', requireAuth, async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Error destroying session:', err);
+          return res.status(500).json({ error: 'Logout failed' });
+        }
+        res.clearCookie('connect.sid'); // Clear session cookie
+        res.json({ message: 'Logout successful' });
+      });
+    } catch (error) {
+      console.error('Error during logout:', error);
+      res.status(500).json({ error: 'Logout failed' });
+    }
+  });
+
+  // Check session endpoint to verify authentication status
+  app.get('/api/cms/auth/session', (req, res) => {
+    if (req.session && req.session.user) {
+      // SessionUser already excludes passwordHash, so no need to destructure
+      res.json({ user: req.session.user, authenticated: true });
+    } else {
+      res.json({ authenticated: false });
     }
   });
 

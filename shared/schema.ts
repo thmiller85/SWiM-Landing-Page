@@ -82,6 +82,9 @@ export type InsertImage = z.infer<typeof insertImageSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
+// Secure session user type without sensitive data like passwordHash
+export type SessionUser = Omit<User, 'passwordHash'>;
+
 // Analytics Events table
 export const analyticsEvents = pgTable('analytics_events', {
   id: serial('id').primaryKey(),
