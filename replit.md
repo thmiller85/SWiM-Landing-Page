@@ -26,7 +26,7 @@ The project is built with a modern full-stack architecture using React with Type
 - **Content Management System (CMS)**: Utilizes WordPress as the primary CMS, providing an admin interface for full content creation, editing, and publishing workflows (draft, review, publish, scheduling). It supports Gutenberg editor, Yoast SEO, media management, and custom fields for lead magnets.
 - **Database**: PostgreSQL serves as the persistent content storage, supporting full CRUD operations.
 - **Server-Side Rendering (SSR)**: Blog posts are server-side rendered to generate complete HTML with meta tags, Open Graph, and JSON-LD structured data for enhanced SEO and social media sharing. This ensures optimal search engine crawling and indexing.
-- **Image Management**: Images are stored persistently across deployments using a dedicated `/persistent-uploads/` directory, ensuring no data loss. Uploads include robust verification and error handling.
+- **Image Management**: Images are stored in Replit Object Storage (cloud-based) ensuring persistent storage across deployments and eliminating the need for manual file management. The system provides robust upload verification, automatic file serving via `/objects/*` routes, and proper ACL management.
 - **Analytics**: Database-tracked engagement metrics (views, leads, shares) are integrated.
 - **Performance**: Optimized data fetching via TanStack Query caching and robust cache invalidation mechanisms ensure real-time content updates.
 
