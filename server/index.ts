@@ -40,6 +40,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // IMPORTANT: Register API routes FIRST to prevent Vite SPA fallback from intercepting them
+  const server = await registerRoutes(app);
+  
   // Register blog SSR route first to prevent Vite interception
   const { storage } = await import("./storage");
   
@@ -355,7 +358,7 @@ window.__vite_plugin_react_preamble_installed__ = true
     }
   });
 
-  const server = await registerRoutes(app);
+  // API routes already registered at the beginning
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

@@ -750,6 +750,127 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // Test Object Storage endpoint - REMOVED FOR SECURITY
+  // This endpoint was removed as it allowed public file uploads without authentication
+  
+  // Migration endpoint - RESTRICTED ACCESS - migrate images from persistent-uploads to Object Storage
+  // TODO: Add proper authentication before production use
+  app.post('/api/cms/images/migrate-to-object-storage', async (req, res) => {
+    // SECURITY: This endpoint should be protected with admin authentication
+    // For now, return 403 to prevent public access
+    return res.status(403).json({
+      success: false,
+      error: 'Migration endpoint disabled for security. Contact administrator.'
+    });
+    
+    // Original migration code preserved but disabled:
+    try {
+      console.log('=== STARTING IMAGE MIGRATION ===');
+      
+      // Get all images that need migration (URLs starting with /persistent-uploads/)
+      const allImages = await storage.getAllImages();
+      const imagesToMigrate = allImages.filter(image => 
+        image.url.startsWith('/persistent-uploads/')
+      );
+      
+      console.log(`Found ${imagesToMigrate.length} images to migrate`);
+      
+      if (imagesToMigrate.length === 0) {
+        return res.json({
+          success: true,
+          message: 'No images need migration',
+          migrated: [],
+          errors: []
+        });
+      }
+      
+      const objectStorageService = new ObjectStorageService();
+      const results = {
+        migrated: [] as any[],
+        errors: [] as any[]
+      };
+      
+      // Process each image
+      for (const image of imagesToMigrate) {
+        console.log(`Migrating image ID ${image.id}: ${image.filename}`);
+        
+        try {
+          // Read the file from persistent-uploads
+          const oldFilePath = path.join(process.cwd(), 'persistent-uploads', image.filename);
+          
+          // Check if file exists
+          try {
+            await fs.access(oldFilePath);
+          } catch {
+            console.error(`File not found: ${oldFilePath}`);
+            results.errors.push({
+              imageId: image.id,
+              filename: image.filename,
+              error: 'File not found in persistent-uploads directory'
+            });
+            continue;
+          }
+          
+          // Read file content
+          const fileBuffer = await fs.readFile(oldFilePath);
+          
+          // Upload to Object Storage
+          const newObjectUrl = await objectStorageService.uploadCMSImage(
+            fileBuffer,
+            image.originalName || image.filename,
+            image.mimeType
+          );
+          
+          console.log(`✓ Uploaded to Object Storage: ${newObjectUrl}`);
+          
+          // Update database record
+          const updatedImage = await storage.updateImage(image.id, {
+            url: newObjectUrl
+          });
+          
+          if (updatedImage) {
+            console.log(`✓ Updated database record for ID ${image.id}`);
+            results.migrated.push({
+              imageId: image.id,
+              filename: image.filename,
+              oldUrl: image.url,
+              newUrl: newObjectUrl
+            });
+          } else {
+            throw new Error('Failed to update database record');
+          }
+          
+        } catch (error) {
+          console.error(`Error migrating image ID ${image.id}:`, error);
+          results.errors.push({
+            imageId: image.id,
+            filename: image.filename,
+            error: error instanceof Error ? error.message : String(error)
+          });
+        }
+      }
+      
+      console.log('=== MIGRATION COMPLETE ===');
+      console.log(`Successfully migrated: ${results.migrated.length}`);
+      console.log(`Errors: ${results.errors.length}`);
+      
+      res.json({
+        success: true,
+        message: `Migration completed. ${results.migrated.length} images migrated, ${results.errors.length} errors.`,
+        migrated: results.migrated,
+        errors: results.errors
+      });
+      
+    } catch (error) {
+      console.error('Migration failed:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Migration failed',
+        details: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+  
   // Image consistency check and repair endpoint
   app.post('/api/cms/images/consistency-check', async (req, res) => {
     try {
