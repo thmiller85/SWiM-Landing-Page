@@ -19,27 +19,11 @@ import {
 import multer from "multer";
 import fs from "fs/promises";
 import { existsSync } from "fs";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
-// Configure multer for image uploads - use persistent directory directly
-const storage_config = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    // Store directly in persistent directory - no backup needed
-    const uploadDir = path.join(process.cwd(), 'persistent-uploads');
-    try {
-      await fs.mkdir(uploadDir, { recursive: true });
-      cb(null, uploadDir);
-    } catch (error) {
-      cb(error as Error, '');
-    }
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Configure multer for temporary file handling during Object Storage upload
 const upload = multer({ 
-  storage: storage_config,
+  storage: multer.memoryStorage(), // Store in memory for Object Storage upload
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -90,18 +74,37 @@ function parseUserAgent(userAgent: string): {
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log('Registering routes...');
   
-  // Initialize direct persistent storage
-  console.log('Initializing direct persistent storage...');
+  // Initialize Object Storage service
+  console.log('Initializing Object Storage service...');
   try {
-    const persistentDir = path.join(process.cwd(), 'persistent-uploads');
-    await fs.mkdir(persistentDir, { recursive: true });
-    console.log('✓ Persistent storage directory ensured');
+    const objectStorageService = new ObjectStorageService();
+    // Verify Object Storage is properly configured
+    const publicPaths = objectStorageService.getPublicObjectSearchPaths();
+    const privateDir = objectStorageService.getPrivateObjectDir();
+    console.log('✓ Object Storage configured successfully');
+    console.log(`Public paths: ${publicPaths.join(', ')}`);
+    console.log(`Private directory: ${privateDir}`);
   } catch (error) {
-    console.error('Error initializing persistent storage:', error);
+    console.error('Error initializing Object Storage:', error);
+    console.warn('Some upload functionality may not work properly');
   }
   
-  // Serve uploaded images statically from persistent directory
-  app.use('/persistent-uploads', express.static(path.join(process.cwd(), 'persistent-uploads')));
+  // Serve objects from Object Storage
+  app.get('/objects/:objectPath(*)', async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(
+        req.path,
+      );
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error('Error serving object:', error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
   
   // Enhanced health check endpoint with database connectivity test
   app.get('/api/health', async (req, res) => {
@@ -600,43 +603,36 @@ ${posts.map(post => `  <url>
     }
   });
 
-  // Image upload and management
+  // Image upload and management using Object Storage
   app.post('/api/cms/images/upload', upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No image file provided' });
       }
 
-      // Verify file was actually saved to disk
-      const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
-      console.log(`=== UPLOAD DEBUG ===`);
-      console.log(`File: ${req.file.filename}`);
-      console.log(`Expected path: ${filePath}`);
-      console.log(`Multer destination: ${req.file.destination}`);
-      console.log(`File size: ${req.file.size} bytes`);
+      console.log(`=== OBJECT STORAGE UPLOAD DEBUG ===`);
+      console.log(`File: ${req.file.originalname}`);
+      console.log(`Size: ${req.file.size} bytes`);
+      console.log(`MIME type: ${req.file.mimetype}`);
       
-      try {
-        await fs.access(filePath);
-        const stats = await fs.stat(filePath);
-        console.log(`✓ File verified: ${req.file.filename} (${stats.size} bytes)`);
-      } catch (fileError) {
-        console.error(`✗ File not found after upload: ${filePath}`, fileError);
-        
-        // Debug: Check what files actually exist
-        try {
-          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
-          console.log('Files in persistent-uploads:', files);
-        } catch (dirError) {
-          console.error('Cannot read persistent-uploads directory:', dirError);
-        }
-        
-        return res.status(500).json({ error: 'File upload failed - file not saved' });
-      }
+      const objectStorageService = new ObjectStorageService();
+      
+      // Upload file to Object Storage
+      const objectUrl = await objectStorageService.uploadCMSImage(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+      
+      console.log(`✓ File uploaded to Object Storage: ${objectUrl}`);
+
+      // Generate filename from object URL for database storage
+      const filename = objectUrl.split('/').pop() || `image-${Date.now()}.jpg`;
 
       const imageData = {
-        filename: req.file.filename,
+        filename: filename,
         originalName: req.file.originalname,
-        url: `/persistent-uploads/${req.file.filename}`,
+        url: objectUrl,
         size: req.file.size,
         mimeType: req.file.mimetype,
         altText: req.body.altText || '',
@@ -645,7 +641,7 @@ ${posts.map(post => `  <url>
         height: null,
       };
 
-      // Create database record with verification
+      // Create database record
       const image = await storage.createImage(imageData);
       console.log(`✓ Image record created in database: ID ${image.id}`);
       
@@ -653,33 +649,17 @@ ${posts.map(post => `  <url>
       const verifyImage = await storage.getImageById(image.id);
       if (!verifyImage) {
         console.error(`✗ Database verification failed for image ID ${image.id}`);
-        // Clean up physical file if database failed
-        try {
-          await fs.unlink(filePath);
-          console.log('Cleaned up file after database verification failure');
-        } catch (cleanupError) {
-          console.warn('Could not clean up file after verification failure:', cleanupError);
-        }
+        // Note: Object Storage cleanup would require additional implementation
         return res.status(500).json({ error: 'Database verification failed' });
       }
       
       console.log(`✓ Database record verified for ID ${image.id}`);
-      console.log(`✓ Upload complete: ${req.file.filename}`);
+      console.log(`✓ Upload complete: ${filename}`);
       
       res.status(201).json(image);
     } catch (error) {
       console.error('Error uploading image:', error);
-      // Clean up file if database save failed
-      if (req.file) {
-        const filePath = path.join(process.cwd(), 'persistent-uploads', req.file.filename);
-        try {
-          await fs.unlink(filePath);
-          console.log('Cleaned up orphaned file after database error');
-        } catch (cleanupError) {
-          console.warn('Could not clean up orphaned file:', cleanupError);
-        }
-      }
-      res.status(500).json({ error: 'Failed to upload image' });
+      res.status(500).json({ error: 'Failed to upload image', details: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -723,24 +703,38 @@ ${posts.map(post => `  <url>
       console.log(`Found image: ${image.filename}`);
       console.log(`Image URL: ${image.url}`);
 
-      // Delete physical file from persistent directory
-      const filename = path.basename(image.url);
-      const filePath = path.join(process.cwd(), 'persistent-uploads', filename);
-      console.log(`Attempting to delete file: ${filePath}`);
-      
-      try {
-        await fs.access(filePath);
-        await fs.unlink(filePath);
-        console.log(`✓ Deleted physical file: ${filename}`);
-      } catch (fileError) {
-        console.warn(`Could not delete physical file ${filename}:`, fileError);
-        // Check if file exists anywhere
+      // Handle file deletion based on storage type
+      if (image.url.startsWith('/objects/')) {
+        // Object Storage file - delete from cloud storage
+        console.log(`Deleting Object Storage file: ${image.url}`);
         try {
-          const files = await fs.readdir(path.join(process.cwd(), 'persistent-uploads'));
-          console.log('Files in persistent-uploads:', files);
-        } catch (dirError) {
-          console.error('Cannot read persistent-uploads directory:', dirError);
+          const objectStorageService = new ObjectStorageService();
+          const objectFile = await objectStorageService.getObjectEntityFile(image.url);
+          await objectFile.delete();
+          console.log(`✓ Deleted Object Storage file: ${image.url}`);
+        } catch (fileError) {
+          if (fileError instanceof ObjectNotFoundError) {
+            console.warn(`Object Storage file not found (non-fatal): ${image.url}`);
+          } else {
+            console.error(`Error deleting Object Storage file ${image.url}:`, fileError);
+          }
+          // Continue with database deletion even if file deletion fails
         }
+      } else if (image.url.startsWith('/persistent-uploads/')) {
+        // Legacy persistent file - delete from file system
+        const filename = path.basename(image.url);
+        const filePath = path.join(process.cwd(), 'persistent-uploads', filename);
+        console.log(`Deleting legacy persistent file: ${filePath}`);
+        
+        try {
+          await fs.access(filePath);
+          await fs.unlink(filePath);
+          console.log(`✓ Deleted physical file: ${filename}`);
+        } catch (fileError) {
+          console.warn(`Could not delete physical file ${filename}:`, fileError);
+        }
+      } else {
+        console.log(`Unknown file type for URL: ${image.url} - will only delete database record`);
       }
 
       console.log(`Deleting database record for ID: ${id}`);
