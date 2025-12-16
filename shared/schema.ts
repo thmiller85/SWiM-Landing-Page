@@ -17,6 +17,8 @@ export const posts = pgTable('posts', {
   author: varchar('author', { length: 100 }).notNull(),
   status: varchar('status', { length: 20 }).notNull().default('draft'), // draft, published
   ctaType: varchar('cta_type', { length: 50 }).notNull().default('consultation'), // consultation, download, newsletter, demo
+  downloadableResource: text('downloadable_resource'), // URL to downloadable file (PDF, etc.)
+  downloadableResourceName: varchar('downloadable_resource_name', { length: 255 }), // Display name for the download
   category: varchar('category', { length: 100 }).notNull(),
   tags: jsonb('tags').$type<string[]>().notNull().default([]),
   targetKeywords: jsonb('target_keywords').$type<string[]>().notNull().default([]),

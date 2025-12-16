@@ -701,6 +701,41 @@ ${posts.map(post => `  <url>
     }
   });
 
+  // Document upload endpoint for downloadable resources (PDFs, etc.) - EDITOR REQUIRED
+  app.post('/api/cms/documents/upload', requireEditor, upload.single('document'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No document file provided' });
+      }
+
+      console.log(`=== DOCUMENT UPLOAD DEBUG ===`);
+      console.log(`File: ${req.file.originalname}`);
+      console.log(`Size: ${req.file.size} bytes`);
+      console.log(`MIME type: ${req.file.mimetype}`);
+      
+      const objectStorageService = new ObjectStorageService();
+      
+      // Upload file to Object Storage
+      const objectUrl = await objectStorageService.uploadCMSDocument(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype
+      );
+      
+      console.log(`✓ Document uploaded to Object Storage: ${objectUrl}`);
+
+      res.status(201).json({
+        url: objectUrl,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        mimeType: req.file.mimetype,
+      });
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      res.status(500).json({ error: 'Failed to upload document', details: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
   // Test Object Storage endpoint - REMOVED FOR SECURITY
   // This endpoint was removed as it allowed public file uploads without authentication
   

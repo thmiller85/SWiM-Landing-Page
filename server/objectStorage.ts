@@ -200,6 +200,53 @@ export class ObjectStorageService {
     }
   }
 
+  // Upload file directly to object storage for CMS documents (PDFs, etc.)
+  async uploadCMSDocument(file: Buffer, originalFilename: string, mimeType: string): Promise<string> {
+    const privateObjectDir = this.getPrivateObjectDir();
+    if (!privateObjectDir) {
+      throw new Error(
+        "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +
+          "tool and set PRIVATE_OBJECT_DIR env var."
+      );
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const random = Math.round(Math.random() * 1E9);
+    const extension = originalFilename.split('.').pop() || 'pdf';
+    const sanitizedName = originalFilename.replace(/[^a-zA-Z0-9.-]/g, '_').slice(0, 50);
+    const filename = `doc-${timestamp}-${random}-${sanitizedName}`;
+    
+    const fullPath = `${privateObjectDir}/cms-documents/${filename}`;
+    const { bucketName, objectName } = parseObjectPath(fullPath);
+
+    try {
+      const bucket = objectStorageClient.bucket(bucketName);
+      const objectFile = bucket.file(objectName);
+
+      // Upload the file
+      await objectFile.save(file, {
+        metadata: {
+          contentType: mimeType,
+        },
+      });
+
+      console.log(`✓ Document uploaded to Object Storage: ${objectName}`);
+      
+      // Set ACL policy for public access (CMS documents are publicly accessible for downloads)
+      await setObjectAclPolicy(objectFile, {
+        owner: 'cms-system',
+        visibility: 'public',
+      });
+
+      // Return public URL path for database storage
+      return `/objects/cms-documents/${filename}`;
+    } catch (error) {
+      console.error('Error uploading document to Object Storage:', error);
+      throw new Error(`Failed to upload document to Object Storage: ${error}`);
+    }
+  }
+
   // Gets the object entity file from the object path.
   async getObjectEntityFile(objectPath: string): Promise<File> {
     if (!objectPath.startsWith("/objects/")) {
