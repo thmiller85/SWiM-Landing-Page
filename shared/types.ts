@@ -2,6 +2,7 @@
 // This file contains only types and interfaces that can be safely imported in the browser
 
 export interface BlogPost {
+  id?: number;
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -20,6 +21,8 @@ export interface BlogPost {
   content: string;
   publishedDate: Date;
   updatedDate: Date;
+  downloadableResource?: string;
+  downloadableResourceName?: string;
 }
 
 export interface BlogMetadata {
@@ -61,6 +64,8 @@ export interface Post {
   author: string;
   status: string;
   ctaType: string;
+  downloadableResource: string | null;
+  downloadableResourceName: string | null;
   category: string;
   tags: string[];
   targetKeywords: string[];

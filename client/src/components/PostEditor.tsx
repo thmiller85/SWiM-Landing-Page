@@ -12,7 +12,7 @@ import { SEOPreview } from '@/components/SEOPreview';
 import { PostPreview } from '@/components/PostPreview';
 import { InteractiveContentPicker } from '@/components/cms/InteractiveContentPicker';
 import { useToast } from '@/hooks/use-toast';
-import { X, Save, Image, AlertCircle, Check, FileText, Eye, ClipboardPaste } from 'lucide-react';
+import { X, Save, Image, AlertCircle, Check, FileText, Eye, ClipboardPaste, Download, Upload, Trash2 } from 'lucide-react';
 import MDEditor from '@uiw/react-md-editor';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -42,8 +42,11 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
     tags: post.tags?.join(', ') || '',
     targetKeywords: post.targetKeywords?.join(', ') || '',
     readingTime: post.readingTime || 5,
+    downloadableResource: post.downloadableResource || '',
+    downloadableResourceName: post.downloadableResourceName || '',
   });
   const [metaTitleLength, setMetaTitleLength] = useState(formData.metaTitle.length);
+  const [isUploadingDocument, setIsUploadingDocument] = useState(false);
   const [metaDescLength, setMetaDescLength] = useState(formData.metaDescription.length);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [featuredImagePreview, setFeaturedImagePreview] = useState(formData.featuredImage);
@@ -158,6 +161,8 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
     submitData.set('tags', formData.tags);
     submitData.set('targetKeywords', formData.targetKeywords);
     submitData.set('readingTime', formData.readingTime.toString());
+    submitData.set('downloadableResource', formData.downloadableResource);
+    submitData.set('downloadableResourceName', formData.downloadableResourceName);
     
     if (validateForm(submitData)) {
       onSave(submitData);
@@ -640,6 +645,118 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
                     </Select>
                   </div>
                 </div>
+
+                {formData.ctaType === 'download' && (
+                  <div className="p-4 bg-gray-700/50 rounded-lg border border-gray-600 space-y-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Download className="h-5 w-5 text-accent" />
+                      <h4 className="text-white font-medium">Downloadable Resource</h4>
+                    </div>
+                    
+                    {formData.downloadableResource ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                          <FileText className="h-8 w-8 text-accent" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white font-medium truncate">
+                              {formData.downloadableResourceName || 'Uploaded Document'}
+                            </p>
+                            <p className="text-gray-400 text-sm truncate">{formData.downloadableResource}</p>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => {
+                              updateFormData('downloadableResource', '');
+                              updateFormData('downloadableResourceName', '');
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <div>
+                          <Label htmlFor="downloadableResourceName" className="text-white">Display Name</Label>
+                          <Input
+                            id="downloadableResourceName"
+                            value={formData.downloadableResourceName}
+                            className="bg-gray-700 border-gray-600 text-white"
+                            placeholder="e.g., BI Strategy Framework Checklist"
+                            onChange={(e) => updateFormData('downloadableResourceName', e.target.value)}
+                          />
+                          <p className="text-xs text-gray-400 mt-1">
+                            This name will be shown on the download button
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          type="file"
+                          id="documentUpload"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            
+                            setIsUploadingDocument(true);
+                            const uploadFormData = new FormData();
+                            uploadFormData.append('document', file);
+                            
+                            try {
+                              const response = await fetch('/api/cms/documents/upload', {
+                                method: 'POST',
+                                body: uploadFormData,
+                              });
+                              
+                              if (response.ok) {
+                                const result = await response.json();
+                                updateFormData('downloadableResource', result.url);
+                                updateFormData('downloadableResourceName', file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
+                                toast({
+                                  title: "Success",
+                                  description: "Document uploaded successfully",
+                                });
+                              } else {
+                                const error = await response.json();
+                                throw new Error(error.error || 'Upload failed');
+                              }
+                            } catch (error) {
+                              toast({
+                                title: "Error",
+                                description: error instanceof Error ? error.message : "Failed to upload document",
+                                variant: "destructive",
+                              });
+                            } finally {
+                              setIsUploadingDocument(false);
+                              e.target.value = '';
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-dashed border-2 h-24 flex flex-col gap-2"
+                          onClick={() => document.getElementById('documentUpload')?.click()}
+                          disabled={isUploadingDocument}
+                        >
+                          {isUploadingDocument ? (
+                            <>
+                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent"></div>
+                              <span className="text-gray-400">Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="h-6 w-6 text-gray-400" />
+                              <span className="text-gray-400">Click to upload a document (PDF, Word, Excel, etc.)</span>
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div>
                   <Label htmlFor="readingTime" className="text-white">Reading Time (minutes)</Label>

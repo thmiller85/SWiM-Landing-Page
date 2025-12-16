@@ -17,6 +17,8 @@ export const createPostSchema = z.object({
   author: z.string().min(1),
   status: z.enum(['draft', 'published']).default('draft'),
   ctaType: z.enum(['consultation', 'download', 'newsletter', 'demo']).default('consultation'),
+  downloadableResource: z.string().nullable().optional().transform(val => val || null),
+  downloadableResourceName: z.string().nullable().optional().transform(val => val || null),
   category: z.string().min(1),
   tags: z.array(z.string()).default([]),
   targetKeywords: z.array(z.string()).default([]),

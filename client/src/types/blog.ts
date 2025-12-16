@@ -2,6 +2,7 @@
 // This file ensures zero server-side imports reach the client bundle
 
 export interface BlogPost {
+  id?: number;
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -20,6 +21,8 @@ export interface BlogPost {
   content: string;
   publishedDate: Date;
   updatedDate: Date;
+  downloadableResource?: string;
+  downloadableResourceName?: string;
 }
 
 export interface BlogMetadata {
