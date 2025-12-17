@@ -15,7 +15,8 @@ import {
   Monitor,
   Smartphone,
   Eye,
-  Share2
+  Share2,
+  Download
 } from 'lucide-react';
 
 interface PostPreviewProps {
@@ -35,6 +36,8 @@ interface PostPreviewProps {
     publishedAt?: Date | null;
     status: string;
     ctaType: string;
+    downloadableResource?: string | null;
+    downloadableResourceName?: string | null;
   };
   isOpen: boolean;
   onClose: () => void;
@@ -238,18 +241,43 @@ export function PostPreview({ post, isOpen, onClose }: PostPreviewProps) {
 
                   {/* CTA Section */}
                   <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-8 md:p-12 text-center border border-white/20">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                      {cta.title}
-                    </h3>
-                    <p className="text-white/80 max-w-2xl mx-auto mb-8">
-                      {cta.description}
-                    </p>
-                    <Button 
-                      size="lg" 
-                      className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
-                    >
-                      {cta.button}
-                    </Button>
+                    {post.ctaType === 'download' && post.downloadableResource ? (
+                      <>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                          Get Your Free Resource
+                        </h3>
+                        <p className="text-white/80 max-w-2xl mx-auto mb-8">
+                          Download the {post.downloadableResourceName?.replace(/\.(pdf|doc|docx)$/i, '').replace(/[-_]/g, ' ') || 'resource'} to accompany this guide and start implementing today.
+                        </p>
+                        <a
+                          href={post.downloadableResource}
+                          download={post.downloadableResourceName || 'resource.pdf'}
+                        >
+                          <Button 
+                            size="lg" 
+                            className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
+                          >
+                            <Download className="mr-2 h-4 w-4" />
+                            Download Now
+                          </Button>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                          {cta.title}
+                        </h3>
+                        <p className="text-white/80 max-w-2xl mx-auto mb-8">
+                          {cta.description}
+                        </p>
+                        <Button 
+                          size="lg" 
+                          className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
+                        >
+                          {cta.button}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
