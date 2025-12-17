@@ -39,6 +39,23 @@ const upload = multer({
   }
 });
 
+// Configure multer for document uploads (PDFs, Word docs, etc.)
+const documentUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit for documents
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /pdf|doc|docx|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document/;
+    const extname = /\.(pdf|doc|docx)$/i.test(file.originalname);
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype || extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only PDF and Word document files are allowed'));
+    }
+  }
+});
+
 // Simple user agent parser
 function parseUserAgent(userAgent: string): {
   deviceType: string;
@@ -702,7 +719,7 @@ ${posts.map(post => `  <url>
   });
 
   // Document upload endpoint for downloadable resources (PDFs, etc.) - EDITOR REQUIRED
-  app.post('/api/cms/documents/upload', requireEditor, upload.single('document'), async (req, res) => {
+  app.post('/api/cms/documents/upload', requireEditor, documentUpload.single('document'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No document file provided' });
