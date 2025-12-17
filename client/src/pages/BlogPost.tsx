@@ -316,28 +316,30 @@ const BlogPost = () => {
                 {post.ctaType === 'download' && post.downloadableResource ? (
                   <>
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                      Download Your Free Resource
+                      Get Your Free Resource
                     </h3>
                     <p className="text-white/80 max-w-2xl mx-auto mb-8">
-                      Get instant access to this valuable resource and start implementing today.
+                      Download the {post.downloadableResourceName?.replace(/\.(pdf|doc|docx)$/i, '').replace(/[-_]/g, ' ') || 'resource'} to accompany this guide and start implementing today.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <Button 
-                        size="lg" 
-                        className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
-                        style={{ 
-                          textShadow: "0 0 5px rgba(0,240,255,0.3)",
-                          boxShadow: "0 0 20px rgba(0,240,255,0.5)"
-                        }}
-                        onClick={() => {
-                          blogAPIService.trackLead(post.slug);
-                          window.open(post.downloadableResource, '_blank');
-                        }}
+                      <a
+                        href={post.downloadableResource}
+                        download={post.downloadableResourceName || 'resource.pdf'}
+                        onClick={() => blogAPIService.trackLead(post.slug)}
                         data-testid="button-download-resource"
                       >
-                        <Download className="mr-2 h-4 w-4" />
-                        {post.downloadableResourceName || 'Download Resource'}
-                      </Button>
+                        <Button 
+                          size="lg" 
+                          className="bg-accent hover:bg-accent/90 text-black font-semibold shadow-glow transition-all"
+                          style={{ 
+                            textShadow: "0 0 5px rgba(0,240,255,0.3)",
+                            boxShadow: "0 0 20px rgba(0,240,255,0.5)"
+                          }}
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Now
+                        </Button>
+                      </a>
                       <Button 
                         variant="outline" 
                         size="lg"
