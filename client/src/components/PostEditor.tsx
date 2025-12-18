@@ -906,6 +906,8 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
             readingTime: formData.readingTime,
             status: formData.status,
             ctaType: formData.ctaType,
+            downloadableResource: formData.downloadableResource,
+            downloadableResourceName: formData.downloadableResourceName,
             publishedAt: post.publishedAt || new Date(),
           }}
           isOpen={showPostPreview}
