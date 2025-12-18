@@ -208,6 +208,8 @@ export default function CMSDashboardClean() {
       author: formData.get('author') as string,
       status: formData.get('status') as string,
       ctaType: formData.get('ctaType') as string,
+      downloadableResource: (formData.get('downloadableResource') as string) || null,
+      downloadableResourceName: (formData.get('downloadableResourceName') as string) || null,
       category: formData.get('category') as string,
       tags: ((formData.get('tags') as string) || '').split(',').map(tag => tag.trim()).filter(Boolean),
       targetKeywords: ((formData.get('targetKeywords') as string) || '').split(',').map(kw => kw.trim()).filter(Boolean),
