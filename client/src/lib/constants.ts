@@ -8,57 +8,39 @@ export const BACKGROUND_COLOR = "#F2F2F2"; // Light Gray
 
 export const SERVICES = [
   {
-    title: "AI-Powered Marketing",
-    description: "Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.",
-    icon: "analytics",
+    title: "Retail Intelligence",
+    description: "For wholesale brands selling through independent retailers. We unlock the sell-through data trapped across your retail channel — real-time visibility for smarter inventory, production, and assortment decisions.",
+    icon: "shopping_bag",
     color: "accent"
   },
   {
-    title: "Workflow Automation",
-    description: "Streamline your operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.",
-    icon: "autorenew",
+    title: "Storage Operations AI",
+    description: "For owner-operators running 1–5 self-storage facilities. We build pricing engines, competitor intel dashboards, and automated workflows that give you the same tools the REITs use.",
+    icon: "warehouse",
     color: "highlight"
   },
   {
-    title: "B2B SaaS Development",
-    description: "Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.",
-    icon: "code",
+    title: "EOS Implementer Growth",
+    description: "Stop cold calling. AI-powered lead generation that delivers qualified EOS prospects monthly — so you close clients, not chase them.",
+    icon: "target",
     color: "accent"
-  },
-  {
-    title: "Data Intelligence",
-    description: "Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.",
-    icon: "insights",
-    color: "highlight"
-  },
-  {
-    title: "AI Strategy Consulting",
-    description: "Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.",
-    icon: "psychology",
-    color: "accent"
-  },
-  {
-    title: "AI Security & Ethics",
-    description: "Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.",
-    icon: "security",
-    color: "highlight"
   }
 ];
 
 export const AI_SOLUTIONS = [
   {
-    title: "Natural Language Processing",
-    description: "Implement advanced NLP models to analyze customer feedback, generate content, and streamline communication.",
+    title: "AI as Your Operating Layer",
+    description: "We don't bolt AI onto your existing stack. We make it the foundation — connecting your data, automating your workflows, and surfacing the insights that drive decisions.",
     icon: "auto_awesome"
   },
   {
-    title: "Machine Learning Models",
-    description: "Build custom ML models that continuously learn from your data to improve performance and accuracy over time.",
+    title: "Founder-Led, U.S.-Based, Lean",
+    description: "Three founders who've built businesses, managed P&Ls, and shipped products. You work directly with the people who build your solution — no handoffs, no surprises.",
     icon: "psychology_alt"
   },
   {
-    title: "Predictive Analytics",
-    description: "Anticipate market trends and customer behavior with predictive models that inform your strategic decision-making.",
+    title: "See It Work Before You Sign",
+    description: "Every engagement starts with a working proof of concept. You see real results with your real data before making any long-term commitment. That's the SWiM difference.",
     icon: "insights"
   }
 ];
@@ -66,30 +48,30 @@ export const AI_SOLUTIONS = [
 export const WORKFLOW_STEPS = [
   {
     number: "01",
-    title: "Discovery & Analysis",
-    description: "We begin by deeply understanding your business, identifying key challenges, and defining clear objectives for AI implementation.",
-    checkpoints: ["Business needs assessment", "Data infrastructure audit", "ROI potential analysis"],
+    title: "Deep Dive Discovery",
+    description: "We spend time in your business — understanding your data, your workflows, and the pain points that off-the-shelf tools can't reach. No generic questionnaires.",
+    checkpoints: ["Map your core workflows", "Identify automation opportunities", "Define success metrics together"],
     icon: "search"
   },
   {
     number: "02",
-    title: "Strategy & Solution Design",
-    description: "We develop a comprehensive strategy and custom solution architecture tailored to your specific business requirements.",
-    checkpoints: ["Custom AI model selection", "Technology stack planning", "Implementation roadmap"],
+    title: "Proof of Concept",
+    description: "We build a working prototype with your real data. You see it in action, evaluate the results, and decide if it delivers value — before committing to anything.",
+    checkpoints: ["Working prototype with real data", "Measurable results you can validate", "No commitment required at this stage"],
     icon: "lightbulb"
   },
   {
     number: "03",
-    title: "Development & Integration",
-    description: "Our engineering team builds, tests, and integrates the AI solution into your existing systems with minimal disruption to operations.",
-    checkpoints: ["Agile development process", "Rigorous quality testing", "Seamless system integration"],
+    title: "Build & Integrate",
+    description: "Once you've seen it work, we build the production-grade solution and integrate it into your existing systems. Founder-led delivery from start to finish.",
+    checkpoints: ["Production-quality engineering", "Seamless integration with your tools", "Direct access to the builders"],
     icon: "code"
   },
   {
     number: "04",
-    title: "Deployment & Optimization",
-    description: "We launch your solution and continuously monitor, maintain, and improve its performance to ensure maximum ROI over time.",
-    checkpoints: ["Smooth production deployment", "Performance monitoring", "Continuous model improvement"],
+    title: "Optimize & Scale",
+    description: "We monitor performance, refine the models, and expand what's working. Your AI operating layer gets smarter over time — and so does your business.",
+    checkpoints: ["Ongoing performance monitoring", "Continuous model improvement", "Scale to new use cases as you grow"],
     icon: "rocket_launch"
   }
 ];

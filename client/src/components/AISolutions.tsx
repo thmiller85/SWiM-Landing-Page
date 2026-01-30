@@ -30,14 +30,14 @@ const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick 
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
-              AI Solutions
+              Why SWiM
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              Elevate Your Business with Advanced AI Technology
+              The SWiM Difference
             </h2>
             <p className="text-white/70 font-inter text-lg mb-8">
-              Our AI solutions are designed to transform your business operations, 
-              automate complex tasks, and deliver insights that drive strategic decision-making.
+              Most agencies sell you a tool. We build you an operating layer — and
+              we prove it works before you commit.
             </p>
             
             <div className="space-y-6">
@@ -46,9 +46,9 @@ const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick 
                   <Sparkles className="text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Automated Workflow Optimization</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">AI as Your Operating Layer</h3>
                   <p className="text-white/70 font-inter">
-                    Streamline repetitive tasks, reduce manual errors, and free up your team to focus on what matters most -- growth and innovation.
+                    We don't bolt AI onto your existing stack. We make it the foundation — connecting your data, automating your workflows, and surfacing the insights that drive decisions.
                   </p>
                 </div>
               </div>
@@ -58,9 +58,9 @@ const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick 
                   <Brain className="text-highlight" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Smarter Marketing Intelligence</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">Founder-Led, U.S.-Based, Lean</h3>
                   <p className="text-white/70 font-inter">
-                    Use AI to analyze customer behavior, optimize campaign performance, and uncover insights that lead to better targeting and higher ROI.
+                    Three founders who've built businesses, managed P&Ls, and shipped products. You work directly with the people who build your solution — no handoffs, no surprises.
                   </p>
                 </div>
               </div>
@@ -70,9 +70,9 @@ const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick 
                   <LineChart className="text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-medium mb-2">Custom AI-Powered Solutions</h3>
+                  <h3 className="text-xl font-space font-medium mb-2">See It Work Before You Sign</h3>
                   <p className="text-white/70 font-inter">
-                    From internal tools to client-facing software, we build bespoke SaaS platforms that leverage your data to create scalable, intelligent systems.
+                    Every engagement starts with a working proof of concept. You see real results with your real data before making any long-term commitment. That's the SWiM difference.
                   </p>
                 </div>
               </div>
@@ -83,7 +83,7 @@ const AISolutions = forwardRef<HTMLElement, AISolutionsProps>(({ onContactClick 
               className="mt-10 bg-transparent border border-accent text-accent hover:bg-accent hover:text-primary transition-all duration-300"
               onClick={onContactClick}
             >
-              Get Started with AI Solutions
+              Book a Free Demo
             </Button>
           </motion.div>
           

@@ -2,7 +2,7 @@ import React, { forwardRef, useRef } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, Brain, Heart, Shield } from "lucide-react";
+import { Check, Wrench, Target, RefreshCw, Rocket } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, slideIn } from "@/lib/animations";
 
@@ -66,27 +66,34 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               animate={isContentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
-                    <Brain className="text-accent text-lg" />
+                    <Wrench className="text-accent text-lg" />
                   </div>
-                  <h4 className="text-sm font-space font-bold text-accent mb-1">Innovation</h4>
-                  <p className="text-white/70 font-inter text-xs">Cutting-edge AI solutions</p>
+                  <h4 className="text-sm font-space font-bold text-accent mb-1">Solve Pain Others Accept</h4>
+                  <p className="text-white/70 font-inter text-xs">We tackle problems everyone else calls "good enough"</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center mx-auto mb-3">
-                    <Heart className="text-highlight text-lg" />
+                    <Target className="text-highlight text-lg" />
                   </div>
-                  <h4 className="text-sm font-space font-bold text-highlight mb-1">Human-Centered</h4>
-                  <p className="text-white/70 font-inter text-xs">AI that enhances people</p>
+                  <h4 className="text-sm font-space font-bold text-highlight mb-1">Win With the End in Mind</h4>
+                  <p className="text-white/70 font-inter text-xs">Every deliverable ties to your business outcome</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-3">
-                    <Shield className="text-accent text-lg" />
+                    <RefreshCw className="text-accent text-lg" />
                   </div>
-                  <h4 className="text-sm font-space font-bold text-accent mb-1">Ethical</h4>
-                  <p className="text-white/70 font-inter text-xs">Responsible AI practices</p>
+                  <h4 className="text-sm font-space font-bold text-accent mb-1">Iteration Over Theory</h4>
+                  <p className="text-white/70 font-inter text-xs">Ship fast, learn fast, improve fast</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center mx-auto mb-3">
+                    <Rocket className="text-highlight text-lg" />
+                  </div>
+                  <h4 className="text-sm font-space font-bold text-highlight mb-1">Move Fast, Stay Lean</h4>
+                  <p className="text-white/70 font-inter text-xs">Small team. No bloat. Direct access to the builders</p>
                 </div>
               </div>
             </motion.div>
@@ -101,16 +108,16 @@ const About = forwardRef<HTMLElement>((props, ref) => {
               About SWiM
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              AI Innovation with a Human Touch
+              We Solve What Off-the-Shelf Can't
             </h2>
             <p className="text-white/70 font-inter text-lg mb-6">
-              At SWiM, we're a team of AI specialists, sales and marketing experts, technical engineers, and strategists
-              united by a passion for transforming businesses through technology.
+              SWiM is a founder-led AI agency built for independent operators. We're three founders — a CMO, a CPO,
+              and a CGO — who got tired of watching small businesses get priced out of the tools that could
+              transform their operations.
             </p>
             <p className="text-white/70 font-inter text-lg mb-8">
-              We believe that the most powerful AI solutions are those that enhance human capabilities
-              rather than replace them. That's why we work closely with your team to develop
-              AI systems that augment your existing processes and empower your people.
+              We don't sell seats on generic platforms. We build custom AI operating layers that solve the specific
+              data and workflow problems your business faces every day. And we prove it works before you pay.
             </p>
             
             <div className="space-y-4 mb-10">
@@ -118,25 +125,25 @@ const About = forwardRef<HTMLElement>((props, ref) => {
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">AI integration experts</p>
+                <p className="text-white font-inter">AI as the operating layer — not a bolt-on feature</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">Transparent, results-driven approach</p>
+                <p className="text-white font-inter">Founder-led delivery, U.S.-based team, lean by design</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">Ongoing support and optimization</p>
+                <p className="text-white font-inter">Proven process with guarantee — see it work before you sign</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">Ethical AI development practices</p>
+                <p className="text-white font-inter">Deep expertise in retail, self-storage, and EOS ecosystems</p>
               </div>
             </div>
             

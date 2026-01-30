@@ -23,7 +23,7 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <Logo className="mb-6" />
             <p className="text-white/70 font-inter text-sm mb-6">
-              Transforming businesses with AI-powered marketing, workflow automation, and custom SaaS solutions.
+              AI solutions for independent retail, self-storage, and EOS ecosystems. We solve the data and workflow problems off-the-shelf software can't.
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/profile.php?id=61577744513077" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-accent transition-colors">
@@ -41,12 +41,9 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <h4 className="text-lg font-space font-bold mb-6">Services</h4>
             <ul className="space-y-3">
-              <li><Link href="/services/ai-powered-marketing" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI-Powered Marketing</Link></li>
-              <li><Link href="/services/workflow-automation" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Workflow Automation</Link></li>
-              <li><Link href="/services/b2b-saas-development" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">B2B SaaS Development</Link></li>
-              <li><Link href="/services/data-intelligence" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Data Intelligence</Link></li>
-              <li><Link href="/services/ai-strategy-consulting" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Strategy Consulting</Link></li>
-              <li><Link href="/services/ai-security-ethics" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">AI Security & Ethics</Link></li>
+              <li><Link href="/retail" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Retail Intelligence</Link></li>
+              <li><Link href="/storage" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Storage Operations AI</Link></li>
+              <li><Link href="/eos" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">EOS Implementer Growth</Link></li>
             </ul>
           </div>
           

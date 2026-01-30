@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
 import ServicePage from "./pages/ServicePage";
+import EosLandingPage from "./pages/EosLandingPage";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -79,8 +80,14 @@ function App() {
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/team" component={Team} />
           <Route path="/team/:id" component={TeamMember} />
-          <Route path="/services/:id">
-            {params => <ServicePage id={params.id} />}
+          <Route path="/retail">
+            <ServicePage id="retail" />
+          </Route>
+          <Route path="/storage">
+            <ServicePage id="self-storage" />
+          </Route>
+          <Route path="/eos">
+            <EosLandingPage />
           </Route>
           <Route path="/cms/login">
             <Suspense fallback={<div>Loading...</div>}>

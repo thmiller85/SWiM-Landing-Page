@@ -21,36 +21,36 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
   const steps = [
     {
       number: "01",
-      title: "Discovery & Analysis",
-      description: "We begin by deeply understanding your business, identifying key challenges, and defining clear objectives for AI implementation.",
-      checkpoints: ["Business needs assessment", "Data infrastructure audit", "ROI potential analysis"],
+      title: "Deep Dive Discovery",
+      description: "We spend time in your business — understanding your data, your workflows, and the pain points that off-the-shelf tools can't reach. No generic questionnaires.",
+      checkpoints: ["Map your core workflows", "Identify automation opportunities", "Define success metrics together"],
       icon: <Search className="text-primary" />,
       color: "accent",
       alignRight: true
     },
     {
       number: "02",
-      title: "Strategy & Solution Design",
-      description: "We develop a comprehensive strategy and custom solution architecture tailored to your specific business requirements.",
-      checkpoints: ["Custom AI model selection", "Technology stack planning", "Implementation roadmap"],
+      title: "Proof of Concept",
+      description: "We build a working prototype with your real data. You see it in action, evaluate the results, and decide if it delivers value — before committing to anything.",
+      checkpoints: ["Working prototype with real data", "Measurable results you can validate", "No commitment required at this stage"],
       icon: <Lightbulb className="text-primary" />,
       color: "highlight",
       alignRight: false
     },
     {
       number: "03",
-      title: "Development & Integration",
-      description: "Our engineering team builds, tests, and integrates the AI solution into your existing systems with minimal disruption to operations.",
-      checkpoints: ["Agile development process", "Rigorous quality testing", "Seamless system integration"],
+      title: "Build & Integrate",
+      description: "Once you've seen it work, we build the production-grade solution and integrate it into your existing systems. Founder-led delivery from start to finish.",
+      checkpoints: ["Production-quality engineering", "Seamless integration with your tools", "Direct access to the builders"],
       icon: <Code className="text-primary" />,
       color: "accent",
       alignRight: true
     },
     {
       number: "04",
-      title: "Deployment & Optimization",
-      description: "We launch your solution and continuously monitor, maintain, and improve its performance to ensure maximum ROI over time.",
-      checkpoints: ["Smooth production deployment", "Performance monitoring", "Continuous model improvement"],
+      title: "Optimize & Scale",
+      description: "We monitor performance, refine the models, and expand what's working. Your AI operating layer gets smarter over time — and so does your business.",
+      checkpoints: ["Ongoing performance monitoring", "Continuous model improvement", "Scale to new use cases as you grow"],
       icon: <Rocket className="text-primary" />,
       color: "highlight",
       alignRight: false
@@ -67,14 +67,14 @@ const Workflow = forwardRef<HTMLElement>((props, ref) => {
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
-              Our Approach
+              Our Process
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              How We Implement AI Solutions
+              How We Deliver Results — Guaranteed
             </h2>
             <p className="text-white/70 max-w-2xl mx-auto font-inter text-lg">
-              Our proven implementation methodology ensures smooth integration, minimal disruption, 
-              and maximum value from your AI investment.
+              Every engagement follows the same proven path: understand your problem, build a proof of concept,
+              prove it works, then scale. No risk. No guesswork.
             </p>
           </motion.div>
         </div>

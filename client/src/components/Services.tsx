@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import ServiceCard from "./ui/service-card";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, staggerContainer } from "@/lib/animations";
-import { ChartScatter, Repeat2, Code, LineChart, Brain, ShieldCheck } from "lucide-react";
+import { ShoppingBag, Warehouse, Target } from "lucide-react";
 
 interface Service {
   id: string;
@@ -21,57 +21,30 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
   
   const services: Service[] = [
     {
-      id: "ai-powered-marketing",
-      icon: <ChartScatter className="text-3xl text-accent" />,
-      title: "AI-Powered Marketing",
-      description: "Leverage machine learning algorithms to optimize your marketing campaigns, predict customer behavior, and increase ROI.",
-      tags: ["Lead Generation", "Customer Segmentation", "Content Optimization"],
+      id: "retail",
+      icon: <ShoppingBag className="text-3xl text-accent" />,
+      title: "Retail Intelligence",
+      description: "For wholesale brands selling through independent retailers. We unlock the sell-through data trapped across your retail channel — giving you real-time visibility into what's actually selling so you can make smarter inventory, production, and assortment decisions.",
+      tags: ["Sell-Through Visibility", "Data Intelligence", "Multi-POS Integration"],
       color: "accent",
       delay: 0
     },
     {
-      id: "workflow-automation",
-      icon: <Repeat2 className="text-3xl text-highlight" />,
-      title: "Workflow Automation",
-      description: "Streamline your operations with intelligent automation systems that reduce manual tasks and optimize resource allocation.",
-      tags: ["Process Optimization", "Task Automation", "Efficiency Analysis"],
+      id: "self-storage",
+      icon: <Warehouse className="text-3xl text-highlight" />,
+      title: "Storage Operations AI",
+      description: "For owner-operators running 1–5 self-storage facilities. We build pricing engines, competitor intel dashboards, and automated workflows that give you the same tools the REITs use — without the REIT budget.",
+      tags: ["Dynamic Pricing", "Competitor Research", "Occupancy Optimization"],
       color: "highlight",
       delay: 0.2
     },
     {
-      id: "b2b-saas-development",
-      icon: <Code className="text-3xl text-accent" />,
-      title: "B2B SaaS Development",
-      description: "Create custom software solutions that integrate AI capabilities to solve specific business challenges and drive growth.",
-      tags: ["Custom Software", "API Integration", "Scalable Solutions"],
+      id: "eos-ecosystem",
+      icon: <Target className="text-3xl text-accent" />,
+      title: "EOS Implementer Growth",
+      description: "Stop cold calling. We build AI-powered lead generation systems that deliver 10-15 qualified prospects monthly — so you close 1-2 new EOS clients and stay focused on delivery, not prospecting.",
+      tags: ["Qualified Lead Generation", "Multi-Channel Campaigns", "Pipeline Growth"],
       color: "accent",
-      delay: 0.4
-    },
-    {
-      id: "data-intelligence",
-      icon: <LineChart className="text-3xl text-highlight" />,
-      title: "Data Intelligence",
-      description: "Transform raw data into actionable insights through advanced analytics, visualization, and predictive modeling.",
-      tags: ["Business Intelligence", "Data Visualization", "Predictive Models"],
-      color: "highlight",
-      delay: 0
-    },
-    {
-      id: "ai-strategy-consulting",
-      icon: <Brain className="text-3xl text-accent" />,
-      title: "AI Strategy Consulting",
-      description: "Develop a comprehensive AI roadmap tailored to your business goals, technical infrastructure, and market positioning.",
-      tags: ["Technology Assessment", "Implementation Planning", "ROI Analysis"],
-      color: "accent",
-      delay: 0.2
-    },
-    {
-      id: "ai-security-ethics",
-      icon: <ShieldCheck className="text-3xl text-highlight" />,
-      title: "AI Security & Ethics",
-      description: "Ensure your AI implementations are secure, compliant with regulations, and aligned with ethical business practices.",
-      tags: ["Risk Assessment", "Compliance", "Ethical AI"],
-      color: "highlight",
       delay: 0.4
     }
   ];
@@ -89,11 +62,11 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
               Our SWiM Lanes
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              Comprehensive AI Solutions for Modern Businesses
+              AI Solutions Built for Your Industry
             </h2>
             <p className="text-white/70 max-w-2xl mx-auto font-inter text-lg">
-              We integrate cutting-edge AI technologies into every aspect of your business operations,
-              from marketing to workflow automation.
+              We don't do generic. Each SWiM Lane is purpose-built for operators who need
+              enterprise-grade intelligence without enterprise complexity.
             </p>
           </motion.div>
         </div>

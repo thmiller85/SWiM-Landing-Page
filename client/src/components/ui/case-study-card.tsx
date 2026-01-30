@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { fadeIn, scaleIn, floatingAnimation, pulseAnimation } from "@/lib/animations";
 
@@ -10,15 +11,19 @@ interface CaseStudyCardProps {
   categories: string[];
   results: string;
   delay: number;
+  isRealProject?: boolean;
+  link?: string;
 }
 
-const CaseStudyCard = ({ 
-  image, 
-  title, 
-  description, 
-  categories, 
+const CaseStudyCard = ({
+  image,
+  title,
+  description,
+  categories,
   results,
-  delay
+  delay,
+  isRealProject = false,
+  link
 }: CaseStudyCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -178,7 +183,7 @@ const CaseStudyCard = ({
                   variants={scaleIn}
                   custom={delay + 0.1}
                 >
-                  Retail Content
+                  Retail Intelligence
                 </motion.p>
               </div>
             )}
@@ -300,7 +305,7 @@ const CaseStudyCard = ({
                 delay: isHovered ? 0.1 : 0 
               }}
             >
-              <span className="text-sm">Illustrative Scenario</span>
+              <span className="text-sm">{isRealProject ? "Client Project" : "Illustrative Scenario"}</span>
             </motion.div>
           </motion.div>
         </div>
@@ -360,13 +365,25 @@ const CaseStudyCard = ({
                 {results}
               </motion.p>
             </div>
-            <motion.div 
-              className="flex items-center text-white/60 font-inter text-sm font-medium"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <span className="italic">Based on industry research</span>
-            </motion.div>
+            {link ? (
+              <Link href={link}>
+                <motion.div
+                  className="flex items-center text-accent font-inter text-sm font-semibold cursor-pointer gap-1"
+                  whileHover={{ scale: 1.05, x: 4 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  Learn More <ArrowRight className="w-4 h-4" />
+                </motion.div>
+              </Link>
+            ) : (
+              <motion.div
+                className="flex items-center text-white/60 font-inter text-sm font-medium"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <span className="italic">{isRealProject ? "Real client results" : "Illustrative scenario"}</span>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </motion.div>

@@ -20,35 +20,32 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
   const caseStudies = [
     {
       image: "e-commerce",
-      title: "Self-Storage Revenue Optimization",
-      description: "Our approach: Develop competitor research and unit price recommendation engines to identify gaps in pricing structure, delivering real-time recommendations that could potentially increase revenue by 15-25% while maintaining high occupancy rates.",
-      categories: ["Real Estate", "SaaS", "Data Analytics"],
-      results: "Potential: 15-25% Revenue Increase",
-      delay: 0
+      title: "Self-Storage Pricing Engine",
+      description: "An AI overlay for Storable Easy that optimizes street rates, automates rent increases, and deploys AuroraBot to handle tenant inquiries — giving independent operators the same intelligence tools REITs use.",
+      categories: ["Self-Storage", "Pricing AI", "Automation"],
+      results: "≥4% Revenue Lift Target",
+      delay: 0,
+      isRealProject: true,
+      link: "/storage"
     },
     {
       image: "finance",
-      title: "Retail Content Automation",
-      description: "Our solution: Automate SEO-optimized content generation for website blogs and social media postings to drive internet traffic and increase organic sales, potentially reducing content creation time by 80-95%.",
-      categories: ["Retail", "E-commerce", "Automation"],
-      results: "Potential: 80-95% Time Savings",
-      delay: 0.2
+      title: "Retail Sell-Through Intelligence",
+      description: "Real-time sell-through visibility system for an apparel brand with 25 independent boutiques. Automated data collection across multiple POS systems, intelligent normalization of inconsistent product data, and network-wide analytics — eliminating 5 days of manual reporting per cycle.",
+      categories: ["Retail", "Data Intelligence", "Multi-POS"],
+      results: "25-Door Real-Time Visibility",
+      delay: 0.2,
+      isRealProject: true,
+      link: "/retail"
     },
     {
       image: "marketing",
-      title: "AI-Powered Lead Generation",
-      description: "Our expertise: Develop intelligent cold email outreach systems that personalize messages at scale, identify high-quality prospects, and optimize send times to potentially increase response rates by 60-85%.",
-      categories: ["Sales", "Marketing Automation", "AI"],
-      results: "Potential: 60-85% Higher Response Rates",
-      delay: 0.4
-    },
-    {
-      image: "advertising",
-      title: "Digital Ad Spend Optimization",
-      description: "Our solution: Build AI-driven campaign optimization platforms that analyze performance data across channels, automatically adjust bidding strategies, and reallocate budgets to maximize ROI with potential to reduce ad waste by 40-60%.",
-      categories: ["Digital Marketing", "AI Optimization", "PPC"],
-      results: "Potential: 40-60% Less Ad Waste",
-      delay: 0.6
+      title: "EOS Implementer Lead System",
+      description: "Multi-channel lead generation system for EOS implementers. AI targets ideal 10-250 employee companies across LinkedIn, Google, and Meta — pre-qualifying prospects before they ever book a call.",
+      categories: ["EOS", "Lead Generation", "Multi-Channel AI"],
+      results: "15+ Qualified Leads Monthly",
+      delay: 0.4,
+      link: "/eos"
     }
   ];
 
@@ -125,14 +122,14 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
             variants={fadeIn}
           >
             <span className="font-inter text-sm uppercase tracking-widest text-accent mb-3 inline-block">
-              Proof of Concept Scenarios
+              What We Build
             </span>
             <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-              Potential Impact Scenarios
+              Real Problems We Solve
             </h2>
             <p className="text-white/70 max-w-2xl mx-auto font-inter text-lg">
-              Based on our team's expertise and industry research, here are illustrative examples 
-              of what our AI solutions can achieve across diverse sectors.
+              Each solution starts with a proof of concept you can see working before you commit.
+              Here's what that looks like across our three verticals.
             </p>
           </motion.div>
         </div>
@@ -151,7 +148,7 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
               className="flex gap-6 min-w-max px-4 sm:px-0 justify-center md:justify-start"
               style={{ paddingLeft: `${getInitialOffset()}px`, paddingRight: '16px' }}>
               {caseStudies.map((study, index) => (
-                <CaseStudyCard 
+                <CaseStudyCard
                   key={index}
                   image={study.image}
                   title={study.title}
@@ -159,6 +156,8 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
                   categories={study.categories}
                   results={study.results}
                   delay={study.delay}
+                  isRealProject={study.isRealProject}
+                  link={study.link}
                 />
               ))}
             </div>
@@ -212,8 +211,8 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <p className="text-white/50 font-inter text-sm max-w-3xl mx-auto">
-            <em>The scenarios above are illustrative examples based on our team's expertise and industry research. 
-            Results may vary based on specific business contexts and implementation factors.</em>
+            <em>Each scenario reflects the type of proof of concept we build for clients.
+            We show you it works before you sign.</em>
           </p>
         </motion.div>
 
@@ -226,7 +225,7 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <p className="mb-6 text-white/70 font-inter">
-            Ready to explore what AI can do for your business?
+            Ready to see what we'd build for you?
           </p>
           <Button 
             className="bg-accent hover:bg-accent/90 text-black font-inter font-semibold text-lg px-8 py-6 shadow-glow transition-all"
@@ -236,7 +235,7 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
             }}
             onClick={onContactClick}
           >
-            Discuss Your Potential
+            Book a Free Demo
           </Button>
         </motion.div>
       </div>

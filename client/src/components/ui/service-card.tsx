@@ -54,8 +54,14 @@ const ServiceCard = ({ icon, title, description, tags, color, delay, id }: Servi
     }
   };
 
+  const routeMap: Record<string, string> = {
+    "retail": "/retail",
+    "self-storage": "/storage",
+    "eos-ecosystem": "/eos",
+  };
+
   const handleCardClick = () => {
-    setLocation(`/services/${id}`);
+    setLocation(routeMap[id] || `/${id}`);
   };
   
   return (

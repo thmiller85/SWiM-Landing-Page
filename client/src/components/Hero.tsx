@@ -51,13 +51,14 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
             variants={fadeIn}
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold leading-tight mb-6">
-              <span className="block">Transform your business with</span>
-              <span className="gradient-text">AI-Powered  Solutions</span>
+              <span className="block">Every independent operator deserves</span>
+              <span className="gradient-text">enterprise-grade intelligence</span>
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-inter mb-8 max-w-2xl">
-              SWiM helps B2B companies leverage artificial intelligence to
-              automate workflows, optimize marketing strategies, and create
-              cutting-edge SaaS solutions that drive results.
+              SWiM solves the data and workflow problems that off-the-shelf
+              software can't — for independent retail, self-storage, and the
+              EOS ecosystem. AI isn't a feature we bolt on. It's the operating
+              layer we build on.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
@@ -65,7 +66,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 className="bg-accent text-primary font-inter font-medium hover:bg-accent/90 transition-all"
                 size="lg"
               >
-                Discover Our Solutions
+                See How It Works
               </Button>
               <Button
                 onClick={onContactClick}
@@ -73,7 +74,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                 className="bg-transparent border border-white/20 text-white font-inter font-medium hover:border-accent hover:text-white hover:bg-accent/10 transition-all"
                 size="lg"
               >
-                Get Started Today
+                Book a Free Demo
               </Button>
             </div>
             <div className="mt-12">
@@ -86,11 +87,11 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                     <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                   </div>
                   <div className="text-white/80 font-inter text-sm">
-                    <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
+                    <span className="text-accent font-medium">3 Founders.</span> U.S.-Based. Lean by Design.
                   </div>
                 </div>
                 <div className="text-white/80 font-inter text-sm text-center">
-                  <span className="text-accent font-medium">Ready to Build</span> Your Success Story
+                  <span className="text-accent font-medium">We show you it works</span> before you sign.
                 </div>
               </div>
               
@@ -102,11 +103,11 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                   <img src={steveAvatar} alt="Steve" className="h-8 w-8 rounded-full border-2 border-primary object-cover" />
                 </div>
                 <div className="text-white/80 font-inter text-sm">
-                  <span className="text-accent font-medium">Founder-Led,</span> Expert-Driven AI Solutions
+                  <span className="text-accent font-medium">3 Founders.</span> U.S.-Based. Lean by Design.
                 </div>
                 <div className="h-8 w-px bg-white/20"></div>
                 <div className="text-white/80 font-inter text-sm">
-                  <span className="text-accent font-medium">Ready to Build</span> Your Success Story
+                  <span className="text-accent font-medium">We show you it works</span> before you sign.
                 </div>
               </div>
             </div>
@@ -140,7 +141,7 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     <p className="text-sm font-inter text-white/90">
-                      Unleash Scalable Intelligence
+                      AI as Your Operating Layer
                     </p>
                   </div>
                 </div>

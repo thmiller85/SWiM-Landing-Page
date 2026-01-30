@@ -66,23 +66,23 @@ const Navbar = ({
             >
               Services
             </button>
-            <button 
-              onClick={() => handleNavClick(aiSolutionsRef)} 
+            <button
+              onClick={() => handleNavClick(aiSolutionsRef)}
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
-              AI Solutions
+              Why SWiM
             </button>
-            <button 
-              onClick={() => handleNavClick(workflowRef)} 
+            <button
+              onClick={() => handleNavClick(workflowRef)}
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
-              Workflow
+              Our Process
             </button>
-            <button 
-              onClick={() => handleNavClick(caseStudiesRef)} 
+            <button
+              onClick={() => handleNavClick(caseStudiesRef)}
               className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
             >
-              Case Studies
+              What We Build
             </button>
             <Link href="/blog">
               <button 
@@ -127,23 +127,23 @@ const Navbar = ({
           >
             Services
           </button>
-          <button 
+          <button
             onClick={() => handleNavClick(aiSolutionsRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
-            AI Solutions
+            Why SWiM
           </button>
-          <button 
+          <button
             onClick={() => handleNavClick(workflowRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
-            Workflow
+            Our Process
           </button>
-          <button 
+          <button
             onClick={() => handleNavClick(caseStudiesRef)}
             className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2"
           >
-            Case Studies
+            What We Build
           </button>
           <Link href="/blog" className="block w-full text-center">
             <button 

@@ -198,11 +198,11 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                 Get Started
               </span>
               <h2 className="text-3xl md:text-5xl font-space font-bold mb-6">
-                Ready to Transform Your Business?
+                See It Work Before You Sign
               </h2>
               <p className="text-white/70 font-inter text-lg max-w-2xl mx-auto">
-                Schedule a consultation with our AI specialists to discuss how we can help
-                you leverage AI for sustainable business growth.
+                Tell us about your business and the problems you're facing. We'll show you
+                exactly what we'd build — with a working proof of concept using your real data.
               </p>
             </motion.div>
           </div>
@@ -258,11 +258,10 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                   <SelectValue placeholder="Select a service" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ai-marketing">AI-Powered Marketing</SelectItem>
-                  <SelectItem value="workflow">Workflow Automation</SelectItem>
-                  <SelectItem value="saas">B2B SaaS Development</SelectItem>
-                  <SelectItem value="data">Data Intelligence</SelectItem>
-                  <SelectItem value="consulting">AI Strategy Consulting</SelectItem>
+                  <SelectItem value="retail">Retail Intelligence</SelectItem>
+                  <SelectItem value="self-storage">Storage Operations AI</SelectItem>
+                  <SelectItem value="eos">EOS Implementer Growth</SelectItem>
+                  <SelectItem value="other">Something Else</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -298,7 +297,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                   boxShadow: "0 0 20px rgba(0,240,255,0.5)"
                 }}
               >
-                Schedule Consultation
+                Book Your Free Demo
               </Button>
             </div>
           </motion.form>
