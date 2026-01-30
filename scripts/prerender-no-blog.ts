@@ -133,20 +133,20 @@ async function prerenderRoutes() {
 }
 
 function addRouteSpecificContent(html: string, route: string): string {
-  let title = "SWiM | AI-Powered Marketing & Business Solutions";
+  let title = "SWiM | AI as Your Operating Layer";
   let description =
-    "Transform your business with AI-powered marketing, workflow automation, and custom SaaS solutions. Founder-led team of AI specialists delivering transparent, results-driven implementations for B2B companies. Expert AI integration, data intelligence, and ethical AI consulting.";
+    "Purpose-built AI for independent retail, self-storage, and EOS businesses. We solve the data and workflow problems that off-the-shelf software can't. Founder-led. U.S.-based. We prove it works before you sign.";
   let additionalContent = "";
 
   switch (route) {
     case "/":
       additionalContent = `
         <div style="display: none;" id="seo-content">
-          <h1>Transform your business with AI-Powered Solutions</h1>
-          <p>SWiM helps B2B companies leverage artificial intelligence to automate workflows, optimize marketing strategies, and create cutting-edge SaaS solutions that drive results.</p>
-          <div>AI-Powered Marketing, Workflow Automation, B2B SaaS Development, Data Intelligence, AI Strategy Consulting, AI Security & Ethics</div>
-          <div>24+ AI Experts, 12+ Years Experience, 200+ Projects, 98% Client Retention</div>
-          <div>Founder-Led Delivery, Lean By Design, U.S.-Based Team, Cross-Industry Experience</div>
+          <h1>Every independent operator deserves enterprise-grade intelligence</h1>
+          <p>SWiM builds AI operating layers for independent operators. We solve the data and workflow problems that off-the-shelf software can't — for independent retail, self-storage, and the EOS ecosystem.</p>
+          <div>Retail Intelligence, Storage Operations AI, EOS Implementer Growth</div>
+          <div>3 Founders, U.S.-Based, Lean by Design</div>
+          <div>Founder-Led Delivery, See It Work Before You Sign, AI as Your Operating Layer</div>
         </div>
       `;
       break;

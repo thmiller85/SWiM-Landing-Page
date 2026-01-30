@@ -321,7 +321,7 @@ window.__vite_plugin_react_preamble_installed__ = true
     <meta property="og:url" content="${postUrl}" />
     <meta property="og:title" content="${safeTitle}" />
     <meta property="og:description" content="${safeDescription}" />
-    <meta property="og:image" content="${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}" />
+    <meta property="og:image" content="${blogPost.featuredImage || baseUrl + '/og-image.png'}" />
     <meta property="og:site_name" content="SWiM AI" />
     <meta property="article:published_time" content="${blogPost.publishedAt}" />
     <meta property="article:modified_time" content="${blogPost.updatedAt}" />
@@ -334,7 +334,7 @@ window.__vite_plugin_react_preamble_installed__ = true
     <meta property="twitter:url" content="${postUrl}" />
     <meta property="twitter:title" content="${safeTitle}" />
     <meta property="twitter:description" content="${safeDescription}" />
-    <meta property="twitter:image" content="${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}" />
+    <meta property="twitter:image" content="${blogPost.featuredImage || baseUrl + '/og-image.png'}" />
     
     <!-- Canonical URL -->
     <link rel="canonical" href="${postUrl}" />
@@ -346,7 +346,7 @@ window.__vite_plugin_react_preamble_installed__ = true
       "@type": "BlogPosting",
       "headline": "${safeTitle}",
       "description": "${safeDescription}",
-      "image": "${blogPost.featuredImage || baseUrl + '/og-image-final.jpg'}",
+      "image": "${blogPost.featuredImage || baseUrl + '/og-image.png'}",
       "author": {
         "@type": "Organization",
         "name": "${safeAuthor}"
