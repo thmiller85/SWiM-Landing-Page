@@ -73,7 +73,7 @@ async function generateBlogPages() {
         },
         "publisher": {
           "@type": "Organization",
-          "name": "SWiM Agency",
+          "name": "SWiM AI",
           "url": "https://swimsolutions.replit.app"
         },
         "datePublished": blogPost.publishedAt,

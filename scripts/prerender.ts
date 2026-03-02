@@ -162,7 +162,7 @@ async function prerenderRoutes() {
         },
         "publisher": {
           "@type": "Organization",
-          "name": "SWiM Agency",
+          "name": "SWiM AI",
           "url": "https://swimsolutions.ai"
         },
         "datePublished": blogPost.publishedAt,
@@ -354,7 +354,7 @@ function addRouteSpecificContent(html: string, route: string): string {
     "url": `https://swimsolutions.ai${route}`,
     "isPartOf": {
       "@type": "WebSite",
-      "name": "SWiM Agency",
+      "name": "SWiM AI",
       "url": "https://swimsolutions.ai"
     }
   };

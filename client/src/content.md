@@ -1,5 +1,5 @@
 
-# SWiM Agency Website Content
+# SWiM AI Website Content
 
 ## Vision
 Every independent operator deserves enterprise-grade intelligence.
@@ -179,4 +179,4 @@ AI solutions for independent retail, self-storage, and EOS ecosystems. We solve 
 - EOS Implementer Growth
 
 ### Copyright
-© 2026 SWiM Agency. All rights reserved.
+© 2026 SWiM AI, LLC. All rights reserved.

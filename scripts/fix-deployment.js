@@ -132,7 +132,7 @@ async function fixDeployment() {
       },
       "publisher": {
         "@type": "Organization",
-        "name": "SWiM Agency",
+        "name": "SWiM AI",
         "url": "https://swimsolutions.replit.app"
       },
       "mainEntityOfPage": {

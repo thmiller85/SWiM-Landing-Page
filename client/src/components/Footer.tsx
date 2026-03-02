@@ -69,7 +69,7 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
         
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/50 font-inter text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} SWiM Agency. All rights reserved.
+            © {new Date().getFullYear()} SWiM AI, LLC. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <Link href="/privacy-policy" className="text-white/50 hover:text-white transition-colors font-inter text-sm">Privacy Policy</Link>
