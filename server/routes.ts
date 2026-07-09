@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 import { blogService } from "./blog";
 import { storage } from "./storage";
 import { googleSheetsService } from "./google-sheets";
+import { metaCapi } from "./meta-capi";
 // Import server-only validation schemas to avoid drizzle-orm in client bundle
 import { 
   createPostSchema, 
@@ -344,20 +345,22 @@ ${posts.map(post => `  <url>
   // Contact form submission endpoint
   app.post('/api/contact-form', async (req, res) => {
     try {
-      const formData = req.body;
+      // Separate the internal Meta tracking metadata from the actual form
+      // fields so only real form data is forwarded to the n8n webhook.
+      const { _meta, ...formData } = req.body || {};
       console.log('Contact form data received:', formData);
-      
+
       // Validate required fields based on the actual form structure
       if (!formData.name || !formData.email) {
-        return res.status(400).json({ 
-          error: 'Missing required fields', 
-          details: 'Name and email are required' 
+        return res.status(400).json({
+          error: 'Missing required fields',
+          details: 'Name and email are required'
         });
       }
 
       // Forward to webhook
       const webhookUrl = 'https://n8n.srv863333.hstgr.cloud/webhook/onSwimFormSubmit';
-      
+
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
@@ -371,6 +374,24 @@ ${posts.map(post => `  <url>
       }
 
       const result = await response.json();
+
+      // Fire the Meta Conversions API Lead event (deduplicated with the browser
+      // pixel via the shared _meta.eventId). No-ops when the CAPI token isn't
+      // configured, and never throws — so it can't break the form response.
+      const [firstName, ...lastNameParts] = String(formData.name || '').trim().split(/\s+/);
+      await metaCapi.sendLeadEvent({
+        email: formData.email,
+        firstName,
+        lastName: lastNameParts.join(' ') || undefined,
+        eventId: _meta?.eventId,
+        eventSourceUrl: _meta?.eventSourceUrl,
+        clientIp: req.ip,
+        userAgent: req.headers['user-agent'],
+        fbp: _meta?.fbp,
+        fbc: _meta?.fbc,
+        contentName: formData.service || 'general_inquiry',
+      });
+
       res.json({ success: true, data: result });
       
     } catch (error) {
@@ -436,7 +457,8 @@ ${posts.map(post => `  <url>
         phone,
         leadSource,
         postSlug,
-        interactionData
+        interactionData,
+        _meta
       } = req.body;
 
       // Validate required fields
@@ -471,6 +493,23 @@ ${posts.map(post => `  <url>
       await googleSheetsService.ensureHeaders();
       const postTitle = postId ? (await storage.getPostById(postId))?.title : undefined;
       await googleSheetsService.addLead(lead, postTitle);
+
+      // Fire the Meta Conversions API Lead event (deduplicated with the browser
+      // pixel via the shared _meta.eventId). No-ops without a CAPI token, and
+      // never throws — so it can't break the lead response.
+      await metaCapi.sendLeadEvent({
+        email,
+        firstName,
+        lastName,
+        phone,
+        eventId: _meta?.eventId,
+        eventSourceUrl: _meta?.eventSourceUrl,
+        clientIp: req.ip,
+        userAgent: req.headers['user-agent'],
+        fbp: _meta?.fbp,
+        fbc: _meta?.fbc,
+        contentName: leadSource || 'ROI Calculator',
+      });
 
       res.json({ success: true, leadId: lead.id });
     } catch (error) {

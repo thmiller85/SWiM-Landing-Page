@@ -26,6 +26,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NavigationProvider, useNavigation } from "./context/NavigationContext";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
+import { MetaPixel } from "./components/MetaPixel";
 
 // Home page component
 const HomePage = () => {
@@ -109,6 +110,7 @@ function App() {
         </Switch>
         <Toaster />
         <GoogleAnalytics />
+        <MetaPixel />
       </TooltipProvider>
     </NavigationProvider>
   );
