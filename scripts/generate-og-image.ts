@@ -75,7 +75,7 @@ async function generateOGImage() {
   const services = [
     "Retail Intelligence",
     "Storage Operations AI",
-    "EOS Implementer Growth",
+    "Coaching Practice Growth",
   ];
   const bulletY = 405;
   let bulletX = 70;

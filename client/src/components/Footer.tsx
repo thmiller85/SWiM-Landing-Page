@@ -23,7 +23,7 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
           <div>
             <Logo className="mb-6" />
             <p className="text-white/70 font-inter text-sm mb-6">
-              AI solutions for independent retail, self-storage, and EOS ecosystems. We solve the data and workflow problems off-the-shelf software can't.
+              AI solutions for independent retail, self-storage, and business coaching. We solve the data and workflow problems off-the-shelf software can't.
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/profile.php?id=61577744513077" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-accent transition-colors">
@@ -43,7 +43,7 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
             <ul className="space-y-3">
               <li><Link href="/retail" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Retail Intelligence</Link></li>
               <li><Link href="/storage" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Storage Operations AI</Link></li>
-              <li><Link href="/eos" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">EOS Implementer Growth</Link></li>
+              <li><Link href="/business-coaching" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Coaching Practice Growth</Link></li>
             </ul>
           </div>
           

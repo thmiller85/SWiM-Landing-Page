@@ -143,7 +143,7 @@ const About = forwardRef<HTMLElement>((props, ref) => {
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
                   <Check className="text-accent text-sm" />
                 </div>
-                <p className="text-white font-inter">Deep expertise in retail, self-storage, and EOS ecosystems</p>
+                <p className="text-white font-inter">Deep expertise in retail, self-storage, and business coaching</p>
               </div>
             </div>
             

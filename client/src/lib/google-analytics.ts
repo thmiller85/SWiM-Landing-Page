@@ -82,7 +82,7 @@ export const trackConversion = (
   value?: string
 ) => {
   if (typeof window.gtag !== 'function') return;
-  
+
   window.gtag('event', 'generate_lead', {
     currency: 'USD',
     value: 0,
@@ -91,6 +91,13 @@ export const trackConversion = (
     conversion_type: conversionType,
     conversion_value: value,
   });
+
+  // Google Ads conversion (Submit lead form) — fires on successful lead form submit
+  if (conversionType === 'form_submit') {
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-17985771494/JHj1CNCrkskcEOavpIBD',
+    });
+  }
 };
 
 // Track social shares

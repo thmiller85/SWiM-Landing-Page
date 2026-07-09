@@ -41,8 +41,8 @@ const Services = forwardRef<HTMLElement>((props, ref) => {
     {
       id: "eos-ecosystem",
       icon: <Target className="text-3xl text-accent" />,
-      title: "EOS Implementer Growth",
-      description: "Stop cold calling. We build AI-powered lead generation systems that deliver 10-15 qualified prospects monthly — so you close 1-2 new EOS clients and stay focused on delivery, not prospecting.",
+      title: "Coaching Practice Growth",
+      description: "Stop cold calling. We build AI-powered lead generation systems that deliver 10-15 qualified prospects monthly — so you close 1-2 new coaching clients and stay focused on delivery, not prospecting.",
       tags: ["Qualified Lead Generation", "Multi-Channel Campaigns", "Pipeline Growth"],
       color: "accent",
       delay: 0.4
