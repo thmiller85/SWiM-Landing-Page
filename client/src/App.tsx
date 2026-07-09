@@ -1,4 +1,4 @@
-import { Route, Switch } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
@@ -86,8 +86,11 @@ function App() {
           <Route path="/storage">
             <ServicePage id="self-storage" />
           </Route>
-          <Route path="/eos">
+          <Route path="/business-coaching">
             <EosLandingPage />
+          </Route>
+          <Route path="/eos">
+            <Redirect to="/business-coaching" />
           </Route>
           <Route path="/cms/login">
             <Suspense fallback={<div>Loading...</div>}>

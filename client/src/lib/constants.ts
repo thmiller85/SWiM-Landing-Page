@@ -20,8 +20,8 @@ export const SERVICES = [
     color: "highlight"
   },
   {
-    title: "EOS Implementer Growth",
-    description: "Stop cold calling. AI-powered lead generation that delivers qualified EOS prospects monthly — so you close clients, not chase them.",
+    title: "Coaching Practice Growth",
+    description: "Stop cold calling. AI-powered lead generation that delivers qualified coaching prospects monthly — so you close clients, not chase them.",
     icon: "target",
     color: "accent"
   }

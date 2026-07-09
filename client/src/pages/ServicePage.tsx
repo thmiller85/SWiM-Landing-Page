@@ -216,10 +216,10 @@ const serviceDetails: Record<string, ServiceDetail> = {
   },
   "eos-ecosystem": {
     id: "eos-ecosystem",
-    title: "EOS Implementer Growth",
-    description: "AI-powered lead generation and pipeline management for active EOS implementers.",
+    title: "Coaching Practice Growth",
+    description: "AI-powered lead generation and pipeline management for active business coaches and consultants.",
     longDescription: [
-      "As an EOS implementer, your time is best spent in session rooms \u2014 not chasing leads. But inconsistent pipeline flow is the number one growth constraint most implementers face.",
+      "As a business coach, your time is best spent with clients \u2014 not chasing leads. But inconsistent pipeline flow is the number one growth constraint most coaches face.",
       "SWiM builds AI-powered outreach and pipeline systems that keep your funnel full while you focus on delivery. From personalized cold outreach to automated nurture sequences, we turn lead generation into a system that runs without you."
     ],
     benefits: [
@@ -232,7 +232,7 @@ const serviceDetails: Record<string, ServiceDetail> = {
     features: [
       {
         title: "AI Cold Outreach",
-        description: "Personalized outreach messages generated at scale using AI that understands EOS language, pain points, and decision-maker profiles.",
+        description: "Personalized outreach messages generated at scale using AI that understands your coaching methodology, client pain points, and decision-maker profiles.",
         icon: <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center"><svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
       },
       {
@@ -255,7 +255,7 @@ const serviceDetails: Record<string, ServiceDetail> = {
       {
         step: 1,
         title: "ICP & Messaging Workshop",
-        description: "We define your ideal client profile, key messaging angles, and outreach strategy tailored to EOS prospects."
+        description: "We define your ideal client profile, key messaging angles, and outreach strategy tailored to your coaching prospects."
       },
       {
         step: 2,
@@ -275,13 +275,13 @@ const serviceDetails: Record<string, ServiceDetail> = {
     ],
     cta: {
       title: "See It Work Before You Sign",
-      description: "We'll build a working outreach prototype targeting your ideal EOS prospects \u2014 before you commit to anything. That's the SWiM difference.",
+      description: "We'll build a working outreach prototype targeting your ideal coaching prospects \u2014 before you commit to anything. That's the SWiM difference.",
       buttonText: "Book Your Free Demo"
     },
     faqs: [
       {
         question: "How does AI personalization work without sounding robotic?",
-        answer: "Our AI is trained on EOS-specific language and frameworks. Messages reference real pain points and use natural, conversational tone \u2014 not template fill-in-the-blank."
+        answer: "Our AI is trained on your coaching methodology and frameworks. Messages reference real pain points and use natural, conversational tone \u2014 not template fill-in-the-blank."
       },
       {
         question: "Will this integrate with my existing CRM?",
@@ -289,7 +289,7 @@ const serviceDetails: Record<string, ServiceDetail> = {
       },
       {
         question: "How quickly can I expect to see qualified leads?",
-        answer: "Most implementers see their first qualified responses within 2-3 weeks of launch, with pipeline building steadily from there."
+        answer: "Most coaches see their first qualified responses within 2-3 weeks of launch, with pipeline building steadily from there."
       }
     ],
     color: "accent"

@@ -56,8 +56,8 @@ const Hero = ({ onDiscoverClick, onContactClick }: HeroProps) => {
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-inter mb-8 max-w-2xl">
               SWiM solves the data and workflow problems that off-the-shelf
-              software can't — for independent retail, self-storage, and the
-              EOS ecosystem. AI isn't a feature we bolt on. It's the operating
+              software can't — for independent retail, self-storage, and
+              business coaching. AI isn't a feature we bolt on. It's the operating
               layer we build on.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">

@@ -32,7 +32,7 @@ const painPoints = [
   {
     icon: "🎯",
     title: "Wrong-Fit Clients",
-    description: "Taking anyone who says yes instead of ideal clients who value EOS.",
+    description: "Taking anyone who says yes instead of ideal clients who value your methodology.",
   },
 ];
 
@@ -41,7 +41,7 @@ const solutions = [
   {
     icon: "🎯",
     title: "Laser-Targeted Campaigns",
-    description: "AI identifies your ideal clients: 10-250 employee companies ready for EOS. No more spray and pray.",
+    description: "AI identifies your ideal clients based on your criteria — company size, industry, growth stage. No more spray and pray.",
   },
   {
     icon: "🚀",
@@ -56,7 +56,7 @@ const solutions = [
   {
     icon: "📊",
     title: "Pre-Qualification System",
-    description: "Only book calls with businesses that need and can afford EOS. No more tire kickers.",
+    description: "Only book calls with businesses that need and value your coaching. No more tire kickers.",
   },
   {
     icon: "📈",
@@ -99,7 +99,7 @@ const timelineItems = [
   {
     number: "2",
     title: "Week 3-4: First Leads Arrive",
-    description: "Qualified prospects start booking discovery calls. You're having 3-5 meaningful conversations with businesses ready for EOS.",
+    description: "Qualified prospects start booking discovery calls. You're having 3-5 meaningful conversations with businesses ready to work with you.",
   },
   {
     number: "3",
@@ -177,11 +177,11 @@ const EosLandingPage: React.FC = () => {
                 <h1 className="text-4xl md:text-5xl lg:text-[48px] font-space font-bold mb-6 leading-tight">
                   Stop Cold Calling.{" "}
                   <span className="gradient-text">
-                    Start Closing 1-2 New EOS Clients Monthly.
+                    Start Closing 1-2 New Coaching Clients Monthly.
                   </span>
                 </h1>
                 <p className="text-lg md:text-xl text-white/[0.85] font-inter mb-8">
-                  You're brilliant at implementing EOS. But spending 20+ hours a week on business development is killing your productivity and passion.
+                  You're brilliant at coaching. But spending 20+ hours a week on business development is killing your productivity and passion.
                 </p>
                 <Button
                   className="bg-accent hover:bg-accent/90 text-white"
@@ -393,7 +393,7 @@ const EosLandingPage: React.FC = () => {
                 Stop Struggling. Start Scaling.
               </h2>
               <p className="text-white/80 font-inter max-w-2xl mx-auto mb-8 text-xl">
-                SWiM AI intelligently targets ideal EOS clients — giving you predictable pipeline and back your life.
+                SWiM AI intelligently targets your ideal clients — giving you predictable pipeline and back your life.
               </p>
               <Button
                 size="lg"
@@ -409,13 +409,10 @@ const EosLandingPage: React.FC = () => {
           </div>
         </section>
 
-        {/* EOS Disclaimer + Footer */}
+        {/* Copyright + Footer */}
         <div className="text-center py-4 border-t border-accent/20">
           <p className="text-white/70 font-inter text-sm">
-            © {new Date().getFullYear()} SWiM AI - Enterprise-Grade Lead Intelligence for EOS Implementers
-          </p>
-          <p className="text-white/50 font-inter text-xs mt-2">
-            Not affiliated with EOS Worldwide.
+            © {new Date().getFullYear()} SWiM AI - Enterprise-Grade Lead Intelligence for Business Coaches
           </p>
         </div>
 

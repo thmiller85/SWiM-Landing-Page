@@ -76,7 +76,11 @@ app.use((req, res, next) => {
 (async () => {
   // IMPORTANT: Register API routes FIRST to prevent Vite SPA fallback from intercepting them
   const server = await registerRoutes(app);
-  
+
+  // Permanent redirect: legacy /eos landing page moved to /business-coaching.
+  // Keep indefinitely to preserve existing links, bookmarks, and SEO equity.
+  app.get('/eos', (_req, res) => res.redirect(301, '/business-coaching'));
+
   // Register blog SSR route first to prevent Vite interception
   const { storage } = await import("./storage");
   

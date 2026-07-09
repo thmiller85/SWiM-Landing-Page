@@ -40,12 +40,12 @@ const CaseStudies = forwardRef<HTMLElement, CaseStudiesProps>(({ onContactClick 
     },
     {
       image: "marketing",
-      title: "EOS Implementer Lead System",
-      description: "Multi-channel lead generation system for EOS implementers. AI targets ideal 10-250 employee companies across LinkedIn, Google, and Meta — pre-qualifying prospects before they ever book a call.",
-      categories: ["EOS", "Lead Generation", "Multi-Channel AI"],
+      title: "Business Coach Lead System",
+      description: "Multi-channel lead generation system for business coaches and consultants. AI targets your ideal client profile across LinkedIn, Google, and Meta — pre-qualifying prospects before they ever book a call.",
+      categories: ["Coaching", "Lead Generation", "Multi-Channel AI"],
       results: "15+ Qualified Leads Monthly",
       delay: 0.4,
-      link: "/eos"
+      link: "/business-coaching"
     }
   ];
 

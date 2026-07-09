@@ -57,7 +57,7 @@ const ServiceCard = ({ icon, title, description, tags, color, delay, id }: Servi
   const routeMap: Record<string, string> = {
     "retail": "/retail",
     "self-storage": "/storage",
-    "eos-ecosystem": "/eos",
+    "eos-ecosystem": "/business-coaching",
   };
 
   const handleCardClick = () => {

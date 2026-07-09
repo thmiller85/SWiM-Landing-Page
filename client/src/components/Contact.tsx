@@ -260,7 +260,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
                 <SelectContent>
                   <SelectItem value="retail">Retail Intelligence</SelectItem>
                   <SelectItem value="self-storage">Storage Operations AI</SelectItem>
-                  <SelectItem value="eos">EOS Implementer Growth</SelectItem>
+                  <SelectItem value="eos">Coaching Practice Growth</SelectItem>
                   <SelectItem value="other">Something Else</SelectItem>
                 </SelectContent>
               </Select>
