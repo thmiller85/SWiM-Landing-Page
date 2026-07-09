@@ -66,6 +66,12 @@ coverage/
 # TypeScript
 *.tsbuildinfo
 
+# Claude Code local settings
+.claude/
+
+# Stray auth/session artifacts
+cookies.txt
+
 # Image uploads - keep directory but ignore contents (files are backed up separately)
 uploads/images/*
 !uploads/images/.gitkeep
