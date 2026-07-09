@@ -175,7 +175,7 @@ export function PostPreview({ post, isOpen, onClose }: PostPreviewProps) {
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      <span>{formatDate(post.publishedAt)}</span>
+                      <span>{formatDate(post.publishedAt ?? null)}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4" />

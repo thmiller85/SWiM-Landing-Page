@@ -1,6 +1,6 @@
 import { pgTable, serial, text, varchar, timestamp, integer, boolean, jsonb } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import type { z } from 'zod/v4';
 
 // Blog posts table
 export const posts = pgTable('posts', {

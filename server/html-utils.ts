@@ -25,7 +25,7 @@ export function getClientAssets(): { scripts: string; styles: string } {
     const html = fs.readFileSync(indexPath, 'utf-8');
     
     // Extract all script tags
-    const scriptMatches = html.match(/<script[^>]*>.*?<\/script>/gs) || [];
+    const scriptMatches = html.match(/<script[^>]*>[\s\S]*?<\/script>/g) || [];
     clientScripts = scriptMatches.join('\n    ');
     
     // Extract all link tags for stylesheets

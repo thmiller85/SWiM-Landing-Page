@@ -8,7 +8,7 @@ export function GoogleAnalytics() {
   useEffect(() => {
     // Track page views on route change
     // GA is now initialized directly in index.html
-    if (typeof window !== 'undefined' && window.gtag) {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
       trackPageView(location);
     }
   }, [location]);

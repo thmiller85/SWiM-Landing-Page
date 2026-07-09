@@ -154,7 +154,7 @@ const BlogPost = () => {
         // New analytics tracking
         trackShare('native', post.id);
         // Google Analytics tracking
-        trackGAShare('native_share', post.id.toString());
+        trackGAShare('native_share', post.id?.toString());
       } catch (err) {
         console.log('Error sharing:', err);
       }
@@ -165,7 +165,7 @@ const BlogPost = () => {
       // New analytics tracking
       trackShare('clipboard', post.id);
       // Google Analytics tracking
-      trackGAShare('clipboard_copy', post.id.toString());
+      trackGAShare('clipboard_copy', post.id?.toString());
     }
   };
 
