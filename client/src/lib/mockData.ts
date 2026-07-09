@@ -2,7 +2,9 @@
 import { BlogPost } from '@/types/blog';
 
 // Sample blog posts that match database structure
-export const mockBlogPosts: BlogPost[] = [
+// Mock/fallback posts intentionally diverge from the strict BlogPost shape
+// (extra analytics fields, Date instead of string timestamps), so assert the type.
+export const mockBlogPosts = ([
   {
     id: 1,
     title: "The Complete Guide to AI Marketing Automation in 2024",
@@ -168,7 +170,7 @@ Need assistance implementing these AI tools? Our team provides comprehensive AI 
     updatedAt: new Date('2024-12-16'),
     publishedAt: null
   }
-];
+] as unknown as BlogPost[]);
 
 // Production-safe API simulation
 export const mockApiClient = {

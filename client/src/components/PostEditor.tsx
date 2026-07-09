@@ -902,7 +902,7 @@ export function PostEditor({ post, isCreating, onSave, onCancel }: PostEditorPro
             featuredImageAlt: formData.featuredImageAlt,
             author: formData.author,
             category: formData.category,
-            tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+            tags: formData.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean),
             readingTime: formData.readingTime,
             status: formData.status,
             ctaType: formData.ctaType,
