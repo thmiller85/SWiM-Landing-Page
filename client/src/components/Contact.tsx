@@ -12,6 +12,7 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import { useToast } from "@/hooks/use-toast";
 import { trackConversion } from "@/lib/google-analytics";
+import { trackMetaLead, getFbCookies } from "@/lib/meta-pixel";
 
 const Contact = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,18 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
     
     // Add the selected service from state
     formValues.service = selectedService;
-    
+
+    // Meta Pixel + Conversions API deduplication metadata. The same eventId is
+    // sent to the browser pixel and (via _meta below) to the server CAPI call.
+    const metaEventId = crypto.randomUUID();
+    const { fbp, fbc } = getFbCookies();
+    const metaContext = {
+      eventId: metaEventId,
+      fbp,
+      fbc,
+      eventSourceUrl: window.location.href,
+    };
+
     try {
       console.log('Submitting form data:', formValues);
       
@@ -75,7 +87,7 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formValues),
+          body: JSON.stringify({ ...formValues, _meta: metaContext }),
         });
         
         console.log('Response status:', response.status);
@@ -115,7 +127,10 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
         
         // Track conversion in Google Analytics
         trackConversion('form_submit', selectedService || 'general_inquiry');
-        
+
+        // Track Meta Pixel Lead event (deduplicated with the server CAPI event)
+        trackMetaLead(metaEventId, { content_name: selectedService || 'general_inquiry' });
+
         toast({
           title: "Form submitted successfully",
           description: "We'll be in touch shortly!",

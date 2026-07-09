@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Calculator, TrendingUp, DollarSign, Clock, Users, Target, ArrowRight, CheckCircle } from 'lucide-react';
 import { LeadCaptureForm } from '@/components/forms/LeadCaptureForm';
 import { apiRequest } from '@/lib/queryClient';
+import { trackMetaLead, getFbCookies } from '@/lib/meta-pixel';
 
 interface ROICalculatorProps {
   postSlug?: string;
@@ -135,15 +136,28 @@ export function ROICalculator({ postSlug }: ROICalculatorProps) {
         employeeCount: parseFloat(employeeCount)
       };
 
+      // Meta Pixel + Conversions API deduplication metadata
+      const metaEventId = crypto.randomUUID();
+      const { fbp, fbc } = getFbCookies();
+
       await apiRequest('/api/leads/capture', {
         method: 'POST',
         body: JSON.stringify({
           ...data,
           leadSource: 'ROI Calculator',
           postSlug,
-          interactionData
+          interactionData,
+          _meta: {
+            eventId: metaEventId,
+            fbp,
+            fbc,
+            eventSourceUrl: window.location.href,
+          }
         })
       });
+
+      // Track Meta Pixel Lead event (deduplicated with the server CAPI event)
+      trackMetaLead(metaEventId, { content_name: 'ROI Calculator' });
 
       setLeadCaptured(true);
       setShowLeadForm(false);
