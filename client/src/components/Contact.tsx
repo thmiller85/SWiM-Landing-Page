@@ -13,6 +13,7 @@ import { fadeIn, staggerContainer } from "@/lib/animations";
 import { useToast } from "@/hooks/use-toast";
 import { trackConversion } from "@/lib/google-analytics";
 import { trackMetaLead, getFbCookies } from "@/lib/meta-pixel";
+import { trackLinkedInLead } from "@/lib/linkedin-insight";
 
 const Contact = forwardRef<HTMLElement>((props, ref) => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -130,6 +131,9 @@ const Contact = forwardRef<HTMLElement>((props, ref) => {
 
         // Track Meta Pixel Lead event (deduplicated with the server CAPI event)
         trackMetaLead(metaEventId, { content_name: selectedService || 'general_inquiry' });
+
+        // Track LinkedIn Insight Tag lead conversion
+        trackLinkedInLead();
 
         toast({
           title: "Form submitted successfully",

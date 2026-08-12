@@ -9,6 +9,7 @@ import { Calculator, TrendingUp, DollarSign, Clock, Users, Target, ArrowRight, C
 import { LeadCaptureForm } from '@/components/forms/LeadCaptureForm';
 import { apiRequest } from '@/lib/queryClient';
 import { trackMetaLead, getFbCookies } from '@/lib/meta-pixel';
+import { trackLinkedInLead } from '@/lib/linkedin-insight';
 
 interface ROICalculatorProps {
   postSlug?: string;
@@ -158,6 +159,9 @@ export function ROICalculator({ postSlug }: ROICalculatorProps) {
 
       // Track Meta Pixel Lead event (deduplicated with the server CAPI event)
       trackMetaLead(metaEventId, { content_name: 'ROI Calculator' });
+
+      // Track LinkedIn Insight Tag lead conversion
+      trackLinkedInLead();
 
       setLeadCaptured(true);
       setShowLeadForm(false);
