@@ -13,7 +13,7 @@ import { trackScrollDepth } from "@/lib/google-analytics";
 import BookDemoButton from "@/components/retail/BookDemoButton";
 import StickyCtaBar from "@/components/retail/StickyCtaBar";
 import WorkbookMock from "@/components/retail/WorkbookMock";
-import ConnectorMark from "@/components/retail/ConnectorMark";
+import ConnectorMark, { hasConnectorArtwork } from "@/components/retail/ConnectorMark";
 import swimLogo from "@/assets/swim-logo-transparent.png";
 import {
   CONTACT_EMAIL,
@@ -224,9 +224,9 @@ const RetailPlanningSuite: React.FC = () => {
                   className="flex h-[68px] flex-col items-center justify-center gap-2.5 text-center text-white/65 hover:text-white/90 transition-colors"
                 >
                   <ConnectorMark connector={connector} />
-                  {/* The wordmark fallback already carries the name; only the
-                      pictorial marks need a caption under them. */}
-                  {connector.mark ? (
+                  {/* The wordmark fallback already carries the name; only a
+                      connector we actually have artwork for needs a caption. */}
+                  {hasConnectorArtwork(connector.mark) ? (
                     <span className="font-inter text-xs text-white/55 leading-tight">
                       {connector.name}
                     </span>

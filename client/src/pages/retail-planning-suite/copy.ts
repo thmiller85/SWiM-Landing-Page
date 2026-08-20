@@ -93,12 +93,12 @@ export interface StackConnector {
 
 export const STACK_CONNECTORS: StackConnector[] = [
   { name: "Shopify", mark: "shopify" },
-  { name: "Lightspeed" },
+  { name: "Lightspeed", mark: "lightspeed" },
   { name: "Square", mark: "square" },
-  { name: "Clover" },
-  { name: "Heartland" },
+  { name: "Clover", mark: "clover" },
+  { name: "Heartland", mark: "heartland" },
   { name: "QuickBooks", mark: "quickbooks" },
-  { name: "Microsoft 365" },
+  { name: "Microsoft 365", mark: "microsoft365" },
   { name: "Google Workspace", mark: "google" },
   { name: "Notion", mark: "notion" },
   { name: "Stripe", mark: "stripe" },
