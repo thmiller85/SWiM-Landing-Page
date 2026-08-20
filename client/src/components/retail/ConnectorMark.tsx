@@ -9,11 +9,20 @@ import React from "react";
 // scannable — she is hunting for her own POS, and a familiar colour is
 // recognised faster than a shape and far faster than a word.
 //
-// Two marks are reversed to white instead: Square (#3E4348) and Notion
-// (#000000) are near-black and score 1.9:1 and 1.1:1 against this page's navy,
-// so at their official colour they are invisible. Both brands' guidelines
-// specify a reversed mark on dark backgrounds, so white is the correct
-// treatment rather than a workaround.
+// Marks render in the page's ink rather than in brand colour, and both halves
+// of that are deliberate.
+//
+// The design reason: this page is set as a two-ink linesheet on coloured stock.
+// Ten full-colour logos would be the most off-system objects on it.
+//
+// The compliance reason: a single-colour rendering is explicitly permitted by
+// these companies' brand guidelines, where a re-hued one is not. Several of
+// these colours are also weak on #DCDAD1 — Shopify's green reads 1.8:1 — and
+// darkening them to compensate would mean altering the brand colour, which is
+// the one thing the guidelines rule out. Ink sidesteps both problems.
+//
+// Inline marks take `currentColor`; file-based marks are flattened by CSS
+// filter (see .stockist in editorial.css) because an <img> cannot inherit it.
 //
 // Stating factual "works with" compatibility in each company's own colours is
 // consistent with their brand guidelines. Nothing here may imply partnership,
@@ -77,16 +86,6 @@ export type ConnectorMarkKey =
 
 // Official brand colours, except where the official colour cannot survive a
 // dark ground — see the note above.
-const REVERSED_ON_DARK = "#FFFFFF";
-const MARK_COLORS: Partial<Record<ConnectorMarkKey, string>> = {
-  shopify: "#7AB55C",
-  quickbooks: "#2CA01C",
-  square: REVERSED_ON_DARK,
-  stripe: "#635BFF",
-  notion: REVERSED_ON_DARK,
-  google: "#4285F4",
-  claude: "#D97757",
-};
 
 export interface Connector {
   /** Display name, also the accessible label. */
@@ -142,7 +141,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
       role="img"
       aria-label={connector.name}
       viewBox="0 0 24 24"
-      fill={MARK_COLORS[key!]}
+      fill="currentColor"
       className={`h-7 w-7 md:h-8 md:w-8 ${className}`}
     >
       <path d={d} />
