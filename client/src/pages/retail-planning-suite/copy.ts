@@ -98,16 +98,16 @@ export interface StackConnector {
 }
 
 export const STACK_CONNECTORS: StackConnector[] = [
-  { name: "Shopify", mark: "shopify" },
+  { name: "Shopify", mark: "shopify", lockup: true },
   { name: "Lightspeed", mark: "lightspeed", lockup: true },
-  { name: "Square", mark: "square" },
+  { name: "Square", mark: "square", lockup: true },
   { name: "Clover", mark: "clover", lockup: true },
   { name: "Heartland", mark: "heartland", lockup: true },
-  { name: "QuickBooks", mark: "quickbooks" },
+  { name: "QuickBooks", mark: "quickbooks", lockup: true },
   { name: "Microsoft 365", mark: "microsoft365", lockup: true },
   { name: "Google Workspace", mark: "google" },
-  { name: "Notion", mark: "notion" },
-  { name: "Stripe", mark: "stripe" },
+  { name: "Notion", mark: "notion", lockup: true },
+  { name: "Stripe", mark: "stripe", lockup: true },
 ];
 
 // The caveat the tiers used to carry, in one line.
