@@ -2,13 +2,23 @@ import React from "react";
 
 // Brand marks for the connector row.
 //
-// Inline SVG paths rather than image files: they weigh a few hundred bytes each,
-// stay sharp at any size, and inherit `currentColor` — which is what lets the
-// whole row render in one neutral monochrome tone. That neutral treatment is
-// deliberate. Each of these companies publishes brand-usage guidelines for
-// "works with" claims, and a single monochrome row stating factual
-// compatibility is the conservative reading of all of them. Nothing here should
-// ever imply partnership, endorsement, or certification.
+// Inline SVG paths rather than image files: they weigh a few hundred bytes each
+// and stay sharp at any size.
+//
+// Each mark carries its official brand colour. Colour is what makes this row
+// scannable — she is hunting for her own POS, and a familiar colour is
+// recognised faster than a shape and far faster than a word.
+//
+// Two marks are reversed to white instead: Square (#3E4348) and Notion
+// (#000000) are near-black and score 1.9:1 and 1.1:1 against this page's navy,
+// so at their official colour they are invisible. Both brands' guidelines
+// specify a reversed mark on dark backgrounds, so white is the correct
+// treatment rather than a workaround.
+//
+// Stating factual "works with" compatibility in each company's own colours is
+// consistent with their brand guidelines. Nothing here may imply partnership,
+// endorsement, or certification — no badge shapes, no "official" language, no
+// mark shown larger than its neighbours.
 //
 // Paths are from Simple Icons (CC0-1.0). The marks themselves remain the
 // trademarks of their respective owners.
@@ -33,6 +43,19 @@ const MARKS = {
 /** Keys of the marks we actually have artwork for. */
 export type ConnectorMarkKey = keyof typeof MARKS;
 
+// Official brand colours, except where the official colour cannot survive a
+// dark ground — see the note above.
+const REVERSED_ON_DARK = "#FFFFFF";
+const MARK_COLORS: Record<ConnectorMarkKey, string> = {
+  shopify: "#7AB55C",
+  quickbooks: "#2CA01C",
+  square: REVERSED_ON_DARK,
+  stripe: "#635BFF",
+  notion: REVERSED_ON_DARK,
+  google: "#4285F4",
+  claude: "#D97757",
+};
+
 export interface Connector {
   /** Display name, also the accessible label. */
   name: string;
@@ -52,7 +75,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
     // several of these brands present as wordmarks anyway.
     return (
       <span
-        className={`flex h-7 md:h-8 items-center font-space font-medium tracking-tight text-[13px] md:text-[15px] whitespace-nowrap ${className}`}
+        className={`flex h-7 md:h-8 items-center font-space font-medium tracking-tight text-[13px] md:text-[15px] whitespace-nowrap text-white/85 ${className}`}
       >
         {connector.name}
       </span>
@@ -64,7 +87,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
       role="img"
       aria-label={connector.name}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill={MARK_COLORS[connector.mark!]}
       className={`h-7 w-7 md:h-8 md:w-8 ${className}`}
     >
       <path d={d} />
