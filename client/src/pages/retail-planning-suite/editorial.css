@@ -507,3 +507,28 @@
   .rps-editorial .claude-panel{ gap: 22px; }
   .rps-editorial .claude-panel .claude-mark{ width: 46px; height: 46px; margin-top: 4px; }
 }
+
+/* Stockist names, set in the page's type. A caption in Archivo keeps the row
+   on-system; ten brand wordmarks would put ten competing typefaces on a page
+   set in two. */
+.rps-editorial .stockist{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 92px;
+}
+.rps-editorial .stockist-name{
+  font-family: var(--text);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.2;
+  text-align: center;
+}
+@media (min-width:900px){
+  .rps-editorial .stockist{ min-height: 104px; }
+  .rps-editorial .stockist-name{ font-size: 12px; }
+}

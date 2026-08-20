@@ -241,6 +241,12 @@ const RetailPlanningSuite: React.FC = () => {
             {STACK_CONNECTORS.map((c) => (
               <div className="stockist" key={c.name}>
                 <ConnectorMark connector={c} />
+                {/* The name is set in the page's own type rather than left to
+                    the mark. A bare glyph — Stripe's S, Google's G — asks her
+                    to recognise it, and this section's job is a one-second yes.
+                    Lockups already carry their name in the artwork, so
+                    captioning them would print it twice. */}
+                {c.lockup ? null : <span className="stockist-name">{c.name}</span>}
               </div>
             ))}
           </div>
