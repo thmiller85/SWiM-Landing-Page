@@ -180,6 +180,7 @@ Sitemap: ${baseUrl}/sitemap.xml`;
       const staticRoutes = [
         { url: '/', priority: '1.0', changefreq: 'weekly' },
         { url: '/blog', priority: '0.9', changefreq: 'daily' },
+        { url: '/retail/planning-suite', priority: '0.9', changefreq: 'weekly' },
         { url: '/team', priority: '0.8', changefreq: 'monthly' },
         { url: '/team/ross-stockdale', priority: '0.7', changefreq: 'monthly' },
         { url: '/team/tom-miller', priority: '0.7', changefreq: 'monthly' },
