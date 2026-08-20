@@ -1,3 +1,5 @@
+import type { ConnectorMarkKey } from "@/components/retail/ConnectorMark";
+
 // Section copy for the Retail Planning Suite landing page.
 //
 // Held apart from the markup so wording can be reviewed and edited without
@@ -62,37 +64,49 @@ export const HERO_EYEBROW = "For independent boutiques · $1M–$25M";
 
 // Section 2 — runs on Claude, works with your stack.
 //
-// Grouped honestly, and the grouping is not optional: it prevents a support
-// problem where someone arrives expecting a direct connection she does not have.
-// Claude is given its own line above the grid, larger than the rest. It is the
-// most recognisable name on the page and it does three jobs at once — it
-// explains how this is affordable without making AI the headline, it borrows
-// real credibility, and it discloses the Claude requirement early instead of
-// springing it at signup.
+// She has spent years being told her POS isn't supported, so this section's job
+// is a fast yes: she should find her own system in about a second. That is why
+// these are logos rather than a text list — a mark is recognised pre-attentively,
+// a word has to be read — and why they sit in one equal row rather than in
+// tiers. The earlier tiered layout put Lightspeed, Square, Clover and Heartland
+// under a heading that read as a caveat, which quietly told a large share of
+// independent apparel retail that they were second-class.
 //
-// Trademark note: "runs inside Claude" is a factual compatibility statement and
-// is the safe framing. Nothing here may imply that Anthropic, Shopify, Intuit,
-// Microsoft or Google built, endorses, certifies or partners on this. Neutral
-// monochrome text treatment is deliberate for the same reason.
-export const STACK_GROUPS = [
-  {
-    label: "Connects directly",
-    items: [
-      "Shopify",
-      "QuickBooks",
-      "Google Workspace",
-      "Microsoft 365",
-    ],
-  },
-  {
-    label: "Works from a standard export",
-    items: ["Lightspeed", "Square", "Clover", "Heartland"],
-  },
-  {
-    label: "Also supported",
-    items: ["Notion", "Stripe"],
-  },
+// The honesty the tiers were carrying does not disappear; it moves into one
+// plain sentence under the row, where it informs without demoting.
+//
+// Claude is set apart above the row. It is the most recognisable name here and
+// it does three jobs at once: it explains how this is affordable without making
+// AI the headline, it borrows real credibility, and it discloses the Claude
+// requirement early rather than springing it at signup.
+//
+// Trademark note: "runs inside Claude" and "works with" are factual
+// compatibility statements, and neutral monochrome marks in a single row are the
+// conservative reading of every one of these companies' brand guidelines.
+// Nothing here may imply that any of them built, endorses, certifies or partners
+// on this.
+export interface StackConnector {
+  name: string;
+  /** Omit to render as a wordmark — see the note in ConnectorMark.tsx. */
+  mark?: ConnectorMarkKey;
+}
+
+export const STACK_CONNECTORS: StackConnector[] = [
+  { name: "Shopify", mark: "shopify" },
+  { name: "Lightspeed" },
+  { name: "Square", mark: "square" },
+  { name: "Clover" },
+  { name: "Heartland" },
+  { name: "QuickBooks", mark: "quickbooks" },
+  { name: "Microsoft 365" },
+  { name: "Google Workspace", mark: "google" },
+  { name: "Notion", mark: "notion" },
+  { name: "Stripe", mark: "stripe" },
 ];
+
+// The caveat the tiers used to carry, in one line.
+export const STACK_CAVEAT =
+  "Some connect straight through, some read a standard export — either way we wire it up with you on setup. If yours isn't here, we'll tell you straight on the call.";
 
 // Section 4 — how it works.
 export const HOW_IT_WORKS = [

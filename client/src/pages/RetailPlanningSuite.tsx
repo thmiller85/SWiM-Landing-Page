@@ -13,6 +13,7 @@ import { trackScrollDepth } from "@/lib/google-analytics";
 import BookDemoButton from "@/components/retail/BookDemoButton";
 import StickyCtaBar from "@/components/retail/StickyCtaBar";
 import WorkbookMock from "@/components/retail/WorkbookMock";
+import ConnectorMark from "@/components/retail/ConnectorMark";
 import swimLogo from "@/assets/swim-logo-transparent.png";
 import {
   CONTACT_EMAIL,
@@ -29,7 +30,8 @@ import {
   PRICING_ROWS,
   PRICING_SUPPORTING,
   SKILLS,
-  STACK_GROUPS,
+  STACK_CAVEAT,
+  STACK_CONNECTORS,
   WHAT_THIS_ISNT,
 } from "./retail-planning-suite/copy";
 
@@ -189,50 +191,52 @@ const RetailPlanningSuite: React.FC = () => {
         </section>
 
         {/* ─── 2 · Runs on Claude · works with your stack ───────────────────
-            She has spent years being told her POS isn't supported, so this gets
-            real estate. Claude sits above the rest: it explains how this is
-            affordable without making AI the headline, and it discloses the
-            Claude requirement here rather than at signup. */}
+            Logos, not a text list. She has spent years being told her POS isn't
+            supported; the job here is a fast yes, and a mark is recognised
+            before a word can be read. One equal row, no tiers — the honesty the
+            tiers carried now sits in a single line underneath, where it informs
+            without demoting half of independent apparel retail. */}
         <Section className="bg-[#00111F]/60 border-y border-accent/10">
           <motion.div {...reveal}>
             <SectionHeading sub="Nothing to migrate. Nothing to rebuild. We connect it with you on setup.">
               Works with your existing stack.
             </SectionHeading>
 
-            <div className="glass rounded-2xl p-6 md:p-8 mb-8 border border-highlight/25">
-              <div className="text-xl md:text-2xl font-space font-semibold mb-2">
-                Runs inside Claude.
+            <div className="glass rounded-2xl p-6 md:p-8 mb-8 border border-highlight/25 flex items-start gap-5">
+              <ConnectorMark
+                connector={{ name: "Claude", mark: "claude" }}
+                className="h-10 w-10 md:h-12 md:w-12 text-highlight flex-shrink-0"
+              />
+              <div>
+                <div className="text-xl md:text-2xl font-space font-semibold mb-2">
+                  Runs inside Claude.
+                </div>
+                <p className="text-white/75 font-inter">
+                  Built as a private plugin for Claude, the AI assistant from Anthropic.
+                </p>
               </div>
-              <p className="text-white/75 font-inter">
-                Built as a private plugin for Claude, the AI assistant from Anthropic.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {STACK_GROUPS.map((group) => (
-                <div
-                  key={group.label}
-                  className="glass rounded-2xl p-5 md:p-6 border border-accent/20"
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-6 mb-6">
+              {STACK_CONNECTORS.map((connector) => (
+                <li
+                  key={connector.name}
+                  className="flex h-[68px] flex-col items-center justify-center gap-2.5 text-center text-white/65 hover:text-white/90 transition-colors"
                 >
-                  <div className="text-[11px] uppercase tracking-widest text-highlight/90 font-inter mb-4">
-                    {group.label}
-                  </div>
-                  <ul className="space-y-2.5">
-                    {group.items.map((item) => (
-                      <li
-                        key={item}
-                        className="text-white/85 font-inter text-[15px]"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <ConnectorMark connector={connector} />
+                  {/* The wordmark fallback already carries the name; only the
+                      pictorial marks need a caption under them. */}
+                  {connector.mark ? (
+                    <span className="font-inter text-xs text-white/55 leading-tight">
+                      {connector.name}
+                    </span>
+                  ) : null}
+                </li>
               ))}
-            </div>
-            <p className="text-white/45 font-inter text-xs mt-5">
-              Google Workspace covers Gmail, Drive, and Calendar. All product names
-              are trademarks of their respective owners.
+            </ul>
+
+            <p className="text-white/60 font-inter text-sm max-w-2xl">
+              {STACK_CAVEAT}
             </p>
           </motion.div>
         </Section>
