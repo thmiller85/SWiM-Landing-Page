@@ -31,6 +31,31 @@ against the navy before committing it.
 
 These files are rendered as-is, so whatever colour is in the file is what ships.
 
+### Reversed on arrival
+
+The four files here arrived as light-background lockups, so their dark text was
+reversed to white to survive the navy. Measured against `#00111F`:
+
+| Brand | Was | Contrast | Now |
+|---|---|---|---|
+| Lightspeed | `#040707` | 1.06 — invisible | `#FFFFFF` |
+| Clover | `#5A5A5A` | 2.77 — dim | `#FFFFFF` |
+| Microsoft 365 | `#737373` | 4.03 — legible | `#FFFFFF` |
+| Heartland | `#BB2530` | 3.11 — passes | unchanged |
+
+Only near-neutral text was reversed; no brand colour was altered — Lightspeed's
+red flame, Clover's green leaves, the Microsoft squares and Heartland's red are
+all untouched. This reproduces the reverse/on-dark variant each of these brands
+publishes. If you have their official reverse artwork, prefer it and overwrite
+these outright.
+
+## Lockups vs. logomarks
+
+Artwork containing the brand name needs `lockup: true` on its entry in
+`STACK_CONNECTORS`, which suppresses the caption underneath — otherwise the name
+prints twice. All four files here are lockups. A bare logomark (the Shopify bag,
+the Square glyph) keeps its caption.
+
 ## Sizing
 
 Any viewBox works — each mark is scaled to a 28px (mobile) / 32px (desktop) box

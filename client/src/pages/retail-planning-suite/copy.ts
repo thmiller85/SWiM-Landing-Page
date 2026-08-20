@@ -89,16 +89,22 @@ export interface StackConnector {
   name: string;
   /** Omit to render as a wordmark — see the note in ConnectorMark.tsx. */
   mark?: ConnectorMarkKey;
+  /**
+   * True when the artwork is a full lockup that already contains the brand
+   * name, so captioning it would print the name twice. Bare logomarks — the
+   * Shopify bag, the Square glyph — still need their caption.
+   */
+  lockup?: boolean;
 }
 
 export const STACK_CONNECTORS: StackConnector[] = [
   { name: "Shopify", mark: "shopify" },
-  { name: "Lightspeed", mark: "lightspeed" },
+  { name: "Lightspeed", mark: "lightspeed", lockup: true },
   { name: "Square", mark: "square" },
-  { name: "Clover", mark: "clover" },
-  { name: "Heartland", mark: "heartland" },
+  { name: "Clover", mark: "clover", lockup: true },
+  { name: "Heartland", mark: "heartland", lockup: true },
   { name: "QuickBooks", mark: "quickbooks" },
-  { name: "Microsoft 365", mark: "microsoft365" },
+  { name: "Microsoft 365", mark: "microsoft365", lockup: true },
   { name: "Google Workspace", mark: "google" },
   { name: "Notion", mark: "notion" },
   { name: "Stripe", mark: "stripe" },
