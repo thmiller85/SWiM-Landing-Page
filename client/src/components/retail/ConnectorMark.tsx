@@ -118,7 +118,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
         alt={connector.name}
         loading="lazy"
         decoding="async"
-        className={`h-7 w-auto max-w-[104px] md:h-8 md:max-w-[128px] object-contain ${className}`}
+        className={`connector-mark connector-mark--file ${className}`.trim()}
       />
     );
   }
@@ -129,7 +129,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
     // several of these brands present as wordmarks anyway.
     return (
       <span
-        className={`flex h-7 md:h-8 items-center font-space font-medium tracking-tight text-[13px] md:text-[15px] whitespace-nowrap text-white/85 ${className}`}
+        className={`connector-mark connector-mark--wordmark ${className}`.trim()}
       >
         {connector.name}
       </span>
@@ -142,7 +142,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
       aria-label={connector.name}
       viewBox="0 0 24 24"
       fill="currentColor"
-      className={`h-7 w-7 md:h-8 md:w-8 ${className}`}
+      className={`connector-mark connector-mark--svg ${className}`.trim()}
     >
       <path d={d} />
     </svg>

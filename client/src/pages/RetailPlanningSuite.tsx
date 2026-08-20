@@ -220,9 +220,21 @@ const RetailPlanningSuite: React.FC = () => {
           head="Works with your existing stack."
           sub="Nothing to migrate. Nothing to rebuild. We connect it with you on setup."
         >
+          {/* Claude sits above the connector grid and larger than the marks in
+              it, as the brief specifies. It is the most recognisable name here
+              and does three jobs at once: it explains how this is affordable
+              without making AI the headline, it borrows real credibility, and
+              it discloses the Claude requirement early rather than springing it
+              at signup. */}
           <div className="claude-panel">
-            <p className="kicker">Runs inside Claude.</p>
-            <p>Built as a private plugin for Claude, the AI assistant from Anthropic.</p>
+            <ConnectorMark
+              connector={{ name: "Claude", mark: "claude" }}
+              className="claude-mark"
+            />
+            <div>
+              <p className="kicker">Runs inside Claude.</p>
+              <p>Built as a private plugin for Claude, the AI assistant from Anthropic.</p>
+            </div>
           </div>
 
           <div className="stockists">
