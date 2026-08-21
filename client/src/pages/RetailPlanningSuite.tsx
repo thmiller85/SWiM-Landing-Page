@@ -23,6 +23,7 @@ import {
   STACK_CONNECTORS,
   WHAT_THIS_ISNT,
 } from "./retail-planning-suite/copy";
+import { plateSources } from "./retail-planning-suite/plate-sources";
 import "./retail-planning-suite/editorial.css";
 
 /**
@@ -60,30 +61,79 @@ const Rail: React.FC<{ num: string; run: string; ox?: boolean }> = ({ num, run, 
   </div>
 );
 
+const RATIOS: Record<string, number> = { "4x5": 4 / 5, "3x2": 3 / 2, "16x9": 16 / 9 };
+
 /**
- * A photographic or video plate. These are placeholders: the brief assigns the
- * real assets to Tom, and a marked-up plate is more useful to a photographer
- * than a grey box, so each carries its own art direction.
+ * A photographic or video plate.
+ *
+ * With `image`, it renders the built derivatives. Without one — or before
+ * `scripts/build-plate-derivatives.mjs` has run for that name — it falls back
+ * to the marked-up box carrying its own art direction, which is more useful to
+ * whoever shoots it than a grey rectangle would be.
+ *
+ * `alt` describes the room rather than the person in it. The page names no
+ * customers, and a photograph captioned as one would say what the copy is
+ * careful not to.
  */
 const Plate: React.FC<{
   no: string;
   ratio: "4x5" | "3x2" | "16x9";
   brief: string;
+  image?: string;
+  alt?: string;
+  sizes?: string;
+  priority?: boolean;
   caption?: string;
   style?: React.CSSProperties;
   className?: string;
-}> = ({ no, ratio, brief, caption = "Photography placeholder.", style, className }) => (
-  <figure className={`plate-fig ${className ?? ""}`} style={style}>
-    <div className={`plate-box ar-${ratio}`}>
-      <div className="plate-top">
-        <span className="label">Plate {no}</span>
-        <span className="label">{ratio.replace("x", " : ")}</span>
-      </div>
-      <p className="plate-brief">{brief}</p>
-    </div>
-    <figcaption className="plate-cap">{caption}</figcaption>
-  </figure>
-);
+}> = ({
+  no,
+  ratio,
+  brief,
+  image,
+  alt,
+  sizes,
+  priority = false,
+  caption = "Photography placeholder.",
+  style,
+  className,
+}) => {
+  const sources = image ? plateSources(image, RATIOS[ratio]) : null;
+
+  return (
+    <figure className={`plate-fig ${className ?? ""}`} style={style}>
+      {sources ? (
+        <picture>
+          {sources.srcSets.map((set) => (
+            <source key={set.type} type={set.type} srcSet={set.srcSet} sizes={sizes} />
+          ))}
+          <img
+            className={`plate-img ar-${ratio}`}
+            src={sources.src}
+            sizes={sizes}
+            width={sources.width}
+            height={sources.height}
+            alt={alt ?? ""}
+            loading={priority ? "eager" : "lazy"}
+            decoding={priority ? "sync" : "async"}
+            {...(priority ? { fetchPriority: "high" as const } : {})}
+          />
+        </picture>
+      ) : (
+        <>
+          <div className={`plate-box ar-${ratio}`}>
+            <div className="plate-top">
+              <span className="label">Plate {no}</span>
+              <span className="label">{ratio.replace("x", " : ")}</span>
+            </div>
+            <p className="plate-brief">{brief}</p>
+          </div>
+          <figcaption className="plate-cap">{caption}</figcaption>
+        </>
+      )}
+    </figure>
+  );
+};
 
 /** Heading block shared by every numbered section. */
 const Sec: React.FC<{
@@ -212,6 +262,10 @@ const RetailPlanningSuite: React.FC = () => {
               no="01"
               ratio="4x5"
               className="hero-plate"
+              image="plate-01-shop-floor"
+              alt="The sales floor of a small independent boutique before opening, racks of muted knitwear and linen in flat morning window light."
+              sizes="(min-width: 900px) 430px, 92vw"
+              priority
               brief="Editorial photo — the owner on her own shop floor, mid-morning, before the doors open. Racks in soft focus behind her. Natural light, no stock-photo smile."
             />
           </div>
@@ -508,6 +562,9 @@ const RetailPlanningSuite: React.FC = () => {
             no="03"
             ratio="3x2"
             style={{ marginTop: 36 }}
+            image="plate-03-market"
+            alt="A showroom table during a buying appointment, seen from overhead: overlapping lookbook pages, a ring of fabric swatches, a spiral pad and a coffee cup."
+            sizes="(min-width: 900px) 870px, 92vw"
             brief="Editorial photo — a market appointment in progress: linesheets, swatch cards and a marked-up order pad on a showroom table. Overhead, hard light, no faces."
           />
         </Sec>

@@ -570,3 +570,17 @@
   opacity: .85;
   max-width: 46em;
 }
+
+/* Photographic plates, once the real images are in. The placeholder box above
+   draws its own frame and corner marks; a photograph needs neither, only the
+   reserved aspect ratio so nothing shifts while it loads. */
+.rps-editorial .plate-img{
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background: rgba(20,21,24,.05);
+}
+.rps-editorial .plate-img.ar-4x5{ aspect-ratio: 4/5; }
+.rps-editorial .plate-img.ar-3x2{ aspect-ratio: 3/2; }
+.rps-editorial .plate-img.ar-16x9{ aspect-ratio: 16/9; }
