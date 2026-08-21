@@ -19,6 +19,7 @@ import {
   PRICING_SUPPORTING,
   SKILLS,
   STACK_CAVEAT,
+  STACK_TRADEMARK_NOTE,
   STACK_CONNECTORS,
   WHAT_THIS_ISNT,
 } from "./retail-planning-suite/copy";
@@ -42,6 +43,16 @@ import "./retail-planning-suite/editorial.css";
  */
 
 /** A section's left-hand rail: plate number and running head. */
+/** Accessible names for the individual product marks, so each is announced as
+ *  the service it identifies rather than as the suite it belongs to. */
+const PRODUCT_NAMES: Record<string, string> = {
+  gmail: "Gmail",
+  drive: "Google Drive",
+  calendar: "Google Calendar",
+  outlook: "Microsoft Outlook",
+  excel: "Microsoft Excel",
+};
+
 const Rail: React.FC<{ num: string; run: string; ox?: boolean }> = ({ num, run, ox }) => (
   <div className="rail" style={ox ? { borderColor: "var(--ox)", color: "var(--ox)" } : undefined}>
     <span className="num">{num}</span>
@@ -239,19 +250,33 @@ const RetailPlanningSuite: React.FC = () => {
 
           <div className="stockists">
             {STACK_CONNECTORS.map((c) => (
-              <div className="stockist" key={c.name}>
-                <ConnectorMark connector={c} />
-                {/* The name is set in the page's own type rather than left to
-                    the mark. A bare glyph — Stripe's S, Google's G — asks her
-                    to recognise it, and this section's job is a one-second yes.
-                    Lockups already carry their name in the artwork, so
-                    captioning them would print it twice. */}
-                {c.lockup ? null : <span className="stockist-name">{c.name}</span>}
-              </div>
+                <div className="stockist" key={c.name}>
+                  {c.marks ? (
+                    // A suite shown by its product marks. They sit together as
+                    // one entry so the row still reads as ten services rather
+                    // than fourteen, and the caption names the suite.
+                    <span className="product-marks">
+                      {c.marks.map((m) => (
+                        <ConnectorMark
+                          key={m}
+                          connector={{ name: PRODUCT_NAMES[m] ?? c.name, mark: m }}
+                        />
+                      ))}
+                    </span>
+                  ) : (
+                    <ConnectorMark connector={c} />
+                  )}
+                  {/* The name is set in the page's own type rather than left to
+                      the mark. A lockup already carries its name in the artwork,
+                      so captioning it would print the name twice; a group of
+                      product marks needs the suite named. */}
+                  {c.lockup ? null : <span className="stockist-name">{c.name}</span>}
+                </div>
             ))}
           </div>
 
           <p className="caveat">{STACK_CAVEAT}</p>
+            <p className="tm-note">{STACK_TRADEMARK_NOTE}</p>
         </Sec>
 
         {/* ═══ 03 · PRICE ANCHOR ═══════════════════════════════════════════
@@ -613,10 +638,17 @@ const RetailPlanningSuite: React.FC = () => {
               <Link href="/terms-of-service">Terms of service</Link>
             </p>
           </div>
-          <p className="colophon">
-            The Retail Planning Suite. Set in Literata and Archivo. Figures throughout are
-            illustrative. Product names referenced are trademarks of their respective owners.
-          </p>
+            {/* The page names ten companies and shows their marks. None of
+                them has endorsed anything, and the notice says so where a
+                reader would look for it. */}
+            <p className="colophon">
+              The Retail Planning Suite. Set in Literata and Archivo. Figures throughout are
+              illustrative. Google Workspace, Gmail, Google Drive and Google Calendar are
+              trademarks of Google LLC; Microsoft 365, Outlook and Excel are trademarks of
+              Microsoft Corporation; all other product names and logos are trademarks of their
+              respective owners. SWiM is not affiliated with, endorsed by, or sponsored by any
+              of them.
+            </p>
         </div>
       </footer>
 

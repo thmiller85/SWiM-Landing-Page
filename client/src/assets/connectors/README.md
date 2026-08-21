@@ -72,6 +72,13 @@ no badge treatments, no "official" or "certified" wording, and no single mark
 shown larger than its neighbours.
 
 
+## Checking a new file
+
+Run `python3 scripts/validate-connector-marks.py` from the repo root. It reports
+each file's dimensions and aspect ratio and flags the failure modes below. All
+of them render as something plausible rather than as an error, which is why
+they cost several rounds to find by eye.
+
 ## What makes an export unusable
 
 Three real failures hit this folder, all of them silent — the page renders, the
@@ -97,3 +104,11 @@ are now declared. The row also sets a definite height as a backstop.
 Also worth checking: that the artwork fills its canvas rather than sitting in
 a wide empty margin, and that it is the product lockup you meant — a file
 reading "Google" is not "Google Workspace".
+
+**A corporate mark standing in for a service.** Google's and Microsoft's
+guidance is that the mark used must identify the particular product an
+integration touches — so Google Workspace and Microsoft 365 are shown by their
+product marks (Gmail, Drive, Calendar; Outlook, Excel) grouped as one row
+entry, not by the Google "G" or a corporate lockup. Marks are shown at the same
+scale as their neighbours, never larger, and the row carries a trademark and
+non-affiliation notice underneath.

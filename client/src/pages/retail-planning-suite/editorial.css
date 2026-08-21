@@ -539,3 +539,34 @@
 @media (min-width:900px){
   .rps-editorial .stockist-name{ font-size: 12px; }
 }
+
+/* A suite's product marks, shown together as one entry. They are squarer than
+   the wordmark lockups around them (roughly 1:1 against 2.4–6.2:1), so they are
+   set shorter — matching their height to a lockup's would make them loom. */
+.rps-editorial .product-marks{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.rps-editorial .product-marks .connector-mark--file{
+  height: 22px;
+  width: auto;
+  max-width: none;
+}
+@media (min-width:900px){
+  .rps-editorial .product-marks{ gap: 11px; }
+  .rps-editorial .product-marks .connector-mark--file{ height: 25px; }
+}
+
+/* Trademark and non-affiliation notice under the connector row. Quiet, but on
+   the page rather than buried — the row names ten companies and none of them
+   have endorsed anything. */
+.rps-editorial .tm-note{
+  margin: 14px 0 0;
+  font-family: var(--text);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  opacity: .85;
+  max-width: 46em;
+}

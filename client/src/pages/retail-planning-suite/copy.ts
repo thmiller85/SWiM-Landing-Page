@@ -90,6 +90,15 @@ export interface StackConnector {
   /** Omit to render as a wordmark — see the note in ConnectorMark.tsx. */
   mark?: ConnectorMarkKey;
   /**
+   * Several product marks shown together as one entry, for a suite whose
+   * corporate mark must not stand in for the individual services. Kept to one
+   * row entry rather than one per product: this row exists so a boutique owner
+   * finds her point of sale in about a second, and three Google tiles would
+   * outweigh Shopify and Lightspeed, which are the marks that actually carry
+   * that job.
+   */
+  marks?: ConnectorMarkKey[];
+  /**
    * True when the artwork is a full lockup that already contains the brand
    * name, so captioning it would print the name twice. Bare logomarks — the
    * Shopify bag, the Square glyph — still need their caption.
@@ -104,15 +113,20 @@ export const STACK_CONNECTORS: StackConnector[] = [
   { name: "Clover", mark: "clover", lockup: true },
   { name: "Heartland", mark: "heartland", lockup: true },
   { name: "QuickBooks", mark: "quickbooks", lockup: true },
-  { name: "Microsoft 365", mark: "microsoft365", lockup: true },
-  { name: "Google Workspace", mark: "google" },
+  { name: "Microsoft 365", marks: ["outlook", "excel"] },
+  { name: "Google Workspace", marks: ["gmail", "drive", "calendar"] },
   { name: "Notion", mark: "notion", lockup: true },
   { name: "Stripe", mark: "stripe", lockup: true },
 ];
 
 // The caveat the tiers used to carry, in one line.
 export const STACK_CAVEAT =
-  "Some connect straight through, some read a standard export — either way we wire it up with you on setup. If yours isn't here, we'll tell you straight on the call.";
+  "Some connect straight through, some read a standard export, and your Google and Microsoft accounts connect through Claude's own connectors once you authorise them. Either way we wire it up with you on setup. If yours isn't here, we'll tell you straight on the call.";
+
+// Shown under the connector row. Names the marks as their owners' and denies
+// the affiliation the row could otherwise be read as implying.
+export const STACK_TRADEMARK_NOTE =
+  "Product names and logos are trademarks of their respective owners. SWiM is not affiliated with, endorsed by, or sponsored by any of them, and the marks here identify the services the suite works with, nothing more.";
 
 // Section 4 — how it works.
 export const HOW_IT_WORKS = [
