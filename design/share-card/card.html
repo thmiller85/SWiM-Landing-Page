@@ -5,7 +5,7 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:1200px;height:630px;overflow:hidden}
   .card{position:relative;width:1200px;height:630px;background:#DCDAD1}
-  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .card .ground{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
   /* The type sits on the plaster wall, not on a panel — the wall is already
      an even, near-paper tone, and a panel would read as a sticker. A soft
@@ -40,13 +40,16 @@
     position:absolute; left:74px; bottom:52px;
     display:flex; align-items:center; gap:15px;
   }
-  .logo{ font-family:Literata,Georgia,serif; font-weight:700; font-size:27px; letter-spacing:.02em; color:#141518; }
-  .logo i{ font-style:italic; font-weight:400; }
-  .bar{ width:1px; height:22px; background:#B0ACA0; }
+  /* The real mark, printed in one ink — same file the page uses. The span
+     needs its own box: a block-level image inside a bare inline span leaves
+     the span zero-width, and the row collapses on top of it. */
+  .logo{ display:inline-flex; align-items:center; }
+  .logo img{ display:block; height:46px; width:auto; }
+  .bar{ width:1px; height:30px; background:#B0ACA0; }
   .price{ font-family:Archivo,sans-serif; font-weight:700; font-size:14px; letter-spacing:.16em; text-transform:uppercase; color:#4A4943; }
 </style>
 <div class="card">
-  <img src="ground.jpg" alt="">
+  <img class="ground" src="ground.jpg" alt="">
   <div class="scrim"></div>
   <div class="type">
     <div class="eyebrow">For independent boutiques</div>
@@ -54,7 +57,7 @@
     <p class="sub">Open-to-buy, built from your own sales history.</p>
   </div>
   <div class="foot">
-    <span class="logo">SW<i>i</i>M</span>
+    <span class="logo"><img src="swim-ink.png" alt="SWiM"></span>
     <span class="bar"></span>
     <span class="price">$299/month</span>
   </div>

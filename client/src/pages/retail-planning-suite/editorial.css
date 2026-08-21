@@ -78,18 +78,16 @@
   letter-spacing: -0.035em;
   line-height: .86;
 }.rps-editorial .fig .cur{ font-size:.46em; vertical-align: .82em; letter-spacing:0; margin-right:.04em; }/* ---------- masthead ---------- */.rps-editorial .masthead{
-  height:58px;
+  height:74px;
   display:flex; align-items:center;
   border-bottom: 1px solid var(--hair);
-}.rps-editorial .masthead .wrap{ display:flex; align-items:baseline; gap:10px; }.rps-editorial .logo{
-  font-family: var(--disp);
-  font-variation-settings:"opsz" 40;
-  font-weight:600;
-  font-size:1.5rem;
-  letter-spacing:.01em;
-  line-height:1;
-}.rps-editorial .logo i{ font-style: italic; font-weight:500; }
-@media (min-width:900px){.rps-editorial .masthead{ height:76px; }.rps-editorial .logo{ font-size:1.75rem; }}/* ---------- section shell + rail ---------- */.rps-editorial .sec{ padding: 54px 0 58px; }
+}.rps-editorial .masthead .wrap{ display:flex; align-items:center; gap:10px; }
+/* The mark is the real SWiM logo printed in one ink — see
+   scripts/build-editorial-logo.mjs for why it is a separate file rather than
+   the shipped colour PNG. Sized by height so the two uses stay identical. */
+.rps-editorial .logo{ display:inline-flex; align-items:center; line-height:1; }
+.rps-editorial .logo img{ display:block; height:40px; width:auto; }
+@media (min-width:900px){.rps-editorial .masthead{ height:92px; }.rps-editorial .logo img{ height:48px; }}/* ---------- section shell + rail ---------- */.rps-editorial .sec{ padding: 54px 0 58px; }
 @media (min-width:900px){.rps-editorial .sec{ padding: 104px 0 112px; }}.rps-editorial .sec.ruled{ border-top: 1px solid var(--hair); }.rps-editorial .grid{ display:block; }
 @media (min-width:900px){.rps-editorial .grid{ display:grid; grid-template-columns: 178px minmax(0,1fr); column-gap: 56px; align-items:start; }}.rps-editorial .rail{
   display:flex; align-items:baseline; gap:12px;

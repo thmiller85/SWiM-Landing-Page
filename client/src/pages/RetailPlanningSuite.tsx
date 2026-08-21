@@ -24,6 +24,10 @@ import {
   WHAT_THIS_ISNT,
 } from "./retail-planning-suite/copy";
 import { plateSources } from "./retail-planning-suite/plate-sources";
+// The real SWiM mark, printed in a single ink for this page's paper stock.
+// The shipped colour logo has a white wordmark and vanishes on it —
+// scripts/build-editorial-logo.mjs builds this from the same artwork.
+import swimMark from "../assets/retail/swim-ink.png";
 import "./retail-planning-suite/editorial.css";
 
 /**
@@ -239,8 +243,8 @@ const RetailPlanningSuite: React.FC = () => {
           exists to produce. */}
       <header className="masthead">
         <div className="wrap">
-          <Link href="/" className="logo">
-            SW<i>i</i>M
+          <Link href="/" className="logo" aria-label="SWiM — home">
+            <img src={swimMark} alt="SWiM" width={412} height={300} />
           </Link>
         </div>
       </header>
@@ -689,8 +693,8 @@ const RetailPlanningSuite: React.FC = () => {
       <footer className="foot">
         <div className="wrap foot-in">
           <div>
-            <Link href="/" className="logo">
-              SW<i>i</i>M
+            <Link href="/" className="logo" aria-label="SWiM — home">
+              <img src={swimMark} alt="SWiM" width={412} height={300} />
             </Link>
             <p className="meta" style={{ margin: "12px 0 0" }}>
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
