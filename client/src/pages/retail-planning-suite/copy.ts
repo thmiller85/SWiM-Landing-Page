@@ -120,8 +120,16 @@ export const STACK_CONNECTORS: StackConnector[] = [
 ];
 
 // The caveat the tiers used to carry, in one line.
+// Seven of the ten connect through Claude's own connectors — Shopify, Square,
+// QuickBooks, Notion, Stripe, Microsoft 365 and Google Workspace. Only
+// Lightspeed, Clover and Heartland need an export. Naming the three exceptions
+// rather than the seven is deliberate: the exception is the information she
+// needs, and the row above already lists everything supported.
+//
+// The connectors are Claude's, not ours, and the sentence says so — SWiM does
+// not hold an integration with any of these companies.
 export const STACK_CAVEAT =
-  "Some connect straight through, some read a standard export, and your Google and Microsoft accounts connect through Claude's own connectors once you authorise them. Either way we wire it up with you on setup. If yours isn't here, we'll tell you straight on the call.";
+  "Most of these connect through Claude's own connectors, once you authorise them. Lightspeed, Clover and Heartland read a standard export instead. Either way we wire it up with you on setup, and if yours isn't here we'll tell you straight on the call.";
 
 // Shown under the connector row. Names the marks as their owners' and denies
 // the affiliation the row could otherwise be read as implying.
@@ -133,7 +141,7 @@ export const HOW_IT_WORKS = [
   {
     step: "1",
     title: "Connect what you have",
-    body: "Shopify links directly. Lightspeed, Square, Clover, and Heartland work from a standard export. QuickBooks, your email, and your drive add margin and vendor detail. We do this part with you on a screen share.",
+    body: "Shopify, Square, QuickBooks, your email and your drive connect through Claude's own connectors, once you authorise them. Lightspeed, Clover and Heartland work from a standard export. The accounting and email side is what adds margin and vendor detail. We do this part with you on a screen share.",
   },
   {
     step: "2",
