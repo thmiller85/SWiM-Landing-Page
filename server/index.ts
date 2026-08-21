@@ -182,6 +182,11 @@ app.use((req, res, next) => {
         const description =
           'Build your open-to-buy from your own sales history — what to spend, which brands get it, and when to mark down. Plain English in, Excel out. $299/month, month to month.';
         const canonical = `${baseUrl}/retail/planning-suite`;
+        // 1200x630, composed in design/share-card. Dimensions already match the
+        // site-wide defaults in index.html, so only the src and alt change.
+        const OG_IMAGE = '/og-retail-planning-suite.jpg';
+        const OG_IMAGE_ALT =
+          'Retail Planning Suite — open-to-buy planning for independent boutiques, from SWiM.';
 
         let html = fs.readFileSync(distPath, 'utf-8');
         html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
@@ -200,6 +205,31 @@ app.use((req, res, next) => {
         html = html.replace(
           /<meta property="og:url" content=".*?"/,
           `<meta property="og:url" content="${canonical}"`
+        );
+        // The site-wide card says nothing about open-to-buy, and this page's
+        // traffic is almost entirely links forwarded from ads and email, where
+        // the preview is doing the selling before anyone reaches the page.
+        html = html.replace(
+          /<meta property="og:image" content=".*?"/,
+          `<meta property="og:image" content="${baseUrl}${OG_IMAGE}"`
+        );
+        html = html.replace(
+          /<meta property="og:image:alt" content=".*?"/,
+          `<meta property="og:image:alt" content="${OG_IMAGE_ALT}"`
+        );
+        // The site default is a PNG; this card is a JPEG, and scrapers do read
+        // this tag. Width and height already match at 1200x630.
+        html = html.replace(
+          /<meta property="og:image:type" content=".*?"/,
+          `<meta property="og:image:type" content="image/jpeg"`
+        );
+        html = html.replace(
+          /<meta property="twitter:image" content=".*?"/,
+          `<meta property="twitter:image" content="${baseUrl}${OG_IMAGE}"`
+        );
+        html = html.replace(
+          /<meta property="twitter:image:alt" content=".*?"/,
+          `<meta property="twitter:image:alt" content="${OG_IMAGE_ALT}"`
         );
         html = html.replace(
           /<meta property="twitter:title" content=".*?"/,

@@ -675,7 +675,10 @@ const RetailPlanningSuite: React.FC = () => {
                   no="04"
                   ratio="4x5"
                   style={{ marginTop: 40 }}
-                  brief="Editorial photo — a printed plan on the counter after close, marked up in pen beside a coffee cup and a stack of packing slips. Hands only. Low, warm light."
+                  image="plate-04-after-close"
+                  alt="A boutique counter in the morning: an open plan ruled into columns and marked up in blue pen, beside a coffee mug, reading glasses and a stack of paper slips, with racks of knitwear behind."
+                  sizes="(min-width: 900px) 870px, 92vw"
+                  brief="Editorial photo — a printed plan on the counter, marked up in pen beside a coffee cup and a stack of packing slips. Morning light, no hands."
                 />
               </div>
             </div>
