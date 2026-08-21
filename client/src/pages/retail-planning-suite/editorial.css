@@ -475,8 +475,14 @@
 
 @media (prefers-reduced-motion: reduce){.rps-editorial .sticky{ transition:none; }}
 /* Connector marks. Inline SVGs inherit the ink through currentColor; the
-   file-based lockups are images, so they are flattened to solid ink by filter
-   and then softened to sit at the same optical weight as the drawn marks. */
+   file-based lockups render as supplied.
+   
+   They are deliberately not flattened to ink. A brightness(0) filter maps every
+   colour to black, including the white shapes that knock out the counters in
+   the Notion cube and the QuickBooks circle — those are white fills, not
+   transparent holes, so flattening filled them in solid. These lockups are
+   drawn for light backgrounds and carry dark wordmarks, so as-supplied is both
+   correct and legible on the stock. */
 .rps-editorial .stockist{ color: var(--ink); }
 .rps-editorial .connector-mark--svg{ height: 26px; width: 26px; }
 .rps-editorial .connector-mark--file{
@@ -485,8 +491,7 @@
      max-height stops the squarer marks towering over the rest. */
   height: 30px; width: auto; max-width: 152px;
   object-fit: contain;
-  filter: brightness(0);
-  opacity: .82;
+  opacity: .92;
 }
 .rps-editorial .connector-mark--wordmark{
   display: inline-flex; align-items: center; height: 26px;
