@@ -70,3 +70,30 @@ to state factual "works with" compatibility, which is what each company's brand
 guidelines permit. Nothing may imply partnership, endorsement, or certification —
 no badge treatments, no "official" or "certified" wording, and no single mark
 shown larger than its neighbours.
+
+
+## What makes an export unusable
+
+Three real failures hit this folder, all of them silent — the page renders, the
+mark just looks wrong. Check an export against these before committing it.
+
+**A placed raster.** An SVG whose body is `<image xlink:href="something.png">`
+is a wrapper, not a vector. It cannot work here even with the PNG alongside it:
+an SVG loaded through `<img>` is sandboxed and cannot fetch subresources.
+Export outlines, not a linked bitmap.
+
+**A baked white background.** Auto-traces often emit a full-canvas white shape —
+`d="M0,0h1920v1050H0V0Z…"` — with the letter counters as subpaths of that same
+compound path, so the mark renders as a white box on the stock and the
+background cannot be removed without taking the counters with it. Near-white
+fills scattered through the file (`#fffdfd`, `#fefeff`, `#fffffe`) are the
+giveaway. Ask for the vendor's real vector rather than a trace of a screenshot.
+
+**A viewBox with no width/height.** That gives the file a ratio but no intrinsic
+size, and in a flex row with auto dimensions it resolves to zero — the mark
+disappears while still taking up space. Five files arrived this way; their sizes
+are now declared. The row also sets a definite height as a backstop.
+
+Also worth checking: that the artwork fills its canvas rather than sitting in
+a wide empty margin, and that it is the product lockup you meant — a file
+reading "Google" is not "Google Workspace".

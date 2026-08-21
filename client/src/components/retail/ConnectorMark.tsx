@@ -141,7 +141,7 @@ export const ConnectorMark: React.FC<{ connector: Connector; className?: string 
       role="img"
       aria-label={connector.name}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill={connector.mark === "google" ? "#4285F4" : "currentColor"}
       className={`connector-mark connector-mark--svg ${className}`.trim()}
     >
       <path d={d} />
