@@ -24,10 +24,10 @@ import {
   WHAT_THIS_ISNT,
 } from "./retail-planning-suite/copy";
 import { plateSources } from "./retail-planning-suite/plate-sources";
-// The real SWiM mark, printed in a single ink for this page's paper stock.
-// The shipped colour logo has a white wordmark and vanishes on it —
-// scripts/build-editorial-logo.mjs builds this from the same artwork.
-import swimMark from "../assets/retail/swim-ink.png";
+// The SWiM badge. The site's usual logo has a white wordmark that vanishes on
+// this page's paper stock; this one carries its own navy ground and reads on
+// any surface. scripts/build-editorial-logo.mjs resizes it for the web.
+import swimMark from "../assets/retail/swim-badge.png";
 import "./retail-planning-suite/editorial.css";
 
 /**
@@ -244,7 +244,7 @@ const RetailPlanningSuite: React.FC = () => {
       <header className="masthead">
         <div className="wrap">
           <Link href="/" className="logo" aria-label="SWiM — home">
-            <img src={swimMark} alt="SWiM" width={412} height={300} />
+            <img src={swimMark} alt="SWiM" width={216} height={216} />
           </Link>
         </div>
       </header>
@@ -694,7 +694,7 @@ const RetailPlanningSuite: React.FC = () => {
         <div className="wrap foot-in">
           <div>
             <Link href="/" className="logo" aria-label="SWiM — home">
-              <img src={swimMark} alt="SWiM" width={412} height={300} />
+              <img src={swimMark} alt="SWiM" width={216} height={216} />
             </Link>
             <p className="meta" style={{ margin: "12px 0 0" }}>
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

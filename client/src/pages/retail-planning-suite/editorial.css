@@ -78,16 +78,17 @@
   letter-spacing: -0.035em;
   line-height: .86;
 }.rps-editorial .fig .cur{ font-size:.46em; vertical-align: .82em; letter-spacing:0; margin-right:.04em; }/* ---------- masthead ---------- */.rps-editorial .masthead{
-  height:74px;
+  height:80px;
   display:flex; align-items:center;
   border-bottom: 1px solid var(--hair);
 }.rps-editorial .masthead .wrap{ display:flex; align-items:center; gap:10px; }
-/* The mark is the real SWiM logo printed in one ink — see
-   scripts/build-editorial-logo.mjs for why it is a separate file rather than
-   the shipped colour PNG. Sized by height so the two uses stay identical. */
+/* The SWiM badge — a square that carries its own navy ground, so the white
+   wordmark stays legible on paper. Sized by height; the artwork's own padding
+   means it reads a size smaller than a borderless mark at the same
+   measurement, which is why 52/60 rather than 40/48. */
 .rps-editorial .logo{ display:inline-flex; align-items:center; line-height:1; }
-.rps-editorial .logo img{ display:block; height:40px; width:auto; }
-@media (min-width:900px){.rps-editorial .masthead{ height:92px; }.rps-editorial .logo img{ height:48px; }}/* ---------- section shell + rail ---------- */.rps-editorial .sec{ padding: 54px 0 58px; }
+.rps-editorial .logo img{ display:block; height:52px; width:auto; }
+@media (min-width:900px){.rps-editorial .masthead{ height:96px; }.rps-editorial .logo img{ height:60px; }}/* ---------- section shell + rail ---------- */.rps-editorial .sec{ padding: 54px 0 58px; }
 @media (min-width:900px){.rps-editorial .sec{ padding: 104px 0 112px; }}.rps-editorial .sec.ruled{ border-top: 1px solid var(--hair); }.rps-editorial .grid{ display:block; }
 @media (min-width:900px){.rps-editorial .grid{ display:grid; grid-template-columns: 178px minmax(0,1fr); column-gap: 56px; align-items:start; }}.rps-editorial .rail{
   display:flex; align-items:baseline; gap:12px;
