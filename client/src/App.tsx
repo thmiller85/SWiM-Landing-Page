@@ -12,6 +12,7 @@ import Team from "./pages/Team";
 import TeamMember from "./pages/TeamMember";
 import ServicePage from "./pages/ServicePage";
 import EosLandingPage from "./pages/EosLandingPage";
+import RetailPlanningSuite from "./pages/RetailPlanningSuite";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -81,6 +82,9 @@ function App() {
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/team" component={Team} />
           <Route path="/team/:id" component={TeamMember} />
+          <Route path="/retail/planning-suite">
+            <RetailPlanningSuite />
+          </Route>
           <Route path="/retail">
             <ServicePage id="retail" />
           </Route>

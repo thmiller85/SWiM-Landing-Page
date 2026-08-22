@@ -1,0 +1,158 @@
+import React from "react";
+
+// Brand marks for the connector row.
+//
+// Inline SVG paths rather than image files: they weigh a few hundred bytes each
+// and stay sharp at any size.
+//
+// Each mark carries its official brand colour. Colour is what makes this row
+// scannable — she is hunting for her own POS, and a familiar colour is
+// recognised faster than a shape and far faster than a word.
+//
+// Marks render in the page's ink rather than in brand colour, and both halves
+// of that are deliberate.
+//
+// The design reason: this page is set as a two-ink linesheet on coloured stock.
+// Ten full-colour logos would be the most off-system objects on it.
+//
+// The compliance reason: a single-colour rendering is explicitly permitted by
+// these companies' brand guidelines, where a re-hued one is not. Several of
+// these colours are also weak on #DCDAD1 — Shopify's green reads 1.8:1 — and
+// darkening them to compensate would mean altering the brand colour, which is
+// the one thing the guidelines rule out. Ink sidesteps both problems.
+//
+// Inline marks take `currentColor`; file-based marks are flattened by CSS
+// filter (see .stockist in editorial.css) because an <img> cannot inherit it.
+//
+// Stating factual "works with" compatibility in each company's own colours is
+// consistent with their brand guidelines. Nothing here may imply partnership,
+// endorsement, or certification — no badge shapes, no "official" language, no
+// mark shown larger than its neighbours.
+//
+// Paths are from Simple Icons (CC0-1.0). The marks themselves remain the
+// trademarks of their respective owners.
+//
+// Marks arrive from two places, in this order of precedence:
+//
+//   1. An official SVG dropped into src/assets/connectors/, named after the
+//      connector's key (lightspeed.svg, clover.svg, ...). These are discovered
+//      at build time and rendered as-is, which is what lets a real brand file —
+//      multi-path, multi-colour, however the vendor draws it — render correctly.
+//      See the README in that folder.
+//   2. The inline paths in MARKS below, for the brands Simple Icons covers.
+//
+// A connector with neither falls back to a wordmark set in the page's own type,
+// so a missing file degrades quietly instead of leaving a hole in the row.
+// Lightspeed, Clover, Heartland and Microsoft 365 are in that state until their
+// files land: Simple Icons does not carry them, Microsoft's having been withdrawn
+// at the trademark holder's request.
+
+const MARKS = {
+  shopify: "M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.114-.192-.211-.192s-1.929-.136-1.929-.136-1.275-1.274-1.439-1.411c-.045-.037-.075-.057-.121-.074l-.914 21.104h.023zM11.71 11.305s-.81-.424-1.774-.424c-1.447 0-1.504.906-1.504 1.141 0 1.232 3.24 1.715 3.24 4.629 0 2.295-1.44 3.76-3.406 3.76-2.354 0-3.54-1.465-3.54-1.465l.646-2.086s1.245 1.066 2.28 1.066c.675 0 .975-.545.975-.932 0-1.619-2.654-1.694-2.654-4.359-.034-2.237 1.571-4.416 4.827-4.416 1.257 0 1.875.361 1.875.361l-.945 2.715-.02.01zM11.17.83c.136 0 .271.038.405.135-.984.465-2.064 1.639-2.508 3.992-.656.213-1.293.405-1.889.578C7.697 3.75 8.951.84 11.17.84V.83zm1.235 2.949v.135c-.754.232-1.583.484-2.394.736.466-1.777 1.333-2.645 2.085-2.971.193.501.309 1.176.309 2.1zm.539-2.234c.694.074 1.141.867 1.429 1.755-.349.114-.735.231-1.158.366v-.252c0-.752-.096-1.371-.271-1.871v.002zm2.992 1.289c-.02 0-.06.021-.078.021s-.289.075-.714.21c-.423-1.233-1.176-2.37-2.508-2.37h-.115C12.135.209 11.669 0 11.265 0 8.159 0 6.675 3.877 6.21 5.846c-1.194.365-2.063.636-2.16.674-.675.213-.694.232-.772.87-.075.462-1.83 14.063-1.83 14.063L15.009 24l.927-21.166z",
+  quickbooks: "M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm.642 4.1335c.9554 0 1.7296.776 1.7296 1.7332v9.0667h1.6c1.614 0 2.9275-1.3156 2.9275-2.933 0-1.6173-1.3136-2.9333-2.9276-2.9333h-.6654V7.3334h.6654c2.5722 0 4.6577 2.0897 4.6577 4.667 0 2.5774-2.0855 4.6666-4.6577 4.6666H12.642zM7.9837 7.333h3.3291v12.533c-.9555 0-1.73-.7759-1.73-1.7332V9.0662H7.9837c-1.6146 0-2.9277 1.316-2.9277 2.9334 0 1.6175 1.3131 2.9333 2.9277 2.9333h.6654v1.7332h-.6654c-2.5725 0-4.6577-2.0892-4.6577-4.6665 0-2.5771 2.0852-4.6666 4.6577-4.6666Z",
+  square: "M4.01 0A4.01 4.01 0 000 4.01v15.98c0 2.21 1.8 4 4.01 4.01h15.98C22.2 24 24 22.2 24 19.99V4A4.01 4.01 0 0019.99 0H4zm1.62 4.36h12.74c.7 0 1.26.57 1.26 1.27v12.74c0 .7-.56 1.27-1.26 1.27H5.63c-.7 0-1.26-.57-1.26-1.27V5.63a1.27 1.27 0 011.26-1.27zm3.83 4.35a.73.73 0 00-.73.73v5.09c0 .4.32.72.72.72h5.1a.73.73 0 00.73-.72V9.44a.73.73 0 00-.73-.73h-5.1Z",
+  stripe: "M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z",
+  notion: "M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z",
+  claude: "m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z",
+} as const;
+
+// Official brand files dropped into src/assets/connectors/. Keyed by filename
+// stem, so lightspeed.svg becomes "lightspeed". Eager so they resolve during the
+// build rather than as runtime chunks.
+const FILE_MARKS = Object.fromEntries(
+  Object.entries(
+    import.meta.glob("../../assets/connectors/*.svg", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    }) as Record<string, string>
+  ).map(([path, url]) => [path.split("/").pop()!.replace(/\.svg$/, ""), url])
+);
+
+/**
+ * Every mark the row can name.
+ *
+ * Kept as an explicit union rather than inferred from the glob, so a typo in a
+ * connector's key fails the build instead of silently degrading to a wordmark.
+ * Adding a brand means adding it here and dropping in its file.
+ */
+export type ConnectorMarkKey =
+  | keyof typeof MARKS
+  | "lightspeed"
+  | "clover"
+  | "heartland"
+  // Product marks. Google's and Microsoft's guidance is that a corporate mark
+  // should not stand in for a service — the mark used has to identify the
+  // particular product the integration touches.
+  | "drive"
+  | "gmail"
+  | "calendar"
+  | "outlook"
+  | "excel";
+
+// Official brand colours, except where the official colour cannot survive a
+// dark ground — see the note above.
+
+export interface Connector {
+  /** Display name, also the accessible label. */
+  name: string;
+  /** Key into MARKS. Absent means it renders as a wordmark. */
+  mark?: ConnectorMarkKey;
+}
+
+/**
+ * Whether we have real artwork for this mark — a dropped-in file or an inline
+ * path. False means the connector renders as a wordmark, which already carries
+ * its own name and so must not also be given a caption.
+ */
+export const hasConnectorArtwork = (mark?: ConnectorMarkKey): boolean =>
+  !!mark && (mark in FILE_MARKS || mark in MARKS);
+
+export const ConnectorMark: React.FC<{ connector: Connector; className?: string }> = ({
+  connector,
+  className = "",
+}) => {
+  const key = connector.mark;
+  const fileUrl = key ? FILE_MARKS[key] : undefined;
+  const d = key && key in MARKS ? MARKS[key as keyof typeof MARKS] : undefined;
+
+  // An official file, if one has been dropped in, wins over the inline path.
+  if (fileUrl) {
+    return (
+      <img
+        src={fileUrl}
+        alt={connector.name}
+        loading="lazy"
+        decoding="async"
+        className={`connector-mark connector-mark--file ${className}`.trim()}
+      />
+    );
+  }
+
+  if (!d) {
+    // Wordmark fallback. Set in the page's own type at the row's optical weight
+    // so a missing SVG reads as a deliberate treatment rather than a gap —
+    // several of these brands present as wordmarks anyway.
+    return (
+      <span
+        className={`connector-mark connector-mark--wordmark ${className}`.trim()}
+      >
+        {connector.name}
+      </span>
+    );
+  }
+
+  return (
+    <svg
+      role="img"
+      aria-label={connector.name}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={`connector-mark connector-mark--svg ${className}`.trim()}
+    >
+      <path d={d} />
+    </svg>
+  );
+};
+
+export default ConnectorMark;

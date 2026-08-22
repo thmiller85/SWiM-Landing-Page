@@ -42,6 +42,7 @@ const Footer = ({ onServicesClick, onAboutClick, onContactClick }: FooterProps) 
             <h4 className="text-lg font-space font-bold mb-6">Services</h4>
             <ul className="space-y-3">
               <li><Link href="/retail" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Retail Intelligence</Link></li>
+              <li><Link href="/retail/planning-suite" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Retail Planning Suite</Link></li>
               <li><Link href="/storage" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Storage Operations AI</Link></li>
               <li><Link href="/business-coaching" className="text-white/70 hover:text-accent transition-colors font-inter text-sm">Coaching Practice Growth</Link></li>
             </ul>

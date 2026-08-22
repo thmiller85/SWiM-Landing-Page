@@ -161,6 +161,109 @@ app.use((req, res, next) => {
     });
   });
 
+  // Retail Planning Suite landing page.
+  //
+  // Served by an explicit handler rather than a prerendered directory: the
+  // static middleware below redirects a nested path without a trailing slash,
+  // and this page is an ad destination where a wasted round trip costs
+  // conversions on a slow in-app browser.
+  //
+  // Unlike the handlers above it also rewrites the Open Graph and Twitter tags,
+  // because this page is shared directly in email campaigns and would otherwise
+  // preview with the site-wide default card.
+  app.get('/retail/planning-suite', (req, res, next) => {
+    if (process.env.NODE_ENV === 'production') {
+      const baseUrl = req.protocol + '://' + req.get('host');
+      const distPath = path.resolve('dist/public/index.html');
+
+      if (fs.existsSync(distPath)) {
+        const title =
+          'Retail Planning Suite | Open-to-Buy Planning for Independent Boutiques | SWiM';
+        const description =
+          'Build your open-to-buy from your own sales history — what to spend, which brands get it, and when to mark down. Plain English in, Excel out. $299/month, month to month.';
+        const canonical = `${baseUrl}/retail/planning-suite`;
+        // 1200x630, composed in design/share-card. Dimensions already match the
+        // site-wide defaults in index.html, so only the src and alt change.
+        const OG_IMAGE = '/og-retail-planning-suite.jpg';
+        const OG_IMAGE_ALT =
+          'Retail Planning Suite — open-to-buy planning for independent boutiques, from SWiM.';
+
+        let html = fs.readFileSync(distPath, 'utf-8');
+        html = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+        html = html.replace(
+          /<meta name="description" content=".*?"/,
+          `<meta name="description" content="${description}"`
+        );
+        html = html.replace(
+          /<meta property="og:title" content=".*?"/,
+          `<meta property="og:title" content="${title}"`
+        );
+        html = html.replace(
+          /<meta property="og:description" content=".*?"/,
+          `<meta property="og:description" content="${description}"`
+        );
+        html = html.replace(
+          /<meta property="og:url" content=".*?"/,
+          `<meta property="og:url" content="${canonical}"`
+        );
+        // The site-wide card says nothing about open-to-buy, and this page's
+        // traffic is almost entirely links forwarded from ads and email, where
+        // the preview is doing the selling before anyone reaches the page.
+        html = html.replace(
+          /<meta property="og:image" content=".*?"/,
+          `<meta property="og:image" content="${baseUrl}${OG_IMAGE}"`
+        );
+        html = html.replace(
+          /<meta property="og:image:alt" content=".*?"/,
+          `<meta property="og:image:alt" content="${OG_IMAGE_ALT}"`
+        );
+        // The site default is a PNG; this card is a JPEG, and scrapers do read
+        // this tag. Width and height already match at 1200x630.
+        html = html.replace(
+          /<meta property="og:image:type" content=".*?"/,
+          `<meta property="og:image:type" content="image/jpeg"`
+        );
+        html = html.replace(
+          /<meta property="twitter:image" content=".*?"/,
+          `<meta property="twitter:image" content="${baseUrl}${OG_IMAGE}"`
+        );
+        html = html.replace(
+          /<meta property="twitter:image:alt" content=".*?"/,
+          `<meta property="twitter:image:alt" content="${OG_IMAGE_ALT}"`
+        );
+        html = html.replace(
+          /<meta property="twitter:title" content=".*?"/,
+          `<meta property="twitter:title" content="${title}"`
+        );
+        html = html.replace(
+          /<meta property="twitter:description" content=".*?"/,
+          `<meta property="twitter:description" content="${description}"`
+        );
+        html = html.replace(
+          /<meta property="twitter:url" content=".*?"/,
+          `<meta property="twitter:url" content="${canonical}"`
+        );
+        // index.html ships a canonical pointing at the homepage, so this has to
+        // replace it rather than only add one when absent — otherwise the page
+        // declares itself a duplicate of the home page.
+        if (/<link rel="canonical"[^>]*>/.test(html)) {
+          html = html.replace(
+            /<link rel="canonical"[^>]*>/,
+            `<link rel="canonical" href="${canonical}" />`
+          );
+        } else {
+          html = html.replace(
+            '</head>',
+            `    <link rel="canonical" href="${canonical}" />\n</head>`
+          );
+        }
+        res.setHeader('Content-Type', 'text/html');
+        return res.send(html);
+      }
+    }
+    next();
+  });
+
   // Team pages handlers
   const teamPages = [
     { path: '/team', title: 'Our Team | SWiM AI', description: 'Meet the SWiM AI team of experts in AI marketing, automation, and business transformation.' },

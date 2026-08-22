@@ -84,6 +84,14 @@ const Navbar = ({
             >
               What We Build
             </button>
+            <Link href="/retail/planning-suite">
+              <button
+                onClick={closeMobileMenu}
+                className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide"
+              >
+                Retail Planning
+              </button>
+            </Link>
             <Link href="/blog">
               <button 
                 onClick={closeMobileMenu}
@@ -145,6 +153,14 @@ const Navbar = ({
           >
             What We Build
           </button>
+          <Link href="/retail/planning-suite" className="block w-full text-center">
+            <button
+              onClick={closeMobileMenu}
+              className="text-white/80 hover:text-accent transition font-inter text-sm uppercase tracking-wide py-2 w-full"
+            >
+              Retail Planning
+            </button>
+          </Link>
           <Link href="/blog" className="block w-full text-center">
             <button 
               onClick={closeMobileMenu}

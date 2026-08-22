@@ -11,6 +11,7 @@ const staticRoutes = [
   '/',
   '/blog',
   '/team',
+  '/retail/planning-suite',
   '/team/ross-stockdale',
   '/team/tom-miller', 
   '/team/steve-wurster',
